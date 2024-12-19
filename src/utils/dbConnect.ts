@@ -1,6 +1,5 @@
+/* eslint-disable no-var */
 import mongoose from 'mongoose';
-
-const MONGODB_URI = "mongodb://localhost:27017/freelance1";
 
 interface MongooseCache {
   conn: typeof mongoose | null;
@@ -25,7 +24,7 @@ async function dbConnect() {
       bufferCommands: false,
     };
 
-    global.mongooseCache.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+    global.mongooseCache.promise = mongoose.connect(process.env.MONGODB_URI!, opts).then((mongoose) => {
       return mongoose;
     });
   }
