@@ -1,14 +1,15 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, models,Document } from "mongoose";
 
 interface ITableOfContent {
   title: string;
   description: string;
+  imageLink?: string;
+  videoLink?: string;
 }
 
 interface IBlog extends Document {
   title: string;
   author: string;
-  content: string;
   category: string;
   tableOfContent: ITableOfContent[];
 }
@@ -22,6 +23,14 @@ const tableOfContentSchema = new Schema<ITableOfContent>({
     type: String,
     required: true,
   },
+  imageLink: {
+    type: String,
+    required: false,
+  },
+  videoLink: {
+    type: String,
+    required: false,
+  },
 });
 
 const blogSchema = new Schema<IBlog>(
@@ -31,10 +40,6 @@ const blogSchema = new Schema<IBlog>(
       required: true,
     },
     author: {
-      type: String,
-      required: true,
-    },
-    content: {
       type: String,
       required: true,
     },
@@ -52,6 +57,6 @@ const blogSchema = new Schema<IBlog>(
   }
 );
 
-const Blog = model<IBlog>("Blog", blogSchema);
+const Blog = models.Blog || model<IBlog>("Blog", blogSchema);
 
 export default Blog;

@@ -1,4 +1,4 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document,models } from "mongoose";
 
 interface IJob extends Document {
   company: string;
@@ -9,6 +9,7 @@ interface IJob extends Document {
   category: string;
   yearsOfExperience: number;
   jobType: string;
+  link:string;
 }
 
 const jobSchema = new Schema<IJob>(
@@ -18,6 +19,10 @@ const jobSchema = new Schema<IJob>(
       required: true,
     },
     location: {
+      type: String,
+      required: true,
+    },
+    link:{
       type: String,
       required: true,
     },
@@ -51,6 +56,5 @@ const jobSchema = new Schema<IJob>(
   }
 );
 
-const Job = model<IJob>("Job", jobSchema);
-
+const Job = models.Job || model<IJob>("Job", jobSchema);
 export default Job;
