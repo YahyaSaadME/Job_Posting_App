@@ -1,8 +1,10 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, models } from "mongoose";
 
 interface ITableOfContent {
   title: string;
   description: string;
+  imageLink?: string;
+  videoLink?: string;
 }
 
 interface ICourse extends Document {
@@ -20,6 +22,14 @@ const tableOfContentSchema = new Schema<ITableOfContent>({
   description: {
     type: String,
     required: true,
+  },
+  imageLink: {
+    type: String,
+    required: false,
+  },
+  videoLink: {
+    type: String,
+    required: false,
   },
 });
 
@@ -47,6 +57,5 @@ const courseSchema = new Schema<ICourse>(
   }
 );
 
-const Course = model<ICourse>("Course", courseSchema);
-
+const Course = models.Course || model<ICourse>("Course", courseSchema);
 export default Course;
