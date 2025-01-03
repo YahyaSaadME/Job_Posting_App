@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+'use client'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const EditJob = () => {
-  const router = useRouter();
-  const { jobId } = router.query;
-
+const AddJob = () => {
   const [formData, setFormData] = useState({
     company: "",
     location: "",
@@ -13,84 +11,86 @@ const EditJob = () => {
     requirement: "",
     category: "",
     yearsOfExperience: 0,
-    jobType: "",
     link: "",
+    jobType: "",
+    tags: "", // Add tags field
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (jobId) {
-      const fetchJob = async () => {
-        try {
-          const response = await fetch(`/api/jobs/${jobId}`);
-          const data = await response.json();
-          console.log(data);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const router = useRouter();
 
-          if (response.ok) {
-            setFormData(data.data);
-          } else {
-            setError(data.message || "Failed to fetch job");
-          }
-        } catch (error) {
-          console.log(error);
-
-          setError("An error occurred while fetching job.");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchJob();
-    }
-  }, [jobId]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  // Handle form input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    console.log(`Updating ${name} with value: ${value}`);
     setFormData({
       ...formData,
       [name]: value,
     });
   };
-
+  
+  // Handle submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
 
     try {
-      const response = await fetch(`/api/jobs/${jobId}`, {
-        method: "PUT",
+      const response = await fetch("/api/jobs", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          tags: formData.tags.split(",").map(tag => tag.trim()), // Convert tags to array of strings
+          by: null,
+          approved: true,
+        }),
       });
-
-      const data = await response.json();
-      if (response.ok) {
-        router.push("/admin/jobs");
+      console.log("Form Data:", formData);
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || "Error adding job");
       } else {
-        setError(data.message || "Error updating job");
+        const data = await response.json();
+        console.log(data);
+        setSuccessMessage("Job added successfully!");
+        router.push("/admin/jobs");
       }
     } catch (error) {
-      setError("An error occurred while updating job.");
+      console.log(error);
+      setError("An error occurred while adding the job.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white border rounded-md shadow-md">
-      <h2 className="text-2xl font-semibold text-center">Edit Job</h2>
-
-      {error && <p className="text-red-600">{error}</p>}
+    <div className="max-w-xl mx-auto p-4 bg-white">
+      <h2 className="text-2xl font-bold">Add Job</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+        {successMessage && <p className="text-green-600">{successMessage}</p>}
+        {error && <p className="text-red-600 ">{error}</p>}
+
+        <div className="space-y-2">
+          <label htmlFor="title" className="block font-medium">
+            Job Title
+          </label>
+          <input
+            id="title"
+            name="title"
+            type="text"
+            value={formData.title}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
         <div className="space-y-2">
           <label htmlFor="company" className="block font-medium">
             Company
@@ -115,21 +115,6 @@ const EditJob = () => {
             name="location"
             type="text"
             value={formData.location}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-md"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="title" className="block font-medium">
-            Job Title
-          </label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            value={formData.title}
             onChange={handleChange}
             className="w-full p-2 border rounded-md"
             required
@@ -225,13 +210,27 @@ const EditJob = () => {
           />
         </div>
 
-        <div className="text-center">
+        <div className="space-y-2">
+          <label htmlFor="tags" className="block font-medium">
+            Tags (comma separated)
+          </label>
+          <input
+            id="tags"
+            name="tags"
+            type="text"
+            value={formData.tags}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
+        <div className="text-start">
           <button
             type="submit"
-            className="w-full p-3 mt-4 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
+            className="w-fit p-2 px-4 mt-4 text-white bg-green-500 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
             disabled={loading}
           >
-            {loading ? "Updating Job..." : "Update Job"}
+            {loading ? "Adding Job..." : "Add Job"}
           </button>
         </div>
       </form>
@@ -239,4 +238,4 @@ const EditJob = () => {
   );
 };
 
-export default EditJob;
+export default AddJob;

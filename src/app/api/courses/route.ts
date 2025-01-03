@@ -8,12 +8,12 @@ await dbConnect();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, description, category, tableOfContent } = body;
+    const { title, description, category, tags, link, thumbnail, duration } = body;
 
     // Validation
-    if (!title || !description || !category || !Array.isArray(tableOfContent)) {
+    if (!title || !description || !category || !Array.isArray(tags) || !link || !thumbnail || !duration) {
       return NextResponse.json(
-        { message: "All fields are required, including tableOfContent." },
+        { message: "All fields are required, including tags, link, thumbnail, and duration." },
         { status: 400 }
       );
     }
@@ -23,7 +23,10 @@ export async function POST(request: NextRequest) {
       title,
       description,
       category,
-      tableOfContent,
+      tags,
+      link,
+      thumbnail,
+      duration,
     });
 
     return NextResponse.json(newCourse, { status: 201 });
@@ -32,16 +35,26 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Get courses with pagination
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
+    const searchQuery = searchParams.get("search") || "";
 
-    const courses = await Course.find().skip(skip).limit(limit);
-    const totalCourses = await Course.countDocuments();
+    // Build search criteria
+    const searchCriteria = {
+      $or: [
+        { title: { $regex: searchQuery, $options: "i" } },
+        { description: { $regex: searchQuery, $options: "i" } },
+        { tags: { $regex: searchQuery, $options: "i" } },
+        { category: { $regex: searchQuery, $options: "i" } },
+      ],
+    };
+
+    const courses = await Course.find(searchCriteria).skip(skip).limit(limit);
+    const totalCourses = await Course.countDocuments(searchCriteria);
 
     return NextResponse.json({
       data: courses,
