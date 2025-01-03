@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       by,
       approved,
     } = body;
-    
+
     // Validation
     if (
       !company ||
@@ -55,7 +55,8 @@ export async function POST(request: NextRequest) {
       link,
       jobType,
       tags,
-      by,approved
+      by,
+      approved,
     });
 
     return NextResponse.json(newJob, { status: 201 });
@@ -76,18 +77,43 @@ export async function GET(request: NextRequest) {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filters: any = {};
-
+    const status = searchParams.get("status");
+    if (status !== "undefined") {
+      const jobs = await Job.find({
+        approved: status == "null" ? null : status,
+      })
+        .skip(skip)
+        .limit(limit);
+      const totalJobs = await Job.countDocuments({
+        approved: status == "null" ? null : status,
+      });
+      return NextResponse.json({
+        data: jobs,
+        total: totalJobs,
+        page,
+        pages: Math.ceil(totalJobs / limit),
+      });
+    }
     // Apply filters
-    if (searchParams.get("company")) filters.company = searchParams.get("company");
-    if (searchParams.get("location")) filters.location = searchParams.get("location");
-    if (searchParams.get("category")) filters.category = searchParams.get("category");
-    if (searchParams.get("jobType")) filters.jobType = searchParams.get("jobType");
+    if (searchParams.get("company"))
+      filters.company = searchParams.get("company");
+    if (searchParams.get("location"))
+      filters.location = searchParams.get("location");
+    if (searchParams.get("category"))
+      filters.category = searchParams.get("category");
+    if (searchParams.get("jobType"))
+      filters.jobType = searchParams.get("jobType");
     if (searchParams.get("minExperience")) {
-      filters.yearsOfExperience = { $gte: parseInt(searchParams.get("minExperience")!, 10) };
+      filters.yearsOfExperience = {
+        $gte: parseInt(searchParams.get("minExperience")!, 10),
+      };
     }
     if (searchParams.get("maxExperience")) {
       filters.yearsOfExperience = filters.yearsOfExperience || {};
-      filters.yearsOfExperience.$lte = parseInt(searchParams.get("maxExperience")!, 10);
+      filters.yearsOfExperience.$lte = parseInt(
+        searchParams.get("maxExperience")!,
+        10
+      );
     }
 
     // Apply search
@@ -97,7 +123,7 @@ export async function GET(request: NextRequest) {
         { title: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
         { requirement: { $regex: search, $options: "i" } },
-        { qualifications: { $regex: search, $options: "i" } }
+        { qualifications: { $regex: search, $options: "i" } },
       ];
     }
 

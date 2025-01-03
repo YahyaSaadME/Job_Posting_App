@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -9,7 +9,7 @@ const Jobs = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [status, setstatus] = useState<boolean | null | undefined>(undefined);
   const router = useRouter();
 
   const fetchJobs = async () => {
@@ -17,11 +17,14 @@ const Jobs = () => {
     setError("");
 
     try {
-      const response = await fetch(`/api/jobs?page=${page}&search=${search}`);
+      const response = await fetch(
+        `/api/jobs?page=${page}&search=${search}&status=${status}`
+      );
       const data = await response.json();
       if (response.ok) {
         setJobs(data.data);
-        setTotalPages(data.totalPages);
+        setTotalPages(data.pages);
+        setPage(data.page);
       } else {
         setError(data.message || "Failed to load jobs");
       }
@@ -34,7 +37,7 @@ const Jobs = () => {
 
   useEffect(() => {
     fetchJobs();
-  }, [page, search]);
+  }, [page, search, status]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -58,25 +61,24 @@ const Jobs = () => {
       }
     }
   };
-  const handleApproval = async (jobId: string,status:boolean|null) => {
-      try {
-        setLoading(true)
-        const response = await fetch(`/api/jobs/${jobId}`, {
-          method: "PUT",
-          body:JSON.stringify({_id:jobId,approved:status}),
-        });
-        if (response.ok) {
-            fetchJobs();
-        } else {
-          const data = await response.json();
-          setError(data.message || "Error updating job");
-        }
-      } catch (error) {
-        setError("An error occurred while updating the job.");
+  const handleApproval = async (jobId: string, status: boolean | null) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/jobs/${jobId}`, {
+        method: "PUT",
+        body: JSON.stringify({ _id: jobId, approved: status }),
+      });
+      if (response.ok) {
+        fetchJobs();
+      } else {
+        const data = await response.json();
+        setError(data.message || "Error updating job");
       }
-      finally{
-        setLoading(false)
-      }
+    } catch (error) {
+      setError("An error occurred while updating the job.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEdit = (jobId: string) => {
@@ -113,36 +115,55 @@ const Jobs = () => {
             <th className="px-4 py-2 border">Location</th>
             <th className="px-4 py-2 border">Category</th>
             <th className="px-4 py-2 border">By</th>
-            <th className="px-4 py-2 border">Status</th>
+            <th className="px-4 py-2 border">
+              <select
+                name="Status"
+                id=""
+                className="w-fit"
+                onChange={(e) => {
+                  setstatus(
+                    e.target.value as unknown as boolean | null | undefined
+                  );
+                }}
+              >
+                <option value="undefined">All</option>
+                <option value="true">Approved</option>
+                <option value="false">Pending</option>
+                <option value="null">Declined</option>
+              </select>
+            </th>
             <th className="px-4 py-2 border max-w-sm">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {loading ? (
-            <tr>
-              <td colSpan={5} className="text-center py-4">
-                Loading...
-              </td>
-            </tr>
-          ) : jobs?.length > 0 ? (
+          {jobs?.length > 0 ? (
             jobs.map((job: any) => (
               <tr key={job._id}>
-                <td className="px-4 py-2 border">{job.title}</td>
-                <td className="px-4 py-2 border">{job.company}</td>
-                <td className="px-4 py-2 border">{job.location}</td>
-                <td className="px-4 py-2 border">{job.category}</td>
+                <td className="px-4 py-2 border text-justify">{job.title}</td>
+                <td className="px-4 py-2 border text-justify">{job.company}</td>
+                <td className="px-4 py-2 border text-center">{job.location}</td>
+                <td className="px-4 py-2 border text-center">{job.category}</td>
                 <td className="px-4 py-2 border text-center">
                   {!job.by ? "Admin" : job.by}
                 </td>
-                <td className="px-4 py-2 border text-center">{job.approved === true ? "Approved" : job.approved === false ? "Waiting": "Declined"}</td>
-                <td className="px-4 py-2 border max-w-sm">
+                <td className="px-4 py-2 border text-center">
+                  {job.approved === true
+                    ? "Approved"
+                    : job.approved === false
+                    ? "Pending"
+                    : "Declined"}
+                </td>
+                <td className="px-4 py-2 border max-w-sm text-center">
                   <button
-                    onClick={() => handleApproval(job._id,job.approved === true?null:true)}
+                    onClick={() =>
+                      handleApproval(
+                        job._id,
+                        job.approved === true ? null : true
+                      )
+                    }
                     className="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600"
                   >
-                    {
-                      job.approved === true ? "Decline" : "Approve"
-                    }
+                    {job.approved === true ? "Decline" : "Approve"}
                   </button>
                   <button
                     onClick={() => handleEdit(job._id)}
@@ -168,6 +189,8 @@ const Jobs = () => {
           )}
         </tbody>
       </table>
+
+      {loading ? <p className="text-center py-4">Loading...</p> : ""}
 
       <div className="flex justify-between items-center">
         <button

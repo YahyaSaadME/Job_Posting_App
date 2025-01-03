@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useRouter } from "next/router";
+"use client"
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const AddBlog = () => {
   const [title, setTitle] = useState("");
-  const [author, setauthor] = useState("");
+  const [author, setAuthor] = useState("");
   const [category, setCategory] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [tags, setTags] = useState("");
@@ -13,7 +13,9 @@ const AddBlog = () => {
   ]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
   const router = useRouter();
+
   const handleAddSection = () => {
     setTableOfContent([
       ...tableOfContent,
@@ -25,6 +27,40 @@ const AddBlog = () => {
     const updatedContent = [...tableOfContent];
     updatedContent[index][key as keyof (typeof updatedContent)[0]] = value;
     setTableOfContent(updatedContent);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        if (index !== undefined) {
+          handleTableChange(index, "imageLink", data.url); // Assuming the API returns the filename
+        } else {
+          setThumbnail(data.url); // Assuming the API returns the filename
+        }
+        setSuccess("Image uploaded successfully!");
+      } else {
+        setError(data.message || "Error uploading image");
+      }
+    } catch (error) {
+      setError("An error occurred while uploading the image.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +90,7 @@ const AddBlog = () => {
       const data = await response.json();
       setSuccess("Blog added successfully!");
       setTitle("");
-      setauthor("");
+      setAuthor("");
       setCategory("");
       setThumbnail("");
       setTags("");
@@ -87,7 +123,7 @@ const AddBlog = () => {
           <label className="block text-sm font-medium mb-1">Author:</label>
           <textarea
             value={author}
-            onChange={(e) => setauthor(e.target.value)}
+            onChange={(e) => setAuthor(e.target.value)}
             required
             className="w-full border border-gray-300 p-2 rounded"
           />
@@ -105,12 +141,23 @@ const AddBlog = () => {
         <div>
           <label className="block text-sm font-medium mb-1">Thumbnail:</label>
           <input
-            type="text"
-            value={thumbnail}
-            onChange={(e) => setThumbnail(e.target.value)}
-            required
+            type="file"
+            onChange={(e) => handleImageUpload(e)}
             className="w-full border border-gray-300 p-2 rounded"
           />
+          {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
+          {thumbnail && (
+            <div className="mt-2">
+              <img src={window.location.origin + "/images/" + thumbnail} alt="Thumbnail" className="w-full h-auto" />
+              <button
+                type="button"
+                onClick={() => setThumbnail("")}
+                className="mt-2 text-blue-500 underline"
+              >
+                Change Image
+              </button>
+            </div>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Tags (comma separated):</label>
@@ -145,13 +192,22 @@ const AddBlog = () => {
               />
               <label className="block text-sm font-medium mb-1">Image Link:</label>
               <input
-                type="text"
-                value={section.imageLink}
-                onChange={(e) =>
-                  handleTableChange(index, "imageLink", e.target.value)
-                }
+                type="file"
+                onChange={(e) => handleImageUpload(e, index)}
                 className="w-full border border-gray-300 p-2 rounded mb-2"
               />
+              {section.imageLink && (
+                <div className="mt-2">
+                  <img src={window.location.origin + "/images/" + section.imageLink} alt="Section Image" className="w-full h-auto" />
+                  <button
+                    type="button"
+                    onClick={() => handleTableChange(index, "imageLink", "")}
+                    className="mt-2 text-blue-500 underline"
+                  >
+                    Change Image
+                  </button>
+                </div>
+              )}
               <label className="block text-sm font-medium mb-1">Video Link:</label>
               <input
                 type="text"

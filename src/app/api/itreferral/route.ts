@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 
 
 export async function GET(request: NextRequest) {
-  const { pathname, searchParams } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const search = searchParams.get("search") || "";
   const userId = searchParams.get("uid");
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -26,7 +26,25 @@ export async function GET(request: NextRequest) {
         { tags: { $regex: search, $options: "i" } }
       ]
     };
-
+    const status = searchParams.get("status");
+    console.log(status);
+    
+    if (status !== "undefined") {
+      const jobs = await Job.find({by: userId,
+        approved: status == "null" ? null : status,
+      })
+        .skip(skip)
+        .limit(limit);
+      const totalJobs = await Job.countDocuments({by: userId,
+        approved: status == "null" ? null : status,
+      });
+      return NextResponse.json({
+        data: jobs,
+        total: totalJobs,
+        page,
+        pages: Math.ceil(totalJobs / limit),
+      });
+    }
     const totalDocuments = await Job.countDocuments(searchQuery);
     const jobs = await Job.find(searchQuery).skip(skip).limit(limit);
     const totalPages = Math.ceil(totalDocuments / limit);
@@ -45,51 +63,36 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Update a job by ID
-export async function PUT(request: NextRequest) {
+
+export async function POST(request: NextRequest) {
+  await dbConnect();
   try {
     const body = await request.json();
-    const { _id, ...updates } = body;
-    if (!_id) {
-      return NextResponse.json({ message: "Job ID is required." }, { status: 400 });
+    const { company, location, title, description, requirement, category, yearsOfExperience, jobType, link, tags, by } = body;
+
+    if (!company || !location || !title || !description || !requirement || !category || !yearsOfExperience || !jobType || !link || !tags || !by) {
+      return NextResponse.json({ message: "All fields are required." }, { status: 400 });
     }
 
-    const updatedJob = await Job.findByIdAndUpdate(_id, updates, {
-      new: true,
-      runValidators: true,
+    const newJob = new Job({
+      company,
+      location,
+      title,
+      description,
+      requirement,
+      category,
+      yearsOfExperience,
+      jobType,
+      link,
+      tags,
+      by,
+      approved:false
     });
 
-    if (!updatedJob) {
-      return NextResponse.json({ message: "Job not found." }, { status: 404 });
-    }
+    const savedJob = await newJob.save();
 
-    return NextResponse.json(updatedJob, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error updating job", error }, { status: 500 });
-  }
-}
-// Delete a job by ID
-export async function DELETE(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-    const uid = searchParams.get("uid");
-
-    if (!id || !uid) {
-      return NextResponse.json({ message: "Job ID & UID is required." }, { status: 400 });
-    }
-    
-    const JobInfo = await Job.findById(new Types.ObjectId(id));
-    if(JobInfo.by !== uid){
-      return NextResponse.json({ message: "You are not authorized to delete this job." }, { status: 401 });
-    }
-    const deletedJob = await Job.findByIdAndDelete(new Types.ObjectId(id));
-    if (!deletedJob) {
-      return NextResponse.json({ message: "Job not found." }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: "Job deleted successfully." }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error deleting job", error }, { status: 500 });
+    return NextResponse.json({ success: true, data: savedJob }, { status: 201 });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

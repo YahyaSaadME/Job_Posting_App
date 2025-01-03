@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-const UpdateCourse = () => {
+const UpdateBlog = () => {
   const router = useRouter();
   const { blogId } = useParams();
 
-  const [blog, setCourse] = useState({
+  const [blog, setBlog] = useState({
     title: "",
     author: "",
     category: "",
@@ -17,15 +17,17 @@ const UpdateCourse = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchBlog = async () => {
       if (!blogId) return;
       try {
         const response = await fetch(`/api/blogs/${blogId}`);
         if (!response.ok) throw new Error("Failed to fetch blog details");
         const data = await response.json();
-        setCourse({
+        setBlog({
           ...data.data,
           tags: data.data.tags.join(", "), // Convert tags array to comma-separated string
         });
@@ -33,11 +35,11 @@ const UpdateCourse = () => {
         setError((err as Error).message);
       }
     };
-    fetchCourse();
+    fetchBlog();
   }, [blogId]);
 
   const handleFieldChange = (field: string, value: string) => {
-    setCourse((prev) => ({ ...prev, [field]: value }));
+    setBlog((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleTableOfContentChange = (
@@ -45,7 +47,7 @@ const UpdateCourse = () => {
     field: keyof typeof blog.tableOfContent[0],
     value: string
   ) => {
-    setCourse((prev) => {
+    setBlog((prev) => {
       const updatedTableOfContent = [...prev.tableOfContent];
       updatedTableOfContent[index] = {
         ...updatedTableOfContent[index],
@@ -56,7 +58,7 @@ const UpdateCourse = () => {
   };
 
   const addTableOfContent = () => {
-    setCourse((prev) => ({
+    setBlog((prev) => ({
       ...prev,
       tableOfContent: [
         ...prev.tableOfContent,
@@ -68,7 +70,41 @@ const UpdateCourse = () => {
   const removeTableOfContent = (index: number) => {
     const updatedTableOfContent = [...blog.tableOfContent];
     updatedTableOfContent.splice(index, 1);
-    setCourse((prev) => ({ ...prev, tableOfContent: updatedTableOfContent }));
+    setBlog((prev) => ({ ...prev, tableOfContent: updatedTableOfContent }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        if (index !== undefined) {
+          handleTableOfContentChange(index, "imageLink", data.url); // Assuming the API returns the filename
+        } else {
+          setBlog((prev) => ({ ...prev, thumbnail: data.url })); // Assuming the API returns the filename
+        }
+        setSuccess("Image uploaded successfully!");
+      } else {
+        setError(data.message || "Error uploading image");
+      }
+    } catch (error) {
+      setError("An error occurred while uploading the image.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,9 +132,10 @@ const UpdateCourse = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-xl">
       <h1 className="text-2xl font-bold mb-4">Update Blog</h1>
       {error && <p className="text-red-500">{error}</p>}
+      {success && <p className="text-green-500">{success}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">Title</label>
@@ -129,11 +166,23 @@ const UpdateCourse = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Thumbnail</label>
           <input
-            type="text"
+            type="file"
+            onChange={(e) => handleImageUpload(e)}
             className="w-full border rounded px-3 py-2"
-            value={blog.thumbnail}
-            onChange={(e) => handleFieldChange("thumbnail", e.target.value)}
           />
+          {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
+          {blog.thumbnail && (
+            <div className="mt-2">
+              <img src={window.location.origin + "/images/" + blog.thumbnail} alt="Thumbnail" className="w-full h-auto" />
+              <button
+                type="button"
+                onClick={() => handleFieldChange("thumbnail", "")}
+                className="mt-2 text-blue-500 underline"
+              >
+                Change Image
+              </button>
+            </div>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Tags (comma separated)</label>
@@ -148,7 +197,7 @@ const UpdateCourse = () => {
           <label className="block text-sm font-medium mb-2">Table of Content</label>
           {blog.tableOfContent?.map((item, index) => (
             <div key={index} className="mb-4">
-              <div className="flex gap-4 mb-2">
+              <div className="grid grid-cols-2 gap-4 border rounded p-2 mb-2">
                 <input
                   type="text"
                   placeholder="Title"
@@ -164,12 +213,22 @@ const UpdateCourse = () => {
                   onChange={(e) => handleTableOfContentChange(index, "description", e.target.value)}
                 />
                 <input
-                  type="text"
-                  placeholder="Image Link"
+                  type="file"
                   className="flex-1 border rounded px-3 py-2"
-                  value={item.imageLink}
-                  onChange={(e) => handleTableOfContentChange(index, "imageLink", e.target.value)}
+                  onChange={(e) => handleImageUpload(e, index)}
                 />
+                {item.imageLink && (
+                  <div className="mt-2">
+                    <img src={window.location.origin + "/images/" + item.imageLink} alt="Section Image" className="w-full h-auto" />
+                    <button
+                      type="button"
+                      onClick={() => handleTableOfContentChange(index, "imageLink", "")}
+                      className="mt-2 text-blue-500 underline"
+                    >
+                      Change Image
+                    </button>
+                  </div>
+                )}
                 <input
                   type="text"
                   placeholder="Video Link"
@@ -207,4 +266,4 @@ const UpdateCourse = () => {
   );
 };
 
-export default UpdateCourse;
+export default UpdateBlog;

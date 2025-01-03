@@ -18,6 +18,8 @@ const UpdateCourse = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -34,8 +36,40 @@ const UpdateCourse = () => {
     fetchCourse();
   }, [courseId]);
 
-  const handleFieldChange = (field: string, value: string) => {
+  const handleFieldChange = (field: string, value: string | string[]) => {
     setCourse((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log(data);
+      
+      if (response.ok) {
+        setCourse((prev) => ({ ...prev, thumbnail: data.url }));
+        setSuccess("Image uploaded successfully!");
+      } else {
+        setError(data.message || "Error uploading image");
+      }
+    } catch (error) {
+      setError("An error occurred while uploading the image.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -63,6 +97,7 @@ const UpdateCourse = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Update Course</h1>
       {error && <p className="text-red-500">{error}</p>}
+      {success && <p className="text-green-500">{success}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-2">Title</label>
@@ -96,7 +131,7 @@ const UpdateCourse = () => {
             type="text"
             className="w-full border rounded px-3 py-2"
             value={course.tags.join(", ")}
-            onChange={(e:any) => handleFieldChange("tags", e.target.value.split(",").map((tag:any) => tag.trim()))}
+            onChange={(e) => handleFieldChange("tags", e.target.value.split(",").map(tag => tag.trim()))}
           />
         </div>
         <div>
@@ -111,11 +146,23 @@ const UpdateCourse = () => {
         <div>
           <label className="block text-sm font-medium mb-2">Thumbnail</label>
           <input
-            type="text"
+            type="file"
+            onChange={handleImageUpload}
             className="w-full border rounded px-3 py-2"
-            value={course.thumbnail}
-            onChange={(e) => handleFieldChange("thumbnail", e.target.value)}
           />
+          {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
+          {course.thumbnail && (
+            <div className="mt-2">
+              <img src={window.location.origin+"/images/"+course.thumbnail} alt="Thumbnail" className="w-full h-auto" />
+              <button
+                type="button"
+                onClick={() => handleFieldChange("thumbnail", "")}
+                className="mt-2 text-blue-500 underline"
+              >
+                Change Image
+              </button>
+            </div>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium mb-2">Duration</label>

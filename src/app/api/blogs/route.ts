@@ -9,6 +9,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { title, author, category, tableOfContent, thumbnail, tags } = body;
+    console.log(!Array.isArray(tableOfContent));
+    
     // Validation
     if (
       !title ||

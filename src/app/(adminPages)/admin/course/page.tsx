@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -12,16 +12,16 @@ const CourseList = () => {
   const fetchCourses = async (page: number) => {
     setError(null);
     try {
-      const response = await fetch(`/api/courses?page=${page}&limit=5&search=${search}`);
+      const response = await fetch(
+        `/api/courses?page=${page}&limit=5&search=${search}`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch courses");
       }
       const data = await response.json();
-      console.log(data);
-
       setCourses(data.data);
-      setCurrentPage(data.currentPage);
-      setTotalPages(data.totalPages);
+      setCurrentPage(data.page);
+      setTotalPages(data.pages);
     } catch (err) {
       setError((err as Error).message);
     }
@@ -51,7 +51,7 @@ const CourseList = () => {
 
   useEffect(() => {
     fetchCourses(currentPage);
-  }, [currentPage]);
+  }, [currentPage,search]);
 
   return (
     <div className="container min-h-screen mx-auto mt-10 p-6">
@@ -68,7 +68,7 @@ const CourseList = () => {
         type="text"
         value={search}
         onChange={handleSearchChange}
-        placeholder="Search by title or company..."
+        placeholder="Search by title or category..."
         className="w-full p-2 border rounded-md mb-4"
       />
       {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -78,32 +78,42 @@ const CourseList = () => {
             <th className="border  px-4 py-2">Title</th>
             <th className="border  px-4 py-2">Description</th>
             <th className="border  px-4 py-2">Category</th>
-            <th className="border  px-4 py-2">Date</th>
+            <th className="border  px-4 py-2">Duration</th>
+            <th className="border  px-4 py-2">Created At</th>
+            <th className="border  px-4 py-2">Last Updated</th>
             <th className="border  px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {courses?.map((course: any) => (
             <tr key={course._id}>
+              <td className="border  px-4 py-2">{course.title}</td>
+              <td className="border  px-4 py-2">{course.description}</td>
+              <td className="border  px-4 py-2">{course.category}</td>
+              <td className="border  px-4 py-2">{course.duration}</td>
               <td className="border  px-4 py-2">
-                {course.title}
-              </td>
-              <td className="border  px-4 py-2">
-                {course.description}
-              </td>
-                <td className="border  px-4 py-2">
-                  {course.category}
-                </td>
-              <td className="border  px-4 py-2">
-                {new Date(course.createdAt).toLocaleDateString("en-GB", {
+                {new Date(course.createdAt).toLocaleString("en-GB", {
                   day: "2-digit",
-                  month: "2-digit",
+                  month: "long",
                   year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
                 })}
               </td>
               <td className="border  px-4 py-2">
+                {new Date(course.updatedAt).toLocaleString("en-GB", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </td>
+              <td className="border  px-4 py-2 text-center">
                 <button
-                  className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+                  className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 m-1"
                   onClick={() =>
                     routes.push(`/admin/course/edit/${course._id}`)
                   }
@@ -111,7 +121,7 @@ const CourseList = () => {
                   Update
                 </button>
                 <button
-                  className="bg-red-500 mx-2 text-white px-4 py-1 rounded hover:bg-red-600"
+                  className="bg-red-500 mx-2 text-white px-4 py-1 rounded hover:bg-red-600 m-1"
                   onClick={() => handleDelete(course._id)}
                 >
                   Delete

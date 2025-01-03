@@ -12,7 +12,40 @@ const AddCourse = () => {
   const [duration, setDuration] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
   const router = useRouter();
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setUploading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const response = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log(data);
+      
+      if (response.ok) {
+        setThumbnail(data.url);
+        setSuccess("Image uploaded successfully!");
+      } else {
+        setError(data.message || "Error uploading image");
+      }
+    } catch (error) {
+      setError("An error occurred while uploading the image.");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,21 +61,14 @@ const AddCourse = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to add course");
+        const data = await response.json();
+        setError(data.message || "Error adding course");
+      } else {
+        setSuccess("Course added successfully!");
+        router.push("/admin/course");
       }
-
-      const data = await response.json();
-      setSuccess("Course added successfully!");
-      setTitle("");
-      setDescription("");
-      setCategory("");
-      setTags([]);
-      setLink("");
-      setThumbnail("");
-      setDuration("");
-      router.push("/admin/course")
-    } catch (err) {
-      setError((err as Error).message);
+    } catch (error) {
+      setError("An error occurred while adding the course.");
     }
   };
 
@@ -104,12 +130,23 @@ const AddCourse = () => {
         <div>
           <label className="block text-sm font-medium mb-1">Thumbnail:</label>
           <input
-            type="text"
-            value={thumbnail}
-            onChange={(e) => setThumbnail(e.target.value)}
-            required
+            type="file"
+            onChange={handleImageUpload}
             className="w-full border border-gray-300 p-2 rounded"
           />
+          {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
+          {thumbnail && (
+            <div className="mt-2">
+              <img src={window.location.origin+"/images/"+thumbnail} alt="Thumbnail" className="w-full h-auto" />
+              <button
+                type="button"
+                onClick={() => setThumbnail("")}
+                className="mt-2 text-blue-500 underline"
+              >
+                Change Image
+              </button>
+            </div>
+          )}
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Duration:</label>
@@ -123,7 +160,7 @@ const AddCourse = () => {
         </div>
         <button
           type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded"
+          className="w-full bg-blue-500 text-white p-2 rounded"
         >
           Add Course
         </button>
