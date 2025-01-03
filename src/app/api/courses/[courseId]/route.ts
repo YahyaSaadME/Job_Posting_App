@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ success: false, message: 'course not found' }, { status: 404 });
       }
       return NextResponse.json({ success: true, data: course }, { status: 200 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
       return NextResponse.json({ success: false, message: error }, { status: 400 });
     }

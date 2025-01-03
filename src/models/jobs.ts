@@ -1,4 +1,4 @@
-import { Schema, model, Document,models } from "mongoose";
+import { Schema, model, Document, models } from "mongoose";
 
 interface IJob extends Document {
   company: string;
@@ -9,7 +9,10 @@ interface IJob extends Document {
   category: string;
   yearsOfExperience: number;
   jobType: string;
-  link:string;
+  link: string;
+  qualifications: string; // New field
+  companySummary: string; // New field
+  companyImgLink : string
 }
 
 const jobSchema = new Schema<IJob>(
@@ -22,7 +25,7 @@ const jobSchema = new Schema<IJob>(
       type: String,
       required: true,
     },
-    link:{
+    link: {
       type: String,
       required: true,
     },
@@ -50,7 +53,21 @@ const jobSchema = new Schema<IJob>(
       type: String,
       required: true,
     },
+    qualifications: {
+      type: String,
+      required: true,
+    },
+    companySummary: {
+      type: String,
+      required: true,
+    },
+    companyImgLink : {
+      type: String,
+      required: true,
+    }
+    
   },
+ 
   {
     timestamps: true,
   }

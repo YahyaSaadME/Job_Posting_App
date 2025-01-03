@@ -17,18 +17,20 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative bg-cover bg-center h-screen flex items-center justify-center">
-  {/* Green Half Border */}
-  <div className="absolute top-0 left-0 w-36 h-80 border-l-4 border-t-4 border-green-500"></div>
+    
+
+
 
   {/* Content */}
-  <div className="text-center px-6">
+  <div className="text-center px-6 pl-9 half-border flex flex-col items-start justify-center">
     <h1 className="text-4xl font-bold text-white mb-4">
       Elevate Your Cybersecurity Career
     </h1>
-    <p className="text-lg text-white mb-8">
+    <p className="text-xl text-white mb-8">
       Discover a world of elite cybersecurity roles and connect with leading companies driving digital protection forward.
     </p>
-    <button className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700">
+    
+    <button className="bg-blue-600 h-14 w-48 text-white py-2 px-6 rounded-md hover:bg-blue-700">
       Browse Jobs
     </button>
   </div>

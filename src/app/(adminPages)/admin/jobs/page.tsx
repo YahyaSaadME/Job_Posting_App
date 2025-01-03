@@ -1,5 +1,6 @@
+'use client'
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const AddJob = () => {
   const [formData, setFormData] = useState({
@@ -10,8 +11,11 @@ const AddJob = () => {
     requirement: "",
     category: "",
     yearsOfExperience: 0,
-    link:"",
+    link: "",
     jobType: "",
+    qualifications: "", // New field
+    companySummary: "", 
+    companyImgLink : ""
   });
 
   const [error, setError] = useState<string | null>(null);
@@ -22,12 +26,13 @@ const AddJob = () => {
   // Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    console.log(`Updating ${name} with value: ${value}`);
     setFormData({
       ...formData,
       [name]: value,
     });
   };
-
+  
   // Handle submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,20 +48,18 @@ const AddJob = () => {
         },
         body: JSON.stringify(formData),
       });
-
+      console.log("Form Data:", formData);
       if (!response.ok) {
         const data = await response.json();
         setError(data.message || "Error adding job");
       } else {
         const data = await response.json();
         console.log(data);
-        
         setSuccessMessage("Job added successfully!");
-        router.push("/admin/jobs"); // Navigate to the job listings page or any other page
+        router.push("/admin/jobs");
       }
     } catch (error) {
       console.log(error);
-      
       setError("An error occurred while adding the job.");
     } finally {
       setLoading(false);
@@ -115,6 +118,19 @@ const AddJob = () => {
             required
           />
         </div>
+        <label htmlFor="location" className="block font-medium">
+            company image link
+          </label>
+        <input
+  id="companyImgLink"
+  name="companyImgLink" // Matches formData.companyImgLink
+  type="text"
+  value={formData.companyImgLink}
+  onChange={handleChange}
+  className="w-full p-2 border rounded-md"
+  required
+/>
+
         <div className="space-y-2">
           <label htmlFor="link" className="block font-medium">
             Job Link
@@ -200,6 +216,40 @@ const AddJob = () => {
             value={formData.jobType}
             onChange={handleChange}
             className="w-full p-2 border rounded-md"
+            required
+          />
+        </div>
+
+
+
+        {/* Qualifications Field */}
+        <div className="space-y-2">
+          <label htmlFor="qualifications" className="block font-medium">
+            Qualifications
+          </label>
+          <textarea
+            id="qualifications"
+            name="qualifications"
+            value={formData.qualifications}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            rows={4}
+            required
+          />
+        </div>
+
+        {/* Company Summary Field */}
+        <div className="space-y-2">
+          <label htmlFor="companySummary" className="block font-medium">
+            Company Summary
+          </label>
+          <textarea
+            id="companySummary"
+            name="companySummary"
+            value={formData.companySummary}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
+            rows={4}
             required
           />
         </div>
