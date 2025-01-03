@@ -15,6 +15,7 @@ const EditJob = () => {
     yearsOfExperience: 0,
     jobType: "",
     link: "",
+    tags: "",
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -64,7 +65,10 @@ const EditJob = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          tags: formData.tags.split(",").map(tag => tag.trim()), // Convert tags to array of strings
+        }),
       });
 
       const data = await response.json();
@@ -85,8 +89,8 @@ const EditJob = () => {
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white border rounded-md shadow-md">
-      <h2 className="text-2xl font-semibold text-center">Edit Job</h2>
+    <div className="max-w-xl mx-auto p-4 bg-white">
+      <h2 className="text-2xl font-bold">Edit Job</h2>
 
       {error && <p className="text-red-600">{error}</p>}
 
@@ -222,6 +226,20 @@ const EditJob = () => {
             onChange={handleChange}
             className="w-full p-2 border rounded-md"
             required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="tags" className="block font-medium">
+            Tags (comma separated)
+          </label>
+          <input
+            id="tags"
+            name="tags"
+            type="text"
+            value={formData.tags}
+            onChange={handleChange}
+            className="w-full p-2 border rounded-md"
           />
         </div>
 

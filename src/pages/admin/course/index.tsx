@@ -6,28 +6,32 @@ const CourseList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState<string | null>(null);
-  const routes = useRouter()
+  const [search, setSearch] = useState("");
+  const routes = useRouter();
   const fetchCourses = async (page: number) => {
     setError(null);
     try {
-      const response = await fetch(`/api/courses?page=${page}&limit=5`);
+      const response = await fetch(`/api/courses?page=${page}&limit=5&search=${search}`);
       if (!response.ok) {
         throw new Error("Failed to fetch courses");
       }
       const data = await response.json();
       console.log(data);
-      
+
       setCourses(data.data);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
     } catch (err) {
-      
       setError((err as Error).message);
     }
   };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setCurrentPage(1); // Reset to page 1 when search changes
+  };
 
   const handleDelete = async (courseId: string) => {
-    if (confirm("Are you sure you want to delete this job?")) {
+    if (confirm("Are you sure you want to delete this course?")) {
       try {
         const response = await fetch(`/api/courses/${courseId}`, {
           method: "DELETE",
@@ -36,10 +40,10 @@ const CourseList = () => {
           setCourses(courses.filter((course: any) => course._id !== courseId));
         } else {
           const data = await response.json();
-          setError(data.message || "Error deleting job");
+          setError(data.message || "Error deleting course");
         }
       } catch (error) {
-        setError("An error occurred while deleting the job.");
+        setError("An error occurred while deleting the course.");
       }
     }
   };
@@ -49,31 +53,59 @@ const CourseList = () => {
   }, [currentPage]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container min-h-screen mx-auto mt-10 p-6">
       <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-bold mb-4">Course List</h1>
-      <button onClick={e=>routes.push("/admin/course/add")} className="bg-black p-2 text-white rounded-md">Add Courses</button>
+        <h1 className="text-2xl font-bold mb-4">Course List</h1>
+        <button
+          onClick={(e) => routes.push("/admin/course/add")}
+          className="bg-black p-2 text-white rounded-md"
+        >
+          Add Courses
+        </button>
       </div>
+      <input
+        type="text"
+        value={search}
+        onChange={handleSearchChange}
+        placeholder="Search by title or company..."
+        className="w-full p-2 border rounded-md mb-4"
+      />
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <table className="table-auto w-full border-collapse border border-gray-300">
+      <table className="min-w-full table-auto border-collapse mb-6">
         <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-gray-300 px-4 py-2">Title</th>
-            <th className="border border-gray-300 px-4 py-2">Description</th>
-            <th className="border border-gray-300 px-4 py-2">Category</th>
-            <th className="border border-gray-300 px-4 py-2">Actions</th>
+          <tr>
+            <th className="border  px-4 py-2">Title</th>
+            <th className="border  px-4 py-2">Description</th>
+            <th className="border  px-4 py-2">Category</th>
+            <th className="border  px-4 py-2">Date</th>
+            <th className="border  px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {courses?.map((course:any) => (
-            <tr key={course._id} className="hover:bg-gray-100">
-              <td className="border border-gray-300 px-4 py-2">{course.title}</td>
-              <td className="border border-gray-300 px-4 py-2">{course.description}</td>
-              <td className="border border-gray-300 px-4 py-2">{course.category}</td>
-              <td className="border border-gray-300 px-4 py-2">
+          {courses?.map((course: any) => (
+            <tr key={course._id}>
+              <td className="border  px-4 py-2">
+                {course.title}
+              </td>
+              <td className="border  px-4 py-2">
+                {course.description}
+              </td>
+                <td className="border  px-4 py-2">
+                  {course.category}
+                </td>
+              <td className="border  px-4 py-2">
+                {new Date(course.createdAt).toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
+              </td>
+              <td className="border  px-4 py-2">
                 <button
                   className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                  onClick={() => routes.push(`/admin/course/edit/${course._id}`)}
+                  onClick={() =>
+                    routes.push(`/admin/course/edit/${course._id}`)
+                  }
                 >
                   Update
                 </button>

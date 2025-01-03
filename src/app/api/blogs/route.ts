@@ -8,13 +8,21 @@ await dbConnect();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { title, author, category, tableOfContent } = body;
-    console.log(body);
-    
+    const { title, author, category, tableOfContent, thumbnail, tags } = body;
     // Validation
-    if (!title || !author || !category || !Array.isArray(tableOfContent)) {
+    if (
+      !title ||
+      !author ||
+      !category ||
+      !Array.isArray(tableOfContent) ||
+      !thumbnail ||
+      !Array.isArray(tags)
+    ) {
       return NextResponse.json(
-        { message: "All fields are required, including tableOfContent." },
+        {
+          message:
+            "All fields are required, including tableOfContent, thumbnail, and tags.",
+        },
         { status: 400 }
       );
     }
@@ -25,6 +33,8 @@ export async function POST(request: NextRequest) {
       author,
       category,
       tableOfContent,
+      thumbnail,
+      tags,
     });
 
     return NextResponse.json(newBlog, { status: 201 });
@@ -45,15 +55,26 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
+    const searchQuery = searchParams.get("search") || "";
 
-    const blog = await Blog.find().skip(skip).limit(limit);
-    const totalCourses = await Blog.countDocuments();
+    // Build search criteria
+    const searchCriteria = {
+      $or: [
+        { title: { $regex: searchQuery, $options: "i" } },
+        { description: { $regex: searchQuery, $options: "i" } },
+        { tags: { $regex: searchQuery, $options: "i" } },
+        { category: { $regex: searchQuery, $options: "i" } },
+      ],
+    };
+
+    const blog = await Blog.find(searchCriteria).skip(skip).limit(limit);
+    const totalBlogs = await Blog.countDocuments(searchCriteria);
 
     return NextResponse.json({
       data: blog,
-      total: totalCourses,
+      total: totalBlogs,
       page,
-      pages: Math.ceil(totalCourses / limit),
+      pages: Math.ceil(totalBlogs / limit),
     });
   } catch (error) {
     return NextResponse.json(

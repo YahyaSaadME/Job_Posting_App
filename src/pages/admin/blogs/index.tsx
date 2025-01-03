@@ -6,11 +6,12 @@ const BlogsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
   const routes = useRouter()
   const fetchCourses = async (page: number) => {
     setError(null);
     try {
-      const response = await fetch(`/api/blogs?page=${page}&limit=5`);
+      const response = await fetch(`/api/blogs?page=${page}&limit=5&search=${search}`);
       if (!response.ok) {
         throw new Error("Failed to fetch blogs");
       }
@@ -20,10 +21,16 @@ const BlogsList = () => {
       setCourses(data.data);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
+
     } catch (err) {
       
       setError((err as Error).message);
     }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+    setCurrentPage(1); // Reset to page 1 when search changes
   };
 
   const handleDelete = async (blogId: string) => {
@@ -49,28 +56,35 @@ const BlogsList = () => {
   }, [currentPage]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container min-h-screen mx-auto mt-10 p-6">
       <div className="flex justify-between items-center">
       <h1 className="text-2xl font-bold mb-4">Blog List</h1>
       <button onClick={e=>routes.push("/admin/blogs/add")} className="bg-black p-2 text-white rounded-md">Add Blogs</button>
       </div>
+      <input
+        type="text"
+        value={search}
+        onChange={handleSearchChange}
+        placeholder="Search by title or company..."
+        className="w-full p-2 border rounded-md mb-4"
+      />
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      <table className="table-auto w-full border-collapse border border-gray-300">
+      <table className="table-auto w-full border-collapse border ">
         <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-gray-300 px-4 py-2">Title</th>
-            <th className="border border-gray-300 px-4 py-2">Author</th>
-            <th className="border border-gray-300 px-4 py-2">Category</th>
-            <th className="border border-gray-300 px-4 py-2">Actions</th>
+          <tr>
+            <th className="border  px-4 py-2">Title</th>
+            <th className="border  px-4 py-2">Author</th>
+            <th className="border  px-4 py-2">Category</th>
+            <th className="border  px-4 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {blogs?.map((blog:any) => (
-            <tr key={blog._id} className="hover:bg-gray-100">
-              <td className="border border-gray-300 px-4 py-2">{blog.title}</td>
-              <td className="border border-gray-300 px-4 py-2">{blog.author}</td>
-              <td className="border border-gray-300 px-4 py-2">{blog.category}</td>
-              <td className="border border-gray-300 px-4 py-2">
+            <tr key={blog._id}>
+              <td className="border  px-4 py-2">{blog.title}</td>
+              <td className="border  px-4 py-2">{blog.author}</td>
+              <td className="border  px-4 py-2">{blog.category}</td>
+              <td className="border  px-4 py-2">
                 <button
                   className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
                   onClick={() => routes.push(`/admin/blogs/edit/${blog._id}`)}

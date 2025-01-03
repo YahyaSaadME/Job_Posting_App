@@ -10,6 +10,9 @@ interface IJob extends Document {
   yearsOfExperience: number;
   jobType: string;
   link:string;
+  tags:string[];
+  by:Schema.Types.ObjectId|null;
+  approved:boolean|null;
 }
 
 const jobSchema = new Schema<IJob>(
@@ -50,6 +53,14 @@ const jobSchema = new Schema<IJob>(
       type: String,
       required: true,
     },
+    tags:[{
+      type: String,
+    }],
+    by:{
+      type: Schema.Types.ObjectId,
+      default:null
+    },
+    approved:{type:Boolean,default:null}
   },
   {
     timestamps: true,

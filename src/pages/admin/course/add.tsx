@@ -5,24 +5,13 @@ const AddCourse = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [tableOfContent, setTableOfContent] = useState([
-    { title: "", description: "", imageLink: "", videoLink: "" },
-  ]);
+  const [tags, setTags] = useState<string[]>([]);
+  const [link, setLink] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [duration, setDuration] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
-  const handleAddSection = () => {
-    setTableOfContent([
-      ...tableOfContent,
-      { title: "", description: "", imageLink: "", videoLink: "" },
-    ]);
-  };
-
-  const handleTableChange = (index: number, key: string, value: string) => {
-    const updatedContent = [...tableOfContent];
-    updatedContent[index][key as keyof (typeof updatedContent)[0]] = value;
-    setTableOfContent(updatedContent);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +23,7 @@ const AddCourse = () => {
       const response = await fetch("/api/courses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, category, tableOfContent }),
+        body: JSON.stringify({ title, description, category, tags, link, thumbnail, duration }),
       });
 
       if (!response.ok) {
@@ -46,9 +35,10 @@ const AddCourse = () => {
       setTitle("");
       setDescription("");
       setCategory("");
-      setTableOfContent([
-        { title: "", description: "", imageLink: "", videoLink: "" },
-      ]);
+      setTags([]);
+      setLink("");
+      setThumbnail("");
+      setDuration("");
       router.push("/admin/course")
     } catch (err) {
       setError((err as Error).message);
@@ -91,55 +81,44 @@ const AddCourse = () => {
           />
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-2">Table of Content:</h3>
-          {tableOfContent.map((section, index) => (
-            <div key={index} className="mb-4 p-4 border border-gray-200 rounded">
-              <label className="block text-sm font-medium mb-1">Section Title:</label>
-              <input
-                type="text"
-                value={section.title}
-                onChange={(e) =>
-                  handleTableChange(index, "title", e.target.value)
-                }
-                required
-                className="w-full border border-gray-300 p-2 rounded mb-2"
-              />
-              <label className="block text-sm font-medium mb-1">Section Description:</label>
-              <textarea
-                value={section.description}
-                onChange={(e) =>
-                  handleTableChange(index, "description", e.target.value)
-                }
-                required
-                className="w-full border border-gray-300 p-2 rounded mb-2"
-              />
-              <label className="block text-sm font-medium mb-1">Image Link:</label>
-              <input
-                type="text"
-                value={section.imageLink}
-                onChange={(e) =>
-                  handleTableChange(index, "imageLink", e.target.value)
-                }
-                className="w-full border border-gray-300 p-2 rounded mb-2"
-              />
-              <label className="block text-sm font-medium mb-1">Video Link:</label>
-              <input
-                type="text"
-                value={section.videoLink}
-                onChange={(e) =>
-                  handleTableChange(index, "videoLink", e.target.value)
-                }
-                className="w-full border border-gray-300 p-2 rounded"
-              />
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={handleAddSection}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            Add Section
-          </button>
+          <label className="block text-sm font-medium mb-1">Tags:</label>
+          <input
+            type="text"
+            value={tags.join(", ")}
+            onChange={(e) => setTags(e.target.value.split(",").map(tag => tag.trim()))}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Link:</label>
+          <input
+            type="text"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Thumbnail:</label>
+          <input
+            type="text"
+            value={thumbnail}
+            onChange={(e) => setThumbnail(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Duration:</label>
+          <input
+            type="text"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
         </div>
         <button
           type="submit"

@@ -16,19 +16,11 @@ export async function POST(request: NextRequest) {
       category,
       yearsOfExperience,
       link,
-      jobType
+      jobType,
+      tags,
+      by,
+      approved,
     } = body;
-    console.log((
-      !company ||
-      !location ||
-      !title ||
-      !description ||
-      !requirement ||
-      !category ||
-      !yearsOfExperience ||
-      !link ||
-      !jobType
-    ));
     
     // Validation
     if (
@@ -40,7 +32,9 @@ export async function POST(request: NextRequest) {
       !category ||
       yearsOfExperience == null ||
       !link ||
-      !jobType
+      !jobType ||
+      !tags ||
+      approved == undefined
     ) {
       return NextResponse.json(
         { message: "All fields are required." },
@@ -59,6 +53,8 @@ export async function POST(request: NextRequest) {
       yearsOfExperience,
       link,
       jobType,
+      tags,
+      by,approved
     });
 
     return NextResponse.json(newJob, { status: 201 });
@@ -66,7 +62,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Error creating job", error }, { status: 500 });
   }
 }
-
 // Get jobs with filters, search, and pagination
 export async function GET(request: NextRequest) {
 

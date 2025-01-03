@@ -57,6 +57,26 @@ const Jobs = () => {
       }
     }
   };
+  const handleApproval = async (jobId: string,status:boolean|null) => {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/jobs/${jobId}`, {
+          method: "PUT",
+          body:JSON.stringify({_id:jobId,approved:status}),
+        });
+        if (response.ok) {
+            fetchJobs();
+        } else {
+          const data = await response.json();
+          setError(data.message || "Error updating job");
+        }
+      } catch (error) {
+        setError("An error occurred while updating the job.");
+      }
+      finally{
+        setLoading(false)
+      }
+  };
 
   const handleEdit = (jobId: string) => {
     router.push(`/admin/jobs/edit/${jobId}`);
@@ -64,12 +84,15 @@ const Jobs = () => {
 
   return (
     <div className="container min-h-screen mx-auto mt-10 p-6">
-     <div className="flex justify-between items-center">
-      <h1 className="text-3xl font-semibold mb-4">Job Listings</h1>
-      <button onClick={e=>router.push("/admin/jobs/add")} className="p-2 bg-black text-white rounded-md hover:bg-gray-800">
-        Add Job
-      </button>
-     </div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold mb-4">Job Listings</h1>
+        <button
+          onClick={(e) => router.push("/admin/jobs/add")}
+          className="p-2 bg-black text-white rounded-md hover:bg-gray-800"
+        >
+          Add Job
+        </button>
+      </div>
 
       <input
         type="text"
@@ -84,11 +107,13 @@ const Jobs = () => {
       <table className="min-w-full table-auto border-collapse mb-6">
         <thead>
           <tr>
-            <th className="px-4 py-2 border">Company</th>
             <th className="px-4 py-2 border">Title</th>
+            <th className="px-4 py-2 border">Company</th>
             <th className="px-4 py-2 border">Location</th>
             <th className="px-4 py-2 border">Category</th>
-            <th className="px-4 py-2 border">Actions</th>
+            <th className="px-4 py-2 border">By</th>
+            <th className="px-4 py-2 border">Status</th>
+            <th className="px-4 py-2 border max-w-sm">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -101,20 +126,32 @@ const Jobs = () => {
           ) : jobs?.length > 0 ? (
             jobs.map((job: any) => (
               <tr key={job._id}>
-                <td className="px-4 py-2 border">{job.company}</td>
                 <td className="px-4 py-2 border">{job.title}</td>
+                <td className="px-4 py-2 border">{job.company}</td>
                 <td className="px-4 py-2 border">{job.location}</td>
                 <td className="px-4 py-2 border">{job.category}</td>
-                <td className="px-4 py-2 border">
+                <td className="px-4 py-2 border text-center">
+                  {!job.by ? "Admin" : job.by}
+                </td>
+                <td className="px-4 py-2 border text-center">{job.approved === true ? "Approved" : job.approved === false ? "Waiting": "Declined"}</td>
+                <td className="px-4 py-2 border max-w-sm">
+                  <button
+                    onClick={() => handleApproval(job._id,job.approved === true?null:true)}
+                    className="bg-yellow-500 text-white px-4 py-1 rounded hover:bg-yellow-600"
+                  >
+                    {
+                      job.approved === true ? "Decline" : "Approve"
+                    }
+                  </button>
                   <button
                     onClick={() => handleEdit(job._id)}
-                    className="text-blue-600 hover:underline mr-4"
+                    className="bg-blue-500  mx-2 text-white px-4 py-1 rounded hover:bg-blue-600"
                   >
-                    Edit
+                    Update
                   </button>
                   <button
                     onClick={() => handleDelete(job._id)}
-                    className="text-red-600 hover:underline"
+                    className="bg-red-500 mx-2 text-white px-4 py-1 rounded hover:bg-red-600"
                   >
                     Delete
                   </button>

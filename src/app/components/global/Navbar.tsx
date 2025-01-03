@@ -4,7 +4,7 @@ import React from 'react'
 const Navbar = () => {
   return (
  
-        <header className="bg-white shadow-md">
+        <header className="bg-white shadow-md fixed z-20 w-full top-0 left-0">
           <div className="container mx-auto pl-4 flex justify-between items-center h-16">
             {/* Logo Section */}
             <div className="flex items-center space-x-2">
@@ -21,7 +21,7 @@ const Navbar = () => {
             Blog
           </a>
           <a href="/udemy-free-course" className="text-gray-600 hover:text-gray-900">
-            Udemy Free Course
+            Free Courses
           </a>
           <a href="/companies" className="text-gray-600 hover:text-gray-900">
             Companies

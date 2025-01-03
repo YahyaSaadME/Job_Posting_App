@@ -5,6 +5,8 @@ const AddBlog = () => {
   const [title, setTitle] = useState("");
   const [author, setauthor] = useState("");
   const [category, setCategory] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [tags, setTags] = useState("");
   const [tableOfContent, setTableOfContent] = useState([
     { title: "", description: "", imageLink: "", videoLink: "" },
   ]);
@@ -34,7 +36,14 @@ const AddBlog = () => {
       const response = await fetch("/api/blogs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, author, category, tableOfContent }),
+        body: JSON.stringify({
+          title,
+          author,
+          category,
+          thumbnail,
+          tags: tags.split(",").map(tag => tag.trim()),
+          tableOfContent,
+        }),
       });
 
       if (!response.ok) {
@@ -46,10 +55,12 @@ const AddBlog = () => {
       setTitle("");
       setauthor("");
       setCategory("");
+      setThumbnail("");
+      setTags("");
       setTableOfContent([
         { title: "", description: "", imageLink: "", videoLink: "" },
       ]);
-      router.push("/admin/blogs")
+      router.push("/admin/blogs");
     } catch (err) {
       setError((err as Error).message);
     }
@@ -72,7 +83,7 @@ const AddBlog = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">author:</label>
+          <label className="block text-sm font-medium mb-1">Author:</label>
           <textarea
             value={author}
             onChange={(e) => setauthor(e.target.value)}
@@ -91,6 +102,26 @@ const AddBlog = () => {
           />
         </div>
         <div>
+          <label className="block text-sm font-medium mb-1">Thumbnail:</label>
+          <input
+            type="text"
+            value={thumbnail}
+            onChange={(e) => setThumbnail(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Tags (comma separated):</label>
+          <input
+            type="text"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
           <h3 className="text-lg font-semibold mb-2">Table of Content:</h3>
           {tableOfContent.map((section, index) => (
             <div key={index} className="mb-4 p-4 border border-gray-200 rounded">
@@ -101,16 +132,14 @@ const AddBlog = () => {
                 onChange={(e) =>
                   handleTableChange(index, "title", e.target.value)
                 }
-                required
                 className="w-full border border-gray-300 p-2 rounded mb-2"
               />
-              <label className="block text-sm font-medium mb-1">Section author:</label>
+              <label className="block text-sm font-medium mb-1">Section Description:</label>
               <textarea
                 value={section.description}
                 onChange={(e) =>
                   handleTableChange(index, "description", e.target.value)
                 }
-                required
                 className="w-full border border-gray-300 p-2 rounded mb-2"
               />
               <label className="block text-sm font-medium mb-1">Image Link:</label>

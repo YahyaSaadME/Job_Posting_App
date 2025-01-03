@@ -9,6 +9,8 @@ const UpdateCourse = () => {
     title: "",
     author: "",
     category: "",
+    thumbnail: "",
+    tags: "",
     tableOfContent: [{ title: "", description: "", imageLink: "", videoLink: "" }],
   });
 
@@ -22,7 +24,10 @@ const UpdateCourse = () => {
         const response = await fetch(`/api/blogs/${blogId}`);
         if (!response.ok) throw new Error("Failed to fetch blog details");
         const data = await response.json();
-        setCourse(data.data);
+        setCourse({
+          ...data.data,
+          tags: data.data.tags.join(", "), // Convert tags array to comma-separated string
+        });
       } catch (err) {
         setError((err as Error).message);
       }
@@ -74,14 +79,15 @@ const UpdateCourse = () => {
       const response = await fetch(`/api/blogs/${blogId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(blog),
+        body: JSON.stringify({
+          ...blog,
+          tags: blog.tags.split(",").map(tag => tag.trim()), // Convert comma-separated string to array
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to update blog");
       router.push("/admin/blogs");
     } catch (err) {
-        console.log(err);
-        
       setError((err as Error).message);
     } finally {
       setLoading(false);
@@ -103,7 +109,7 @@ const UpdateCourse = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">author</label>
+          <label className="block text-sm font-medium mb-2">Author</label>
           <textarea
             className="w-full border rounded px-3 py-2"
             value={blog.author}
@@ -120,6 +126,24 @@ const UpdateCourse = () => {
           />
         </div>
         <div>
+          <label className="block text-sm font-medium mb-2">Thumbnail</label>
+          <input
+            type="text"
+            className="w-full border rounded px-3 py-2"
+            value={blog.thumbnail}
+            onChange={(e) => handleFieldChange("thumbnail", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Tags (comma separated)</label>
+          <input
+            type="text"
+            className="w-full border rounded px-3 py-2"
+            value={blog.tags}
+            onChange={(e) => handleFieldChange("tags", e.target.value)}
+          />
+        </div>
+        <div>
           <label className="block text-sm font-medium mb-2">Table of Content</label>
           {blog.tableOfContent?.map((item, index) => (
             <div key={index} className="mb-4">
@@ -133,7 +157,7 @@ const UpdateCourse = () => {
                 />
                 <input
                   type="text"
-                  placeholder="author"
+                  placeholder="Description"
                   className="flex-1 border rounded px-3 py-2"
                   value={item.description}
                   onChange={(e) => handleTableOfContentChange(index, "description", e.target.value)}
