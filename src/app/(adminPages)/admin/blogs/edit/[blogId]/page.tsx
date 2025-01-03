@@ -1,9 +1,10 @@
+"use client"
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useParams, useRouter } from "next/navigation";
 
 const UpdateCourse = () => {
   const router = useRouter();
-  const { blogId } = router.query;
+  const { blogId } = useParams();
 
   const [blog, setCourse] = useState({
     title: "",

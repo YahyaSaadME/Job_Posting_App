@@ -26,13 +26,8 @@ const Navbar = () => {
           <a href="/blog" className="text-gray-600 hover:text-gray-900">
             Blog
           </a>
-<<<<<<< HEAD
-          <a href="/udemy-free-course" className="text-gray-600 hover:text-gray-900">
-            Free Courses
-=======
           <a href="/udemyCourses" className="text-gray-600 hover:text-gray-900">
             Udemy Free Course
->>>>>>> fdd7102a363bdd0178cc9ee5f58a221b7238e883
           </a>
           <a href="/companies" className="text-gray-600 hover:text-gray-900">
             Companies
