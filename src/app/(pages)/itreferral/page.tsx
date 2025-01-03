@@ -1,10 +1,25 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function page() {
-  const [id, setid] = useState<string>("");
+  const [id, setid] = useState<string>("uyghj");
   const [search, setsearch] = useState<string>("");
 
+  const handleSearch = async() => {
+        try {
+            const req = await fetch(`/api/itreferral?id=${id}`);
+            const res = await req.json();
+            console.log(res);
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+  }
+  useEffect(() => {
+    handleSearch();
+  }, [search]);
+  
   return (
     <div>
       <div className="flex">
