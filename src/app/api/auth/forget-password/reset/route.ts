@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/utils/dbConnect';
-import UserModel from '@/models/User';
-import bcrypt from 'bcrypt';
+import {User} from '@/models/User';
+import bcrypt from 'bcryptjs';
 
 export async function POST(req: NextRequest) {
   const { token, password, confirmPassword } = await req.json();
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
 
     if (password === confirmPassword) {
-      const user = await UserModel.findOne({
+      const user = await User.findOne({
         resetPasswordToken: token,
         resetPasswordExpiresAt: { $gt: Date.now() }, // Check if the token is still valid
       });

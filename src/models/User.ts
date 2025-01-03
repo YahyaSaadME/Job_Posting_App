@@ -1,42 +1,33 @@
+// Named export for User model
 import mongoose, { Model } from "mongoose";
 
-
-
-// Define interface for user
 export interface IUser {
   name?: string;
   email: string;
   password: string;
-  type: string;
+  type: "jobSeeker" | "jobPoster";
   otp?: string;
   otpExpiresAt?: Date;
-  role: "jobSeeker" ;
-  verified: string;
+  verified: "approved" | "declined";
   resetPasswordToken?: string;
   resetPasswordExpiresAt?: Date;
 }
 
-// Define the User schema
 const UserSchema = new mongoose.Schema<IUser>({
   name: { type: String },
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   type: {
     type: String,
-    enum: ["jobSeeker"],
+    enum: ["jobSeeker", "jobPoster"],
     default: "jobSeeker",
   },
-  verified: { type: String, enum:['approved','declined'] },
+  verified: { type: String, enum: ["approved", "declined"], default: "declined" },
   resetPasswordToken: { type: String },
   resetPasswordExpiresAt: { type: Date },
   otp: { type: String },
-  otpExpiresAt: { type: Date }
-
+  otpExpiresAt: { type: Date },
 });
 
-// Use type assertion to ensure the model has the correct type
-export const User: Model<IUser> =
-  (mongoose.models.User as Model<IUser>) ||
-  mongoose.model<IUser>("User", UserSchema);
-
-export default User;
+// Named export
+export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);

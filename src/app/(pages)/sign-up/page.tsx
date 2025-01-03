@@ -1,155 +1,328 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
 
-import { useState } from "react";
+export default function SignUp() {
+  const [name, setName] = useState("");
+  const [type, setType] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showOtpDialog, setShowOtpDialog] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
-export default function Register() {
-  const [formData, setFormData] = useState({
-    email: "",
-    name: "",
-    password: "",
-    type: "jobSeeker", // Default to "jobSeeker"
-    mobile: "",
-    // otp: "",
-  });
+  const router = useRouter();
 
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const validatePassword = (pass: string) => {
+    const hasLength = pass.length >= 8 && pass.length <= 15;
+    const hasLowerUpper = /(?=.*[a-z])(?=.*[A-Z])/.test(pass);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pass);
+    return hasLength && hasLowerUpper && hasSpecial;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  const handleSendOtp = async () => {
+    if (
+      !email ||
+      !validatePassword(password) ||
+      !name ||
+      !phone ||
+      !termsAccepted
+    ) {
+      setError("Please fill all fields correctly and accept terms.");
+      return;
+    }
 
+    setIsLoading(true);
     try {
-      const res = await fetch("/api/auth/sign-up", {
+      const response = await fetch("api/auth/sign-up/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (res.ok) {
-        setMessage("Registration successful!");
+      if (data) {
+        setShowOtpDialog(true);
+        setError("");
       } else {
-        setMessage(data.message || "Something went wrong!");
+        setError(data.message || "Failed to send OTP");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("An error occurred. Please try again.");
+    } catch (err) {
+      console.log(err);
+      setError("Failed to send OTP. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    if (!otp) {
+      setError("Please enter the OTP");
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const response = await fetch("api/auth/sign-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          password,
+          type,
+          mobile: phone,
+          otp,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        router.push("/signin");
+      } else {
+        setError(data.message || "Sign up failed");
+      }
+    } catch (err) {
+      setError("Sign up failed. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6 text-center">Register</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full mt-1 p-2 border rounded-md"
-            />
+    <div className="min-h-screen bg-gray-200/80 ">
+      <div className="mx-auto max-w-[1200px] p-4 h-auto flex items-center ">
+        <div className="w-full flex shadow-lg rounded-lg overflow-hidden bg-white">
+          <div className="hidden sm:flex bg-emerald-500 p-12 relative">
+            <div className="text-white text-4xl font-medium max-w-md mt-24">
+              Discover world best online courses here. 24k online course is
+              waiting for you
+            </div>
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+              {/* <Image
+                src="/images/authBanner.png"
+                alt="Student studying"
+                width={300}
+                height={300}
+                priority
+                className="mx-auto z-10 h-auto w-auto"
+              /> */}
+            </div>
           </div>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full mt-1 p-2 border rounded-md"
-            />
+
+          <div className="flex-1 p-12 bg-white">
+            <div className="max-w-md mx-auto">
+              <h1 className="text-3xl font-bold mb-2">Create an Account</h1>
+              <p className="mb-8">
+                Already have an account?{" "}
+                <button
+                  onClick={() => router.push("/signin")}
+                  className="text-emerald-500 hover:underline"
+                >
+                  Sign In
+                </button>
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <label className="block">
+                     Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full p-3 border rounded-lg"
+                    placeholder="First Name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="role"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Select Account Type <span className="text-red-500">*</span>
+                  </label>
+                  <Select
+                    value={type}
+                    onValueChange={(value: React.SetStateAction<string>) => setType(value)}
+                  >
+                    <SelectTrigger className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="jobSeeker">Job seeker</SelectItem>
+                      <SelectItem value="jobPoster">Job poster</SelectItem>
+        
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-3 border rounded-lg"
+                    placeholder="Enter your Email"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block">
+                    Phone <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full p-3 border rounded-lg"
+                    placeholder="Enter your Phone Number"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block">
+                    Password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-3 border rounded-lg"
+                    placeholder="Enter your Password"
+                    required
+                  />
+                  <div className="bg-slate-900 p-4 rounded-lg text-sm space-y-1">
+                    <div className="text-blue-400">Password Should be:</div>
+                    <ul className="text-blue-400 space-y-1 list-disc pl-4">
+                      <li>At least 8 characters (and up to 15 characters)</li>
+                      <li>At least one lowercase and uppercase character</li>
+                      <li>
+                        Inclusion of at least one special character, e.g., ! @ #
+                        ?
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor="terms" className="text-sm">
+                    By clicking Sign up, I agree that I have read and accepted
+                    the{" "}
+                    <a
+                      href="/terms"
+                      className="text-emerald-500 hover:underline"
+                    >
+                      Terms of Use
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href="/privacy"
+                      className="text-emerald-500 hover:underline"
+                    >
+                      Privacy Policy
+                    </a>
+                    .
+                  </label>
+                </div>
+
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <button
+                  type="button"
+                  onClick={handleSendOtp}
+                  disabled={isLoading}
+                  className="w-full bg-emerald-500 text-white p-3 rounded-lg hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Processing...</span>
+                    </div>
+                  ) : (
+                    "Sign Up"
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="w-full mt-1 p-2 border rounded-md"
-            />
-          </div>
-          <div>
-            <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
-              Mobile
-            </label>
-            <input
-              type="text"
-              name="mobile"
-              id="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-              className="w-full mt-1 p-2 border rounded-md"
-            />
-          </div>
-          {/* <div>
-            <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
-              OTP
-            </label>
-            <input
-              type="text"
-              name="otp"
-              id="otp"
-              value={formData.otp}
-              onChange={handleChange}
-              required
-              className="w-full mt-1 p-2 border rounded-md"
-            />
-          </div> */}
-          <div>
-            <label htmlFor="type" className="block text-sm font-medium text-gray-700">
-              User Type
-            </label>
-            <select
-              name="type"
-              id="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="w-full mt-1 p-2 border rounded-md"
-            >
-              <option value="jobSeeker">Job Seeker</option>
-              <option value="recruiter">Recruiter</option>
-            </select>
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
-        {message && <p className="mt-4 text-center text-sm text-red-500">{message}</p>}
+
+          <Dialog open={showOtpDialog} onOpenChange={setShowOtpDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Enter OTP</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <p>Please enter the OTP sent to your email address.</p>
+                <input
+                  type="text"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  className="w-full p-3 border rounded-lg"
+                  placeholder="Enter OTP"
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading || !otp}
+                  className="w-full bg-emerald-500 text-white p-3 rounded-lg hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Verifying...</span>
+                    </div>
+                  ) : (
+                    "Verify & Sign Up"
+                  )}
+                </button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
     </div>
   );

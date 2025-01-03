@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react'
-
+import { useSession , signOut} from 'next-auth/react';
 const Navbar = () => {
+  const {data : session} = useSession()
+  const handleLogout = () => {
+    signOut({
+      callbackUrl: "/", // Redirect to the homepage or any other URL after logout
+    });
+  };
   return (
  
         <header className="bg-white shadow-md fixed z-20 w-full top-0 left-0">
@@ -20,8 +26,13 @@ const Navbar = () => {
           <a href="/blog" className="text-gray-600 hover:text-gray-900">
             Blog
           </a>
+<<<<<<< HEAD
           <a href="/udemy-free-course" className="text-gray-600 hover:text-gray-900">
             Free Courses
+=======
+          <a href="/udemyCourses" className="text-gray-600 hover:text-gray-900">
+            Udemy Free Course
+>>>>>>> fdd7102a363bdd0178cc9ee5f58a221b7238e883
           </a>
           <a href="/companies" className="text-gray-600 hover:text-gray-900">
             Companies
@@ -67,12 +78,23 @@ const Navbar = () => {
     
             {/* Button */}
             <div>
+
+              {
+              session?.user ? (<>
+              
               <a
+                href="#"
+                className="bg-red-700 text-white px-10 py-6 font-bold  text-md hover:bg-red-800 transition"
+             onClick={handleLogout} >
+                Log Out →
+              </a></>) : ( <><a
                 href="#"
                 className="bg-blue-600 text-white px-10 py-6 font-bold  text-md hover:bg-blue-700 transition"
               >
                 Explore Jobs →
-              </a>
+              </a></>)
+              }
+              
             </div>
           </div>
         </header>

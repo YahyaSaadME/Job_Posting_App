@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Job from "../../../models/jobs"; // Adjust the path to your model
 import dbConnect from "../../../utils/dbConnect";
+
 await dbConnect();
 
 // Create a new job posting
@@ -59,29 +60,21 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(newJob, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ message: "Error creating job", error }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error creating job", error },
+      { status: 500 }
+    );
   }
 }
 // Get jobs with filters, search, and pagination
 export async function GET(request: NextRequest) {
-
-  // curl -X POST -H "Content-Type: application/json" -d '{
-  //   "company": "TechCorp",
-  //   "location": "San Francisco",
-  //   "title": "Software Engineer",
-  //   "description": "Develop cutting-edge software.",
-  //   "requirement": "Proficiency in JavaScript.",
-  //   "category": "Engineering",
-  //   "yearsOfExperience": 3,
-  //   "jobType": "Full-time"
-  // }' http://localhost:3000/api/jobs
-  
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filters: any = {};
 
     // Apply filters
@@ -104,6 +97,7 @@ export async function GET(request: NextRequest) {
         { title: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
         { requirement: { $regex: search, $options: "i" } },
+        { qualifications: { $regex: search, $options: "i" } }
       ];
     }
 
@@ -117,6 +111,9 @@ export async function GET(request: NextRequest) {
       pages: Math.ceil(totalJobs / limit),
     });
   } catch (error) {
-    return NextResponse.json({ message: "Error fetching jobs", error }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error fetching jobs", error },
+      { status: 500 }
+    );
   }
 }

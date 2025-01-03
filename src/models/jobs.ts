@@ -1,4 +1,4 @@
-import { Schema, model, Document,models } from "mongoose";
+import { Schema, model, Document, models } from "mongoose";
 
 interface IJob extends Document {
   company: string;
@@ -25,7 +25,7 @@ const jobSchema = new Schema<IJob>(
       type: String,
       required: true,
     },
-    link:{
+    link: {
       type: String,
       required: true,
     },
@@ -62,6 +62,7 @@ const jobSchema = new Schema<IJob>(
     },
     approved:{type:Boolean,default:null}
   },
+ 
   {
     timestamps: true,
   }
