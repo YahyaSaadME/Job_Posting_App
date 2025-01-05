@@ -10,7 +10,7 @@ import UdemyCourseCard from "./components/homeScreen/UdemyCourseCard";
 import Footer from "./components/global/Footer";
 export default function page() {
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
+    <div className="font-[family-name:var(--font-geist-sans)] max-sm:overflow-y-hidden ">
       <Navbar/>
        <HeroSection/>
        <DataSection/>

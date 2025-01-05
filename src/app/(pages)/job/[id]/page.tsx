@@ -11,7 +11,7 @@ import { useParams } from 'next/navigation';
 import { IoTimeSharp } from "react-icons/io5";
 import { useSession } from 'next-auth/react';
 import {useRouter} from 'next/navigation';
-
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface Job {
     id: string;
@@ -34,7 +34,7 @@ interface Job {
   
   
 const Page = () => {
-
+  const [loading , setLoading] = useState(false)
     const params = useParams();
     const jobId = params.id;
 
@@ -43,11 +43,12 @@ const [job , setJob] = useState<Job>();
   useEffect(() => {
     const getJobs = async () => {
       try {
+        setLoading(true)
         const response = await fetch(`/api/jobs/${jobId}`);
         const data = await response.json();
 
         setJob(data?.data)
-     
+        setLoading(false)
       } catch (error) {
         console.error("Error fetching jobs:", error);
       
@@ -66,11 +67,130 @@ const [job , setJob] = useState<Job>();
     }
 
   return (
-    <>
+    <div>
    
       <Navbar />
-<div className=''>
+
+      <div className="mt-16 md:hidden ">
+        {loading ? (
+          <div className="flex  justify-center items-center h-screen w-full">
+            <ClipLoader color={'#2563eb'} size={60} />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
+            <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+              {/* Job Title */}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <img
+                  src={job?.companyImgLink}
+                  className="h-20 w-24 object-fill rounded"
+                />
+                <div>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                    {job?.title}
+                  </h1>
+                  <div className="flex flex-col sm:flex-row text-gray-600 mt-2">
+                    <span className="inline-flex items-center mr-4">
+                      <FaLocationDot className="mr-2" /> {job?.location}
+                    </span>
+                    <span className="inline-flex items-center">
+                      <IoTimeSharp className="mr-2" /> {job?.jobType}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Job Description */}
+              <h2 className="text-lg sm:text-xl font-bold text-gray-700 mt-6">Job Description</h2>
+              <p className="text-gray-600 mt-2">{job?.description}</p>
+
+              {/* Responsibility */}
+              <h2 className="text-lg sm:text-xl font-bold text-gray-700 mt-6">Responsibility</h2>
+              <ul className="list-disc list-inside text-gray-600 mt-2">
+                {Array.isArray(job?.requirement)
+                  ? job?.requirement.map((item, index) => <li key={index}>{item.trim()}</li>)
+                  : typeof job?.requirement === 'string'
+                  ? job?.requirement
+                      .split(',')
+                      .map((item, index) => <li key={index}>{item.trim()}</li>)
+                  : null}
+              </ul>
+
+              {/* Qualifications */}
+              <h2 className="text-lg sm:text-xl font-bold text-gray-700 mt-6">Qualifications</h2>
+              <ul className="list-disc list-inside text-gray-600 mt-2">
+                {Array.isArray(job?.qualifications)
+                  ? job?.qualifications.map((item, index) => <li key={index}>{item.trim()}</li>)
+                  : typeof job?.qualifications === 'string'
+                  ? job?.qualifications
+                      .split(',')
+                      .map((item, index) => <li key={index}>{item.trim()}</li>)
+                  : null}
+              </ul>
+            </div>
+
+            {/* Job Summary and Company Summary */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-4 max-w-4xl mx-auto">
+              <div className="bg-blue-100 p-4 rounded-md shadow-md flex-1">
+                <h2 className="text-lg font-bold text-blue-700">Job Summary</h2>
+                <ul className="text-gray-600 mt-2">
+                  {session?.user ? (
+                    <button
+                      className="bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-700"
+                      onClick={() => applyForJob(job?.link)}
+                    >
+                      Apply Now
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-700"
+                      onClick={() => router.push('/signin')}
+                    >
+                      Sign In to Apply
+                    </button>
+                  )}
+                  <li className="inline-flex items-center mt-2">
+                    <IoTimeSharp className="mr-2" /> Job Type: {job?.jobType}
+                  </li>
+                  <li className="inline-flex items-center mt-2">
+                    <FaLocationDot className="mr-2" /> Location: {job?.location}
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-blue-100 p-4 rounded-md shadow-md flex-1">
+                <h2 className="text-lg font-bold text-blue-700">Company Summary</h2>
+                <p className="text-gray-600 mt-2">{job?.companySummary}</p>
+              </div>
+            </div>
+          </div>
+        ) } 
+
+
+</div>        
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div className='max-sm:hidden mt-16'>
+{loading ? (
+      <div className="flex  justify-center items-center h-screen w-full">
+        <ClipLoader color={"#2563eb"} size={60} />
+      </div>
+    ) : (
       <div>
       <div className= "flex gap-4 bg-gray-100 min-h-screen p-4">
       <div className="w-[95rem] flex flex-col gap-4 mx-auto bg-white shadow-md rounded-lg p-8 mt-4" >
@@ -189,9 +309,16 @@ const [job , setJob] = useState<Job>();
       </div>
     </div>
     </div>
-    </div>
-    </>
-  );
-};
+    
+ 
+    )
+  }
+   </div>
+ </div>
+  )
+}
+
 
 export default Page;
+
+  

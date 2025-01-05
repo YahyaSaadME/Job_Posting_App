@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Link from 'next/link';
 import React from 'react';
 
 const courses = [
@@ -46,9 +47,9 @@ const CourseCard = ({ title, description }: any) => {
 
 const  UdemyCourseCard = () => {
   return (
-    <div className="container mx-auto py-16 p-10">
+    <div className="container mx-auto py-10 p-6">
         <div className='flex  gap-14 mb-8'>
-      <h2 className="text-2xl font-bold ">Courses </h2> <p className="text-gray-500 text-lg">View All →</p>
+      <h2 className="text-2xl font-bold ">Courses </h2> <Link href={"/free-courses"}> <p className="text-gray-500 text-lg mt-1">View All →</p></Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {courses.map((course) => (

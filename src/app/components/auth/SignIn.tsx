@@ -38,7 +38,11 @@ export default function SignIn() {
         return;
       }
 
-    
+          alert({
+            variant: "success",
+            title: "SuccessFully Log In !! ",
+            description: "you have logged in.",
+          })
           router.push("/");
       
     } catch (error) {
@@ -56,7 +60,7 @@ export default function SignIn() {
     <div className="min-h-screen bg-gray-200/80">
       <div className="mx-auto max-w-[1200px] p-4 h-screen flex items-center">
         <div className="w-full flex shadow-lg rounded-lg overflow-hidden bg-white">
-          <div className="hidden md:flex md:w-1/2 bg-emerald-500 p-12 flex-col text-white relative">
+          <div className="hidden md:flex md:w-1/2 bg-blue-500 p-12 flex-col text-white relative">
             <div className="max-w-md">
               <h2 className="text-3xl font-medium leading-tight mb-6">
                 Discover world best online courses here. 24k online course is
@@ -78,8 +82,8 @@ export default function SignIn() {
                 <p className="text-gray-600">
                   New User?{" "}
                   <Link
-                    href="/signup"
-                    className="text-emerald-600 hover:text-emerald-500"
+                    href="/sign-up"
+                    className="text-blue-600 hover:text-blue-500"
                   >
                     Create an Account
                   </Link>
@@ -101,7 +105,7 @@ export default function SignIn() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     placeholder="Enter your Email"
                     required
                   />
@@ -121,7 +125,7 @@ export default function SignIn() {
                     onChange={(e) =>
                       setFormData({ ...formData, password: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     placeholder="Enter your Password"
                     required
                   />
@@ -131,7 +135,7 @@ export default function SignIn() {
                 <div className="flex justify-end">
                   <Link
                     href="/forgot-password"
-                    className="text-sm text-emerald-600 hover:text-emerald-500"
+                    className="text-sm text-blue-600 hover:text-blue-500"
                   >
                     Forgot Password?
                   </Link>
@@ -140,7 +144,7 @@ export default function SignIn() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 disabled:opacity-70"
+                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 disabled:opacity-70"
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
                 </button>

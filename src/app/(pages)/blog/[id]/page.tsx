@@ -1,8 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { AiFillLike } from "react-icons/ai";
+import ClipLoader from "react-spinners/ClipLoader";
 export default function page() {
   type TableOfContentItem = {
     title: string;
@@ -26,9 +31,11 @@ export default function page() {
   const [data, setdata] = useState<Blog>();
   const [BlogBar, setBlogBar] = useState<number>();
   const [liked, setLiked] = useState<boolean>(false);
+ const [loading ,setLoading] = useState(false)
 
   const handleBlog = async (id: string) => {
     try {
+      setLoading(true)
       const req = await fetch(`/api/blogs/${id}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -37,6 +44,7 @@ export default function page() {
       if (req.ok) {
         setdata(res.data);
       }
+      setLoading(false)
     } catch (e) {}
   };
   const scrollToSection = (sectionId: string) => {
@@ -47,9 +55,11 @@ export default function page() {
   };
   useEffect(() => {
     if (window.location.pathname) {
+      setLoading(true)
       const ID = window.location.pathname.replace("/blog/", "");
       setId(ID);
       handleBlog(ID);
+      setLoading(false)
     }
 
     window.addEventListener("scroll", () => {
@@ -83,13 +93,19 @@ export default function page() {
         style={{ width: `${BlogBar}%` }}
       ></div>
       <Navbar />
+
+      {loading ? (
+      <div className="flex justify-center items-center h-screen w-full">
+        <ClipLoader color={"#2563eb"} size={60} />
+      </div>
+    ) : (
       <div className="flex min-h-screen px-6 w-full mt-20">
         <div className="lg:w-1/3 flex justify-end mt-2">
           <div className="flex flex-col items-center max-h-fit">
             <span className="text-gray-600">{data?.likes}</span>
             <div
-              className={`p-4 border-2 shadow-md cursor-pointer border-gray-900 max-h-fit rounded-full ${
-                liked ? "bg-black text-white" : "bg-white text-black"
+              className={`p-4 border-2 shadow-md cursor-pointer border-blue-700 max-h-fit rounded-full ${
+                liked ? "bg-blue-600 text-white" : "bg-white text-blue-600"
               }`}
               onClick={(e) => {
                 handleLike();
@@ -175,8 +191,13 @@ export default function page() {
               )}
             </ul>
           </div>
+      
         </div>
+       
       </div>
+     
+    )}
+        <Footer/>
     </div>
   );
 }
