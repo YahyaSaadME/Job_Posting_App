@@ -26,15 +26,14 @@ export async function PUT(request: NextRequest) {
     await dbConnect();
     const body = await request.json();
     const { _id, ...updates } = body;
+    console.log(updates);
+    
     if (!_id) {
       return NextResponse.json({ message: "blog ID is required." }, { status: 400 });
     }
 
-    const updatedBlog = await Blogs.findByIdAndUpdate(_id, updates, {
-      new: true,
-      runValidators: true,
-    });
-
+    const updatedBlog = await Blogs.findByIdAndUpdate(_id, {$set :updates}, { new: true, runValidators: true });
+    
     if (!updatedBlog) {
       return NextResponse.json({ message: "blog not found." }, { status: 404 });
     }

@@ -1,37 +1,14 @@
 import { Schema, model, Document, models } from "mongoose";
 
-interface ITableOfContent {
-  title: string;
-  description: string;
-  imageLink?: string;
-  videoLink?: string;
-}
-
 interface ICourse extends Document {
   title: string;
   description: string;
   category: string;
-  tableOfContent: ITableOfContent[];
+  tags: string[];
+  link: string;
+  thumbnail: string;
+  duration:string;
 }
-
-const tableOfContentSchema = new Schema<ITableOfContent>({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  imageLink: {
-    type: String,
-    required: false,
-  },
-  videoLink: {
-    type: String,
-    required: false,
-  },
-});
 
 const courseSchema = new Schema<ICourse>(
   {
@@ -47,10 +24,23 @@ const courseSchema = new Schema<ICourse>(
       type: String,
       required: true,
     },
-    tableOfContent: {
-      type: [tableOfContentSchema],
+    tags: {
+      type: [String],
       required: true,
     },
+    link: {
+      type: String,
+      required: true,
+    },
+    thumbnail: {
+      type: String,
+      required: true,
+    },
+    duration: {
+      type: String,
+      required: true,
+    },
+    
   },
   {
     timestamps: true,

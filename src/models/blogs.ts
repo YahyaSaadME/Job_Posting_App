@@ -1,4 +1,4 @@
-import { Schema, model, models,Document } from "mongoose";
+import { Schema, model, models, Document } from "mongoose";
 
 interface ITableOfContent {
   title: string;
@@ -11,25 +11,24 @@ interface IBlog extends Document {
   title: string;
   author: string;
   category: string;
+  thumbnail: string;
+  tags: string[];
+  likes:number;
   tableOfContent: ITableOfContent[];
 }
 
 const tableOfContentSchema = new Schema<ITableOfContent>({
   title: {
     type: String,
-    required: true,
   },
   description: {
     type: String,
-    required: true,
   },
   imageLink: {
     type: String,
-    required: false,
   },
   videoLink: {
     type: String,
-    required: false,
   },
 });
 
@@ -43,14 +42,23 @@ const blogSchema = new Schema<IBlog>(
       type: String,
       required: true,
     },
+    thumbnail: {
+      type: String,
+      required: true,
+    },
+    tags: [
+      {
+        type: String,
+      },
+    ],
     category: {
       type: String,
       required: true,
     },
     tableOfContent: {
       type: [tableOfContentSchema],
-      required: true,
     },
+    likes:{type:Number,default:0},
   },
   {
     timestamps: true,

@@ -9,10 +9,10 @@ interface IJob extends Document {
   category: string;
   yearsOfExperience: number;
   jobType: string;
-  link: string;
-  qualifications: string; // New field
-  companySummary: string; // New field
-  companyImgLink : string
+  link:string;
+  tags:string[];
+  by:Schema.Types.ObjectId|null;
+  approved:boolean|null;
 }
 
 const jobSchema = new Schema<IJob>(
@@ -53,19 +53,14 @@ const jobSchema = new Schema<IJob>(
       type: String,
       required: true,
     },
-    qualifications: {
+    tags:[{
       type: String,
-      required: true,
+    }],
+    by:{
+      type: Schema.Types.ObjectId,
+      default:null
     },
-    companySummary: {
-      type: String,
-      required: true,
-    },
-    companyImgLink : {
-      type: String,
-      required: true,
-    }
-    
+    approved:{type:Boolean,default:null}
   },
  
   {
