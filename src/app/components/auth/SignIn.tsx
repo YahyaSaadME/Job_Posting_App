@@ -38,20 +38,9 @@ export default function SignIn() {
         return;
       }
 
-      // Redirect based on role
-      switch (formData.role) {
-        case "student":
-          router.push("/dashboard");
-          break;
-        case "studentPartner":
-          router.push("/dashboard");
-          break;
-        case "organizationRepresentative":
-          router.push("/dashboard/organization");
-          break;
-        default:
-          router.push("/dashboard");
-      }
+    
+          router.push("/");
+      
     } catch (error) {
       alert({
         variant: "destructive",

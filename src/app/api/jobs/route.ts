@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import Job from "../../../models/jobs"; // Adjust the path to your model
 import dbConnect from "../../../utils/dbConnect";
@@ -77,7 +78,6 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10", 10);
     const skip = (page - 1) * limit;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const filters: any = {};
 
     // Apply filters
@@ -107,8 +107,14 @@ export async function GET(request: NextRequest) {
     const jobs = await Job.find(filters).skip(skip).limit(limit);
     const totalJobs = await Job.countDocuments(filters);
 
+    // Map _id to id
+    const formattedJobs = jobs.map(job => ({
+      ...job.toObject(),
+      id: job._id.toString(),
+    }));
+
     return NextResponse.json({
-      data: jobs,
+      data: formattedJobs,
       total: totalJobs,
       page,
       pages: Math.ceil(totalJobs / limit),
