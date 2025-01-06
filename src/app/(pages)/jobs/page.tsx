@@ -108,6 +108,7 @@ const Page = () => {
       <Navbar />
       <div className=" max-sm:mt-20  max-sm:p-2">
       {/* Show Filters Button for Mobile */}
+      that button is not working will fix it asap  you can use that red text which is working
       <button
         className="md:hidden flex items-center gap-2 text-blue-600 font-semibold"
         onClick={() => setIsOpen(!isOpen)}
@@ -119,7 +120,11 @@ const Page = () => {
           ▼
         </motion.span>
         {isOpen ? "Hide Filters" : "Show Filters"}
+
+        
       </button>
+
+
 
       {/* Filter Section */}
       <motion.div
@@ -179,7 +184,7 @@ const Page = () => {
         ))}
       </motion.div>
     </div>
-
+   
 
       <div className="min-h-screen mt-12 bg-gray-100 p-6 flex flex-col md:flex-row">
   {/* Filter Section */}
@@ -236,13 +241,19 @@ const Page = () => {
   </div>
 
   {/* Job Listings Section */}
+  <span className='text-red-800'   onClick={() => setIsOpen(!isOpen)}>
+      {isOpen ? (`hide filter`) : (`show filter `)}  
+      </span>
   <div className="w-full flex-grow bg-white p-4 rounded-lg shadow-md">
+ 
     {loading ? (
       <div className="flex justify-center items-center h-screen w-full">
         <ClipLoader color={"#2563eb"} size={60} />
       </div>
     ) : (
+      
       <div className="grid grid-cols-1 gap-6">
+    
         {filteredJobs.length > 0 ? (
        filteredJobs.map((job: {
         companyImgLink: string | undefined;
@@ -301,9 +312,9 @@ const Page = () => {
         </div>
       
       
-          ))
+         ))
         ) : (
-          <p className="text-center text-gray-700">No jobs match your filters.</p>
+          <p className="text-center text-gray-700">No jobs match your filters.    </p>
         )}
       </div>
     )}
