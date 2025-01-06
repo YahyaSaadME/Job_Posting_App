@@ -32,9 +32,7 @@ const Page = () => {
   return (
     <>
     <Navbar/>
-    {
-      console.log("courses is" , courses)
-    }
+
     {loading ? (
       <div className="flex justify-center items-center h-screen w-full">
         <ClipLoader color={"#2563eb"} size={60} />

@@ -39,9 +39,6 @@ const page = () => {
     };
   return (
     <>
-      {
-        console.log(blogs)
-      }
    <Navbar/>
     <div className="p-3 m-2 mt-20">
     
