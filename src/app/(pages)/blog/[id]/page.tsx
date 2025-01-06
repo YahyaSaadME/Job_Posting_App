@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
-import { useRouter } from "next/router";
+
 import React, { useEffect, useState } from "react";
 import { AiFillLike } from "react-icons/ai";
 import ClipLoader from "react-spinners/ClipLoader";

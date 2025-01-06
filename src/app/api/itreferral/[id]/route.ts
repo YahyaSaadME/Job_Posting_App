@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/utils/dbConnect"; // MongoDB connection utility
 import Job from "../../../../models/jobs"; // Job model
