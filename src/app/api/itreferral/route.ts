@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '../../../utils/dbConnect';
 import Job from '../../../models/jobs';
-import { Types } from 'mongoose';
+
 
 
 export async function GET(request: NextRequest) {

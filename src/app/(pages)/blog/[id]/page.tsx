@@ -1,10 +1,12 @@
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
-import { useRouter } from "next/router";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { AiFillLike } from "react-icons/ai";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -85,15 +87,19 @@ export default function page() {
       setLiked(!liked);
     } catch (e) {}
   };
-
+  
+    console.log(data)
+  
   return (
+ 
     <div>
+  
       <div
         className="h-1 bg-blue-600 fixed top-0 left-0 z-30"
         style={{ width: `${BlogBar}%` }}
       ></div>
       <Navbar />
-
+  
       {loading ? (
       <div className="flex justify-center items-center h-screen w-full">
         <ClipLoader color={"#2563eb"} size={60} />
@@ -120,18 +126,22 @@ export default function page() {
           <p className="font-medium text-md">
             {data?.author} -{" "}
             <span className="font-medium text-xs">
-              {data?.createdAt
-                ? new Date(data.createdAt).toLocaleString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })
-                : "Date not available"}
+            {data?.createdAt
+  ? new Date(data.createdAt).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  :  (<></>)
+}
+
+
             </span>
           </p>
           {
             data?.thumbnail?
-            <img src={data?.thumbnail} className="w-full rounded-md shadow-md" alt="" />:""
+            <Image src={`${window.location.origin}/images/${data?.thumbnail}`} className="w-full rounded-md shadow-md" alt="img"   width={200}
+            height={150}/>:""
           }
           
           <div>
@@ -146,7 +156,8 @@ export default function page() {
                     dangerouslySetInnerHTML={{ __html: item.description }}
                   ></p>
                   {item.imageLink ? (
-                    <img src={item.imageLink} className="my-2 rounded-md shadow-md" />
+                    <img               src={`${window.location.origin}/images/${item.imageLink}`}
+                    className="my-2 w-full p-8 h-72 rounded-md shadow-md" />
                   ) : (
                     ""
                   )}
@@ -156,7 +167,7 @@ export default function page() {
                       style={{ paddingBottom: "56.25%" }}
                     >
                       <iframe
-                        src={`https://www.youtube.com/embed/UrsmFxEIp5k`}
+                        src={item.videoLink}
                         title="YouTube video player"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

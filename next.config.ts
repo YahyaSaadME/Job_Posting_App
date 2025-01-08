@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     return config;
   },
   images: {
-    domains: ["storage.googleapis.com"], // If hosting externally
+    unoptimized: true,
   },
 };
 
