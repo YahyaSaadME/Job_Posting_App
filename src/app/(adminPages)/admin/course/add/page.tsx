@@ -8,7 +8,7 @@ const AddCourse = () => {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [link, setLink] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [thumbnail, setThumbnail] = useState("image-1736147122488.png");
   const [duration, setDuration] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);

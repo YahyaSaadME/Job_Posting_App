@@ -39,13 +39,13 @@ const Page = () => {
     <div className="container mx-auto px-4 py-8 mt-20">
       <h1 className="text-3xl font-bold mb-6 text-center"> Free Courses</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course: { id: React.Key | null | undefined; image: string | undefined; title: any |string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; link: string | undefined; }) => (
+        {courses.map((course: { id: React.Key | null | undefined; thumbnail: string | undefined; title: any |string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; link: string | undefined; }) => (
           <div
             key={course.id}
             className="border rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition"
           >
             <img
-              src={course.image}
+              src={`${window.location.origin}/images/`+course.thumbnail}
               alt={course.title}
               className="w-full h-40 object-fill"
             />
