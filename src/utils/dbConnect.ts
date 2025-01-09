@@ -1,4 +1,4 @@
-/* eslint-disable no-var */
+// filepath: /D:/Intern ships/Freelance/Job_Posting_App/src/utils/dbConnect.ts
 import mongoose from "mongoose";
 
 // Declare the cache to hold the Mongoose connection and promise for re-use
@@ -13,8 +13,15 @@ declare global {
 
 global.mongooseCache = global.mongooseCache || { conn: null, promise: null };
 
-// Get MongoDB URI
-const url = process.env.MONGODB_URI!;
+// Get MongoDB URI from environment variables
+const user = encodeURIComponent(process.env.MONGODB_USER || '');
+const password = encodeURIComponent(process.env.MONGODB_PASS || '');
+
+const url = `mongodb+srv://${user}:${password}@textapps.er1hajy.mongodb.net/?retryWrites=true&w=majority&appName=TextApps`;
+
+if (!url) {
+  throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
+}
 
 async function dbConnect() {
   if (global.mongooseCache.conn) {

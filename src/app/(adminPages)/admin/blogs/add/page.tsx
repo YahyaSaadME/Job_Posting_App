@@ -8,7 +8,7 @@ const AddBlog = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const [thumbnail, setThumbnail] = useState("image-1736147122488.png");
   const [tags, setTags] = useState("");
   const [tableOfContent, setTableOfContent] = useState([
     { title: "", description: "", imageLink: "", videoLink: "" },

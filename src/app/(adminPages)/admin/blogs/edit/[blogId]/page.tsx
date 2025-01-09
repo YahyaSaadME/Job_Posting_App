@@ -12,7 +12,7 @@ const UpdateBlog = () => {
     title: "",
     author: "",
     category: "",
-    thumbnail: "",
+    thumbnail: "image-1736147122488.png",
     tags: "",
     tableOfContent: [{ title: "", description: "", imageLink: "", videoLink: "" }],
   });
