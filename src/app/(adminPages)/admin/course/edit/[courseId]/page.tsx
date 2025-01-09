@@ -14,7 +14,7 @@ const UpdateCourse = () => {
     category: "",
     tags: [],
     link: "",
-    thumbnail: "",
+    thumbnail: "image-1736147122488.png",
     duration: "",
   });
 
