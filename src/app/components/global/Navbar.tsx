@@ -109,7 +109,7 @@ import { signOut, useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { RiWhatsappFill } from "react-icons/ri";
 import Link from "next/link";
-
+import { toast ,  ToastContainer  } from 'react-toastify';
 
 
 const Navbar: React.FC = () => {
@@ -136,12 +136,16 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogout = () => {
+  
     signOut({ callbackUrl: "/" });
+    toast("loged out !!")
   };
 
   return (
     <header className="bg-white shadow-md fixed z-20 w-full  top-0 left-0 h-16">
-      <div className="container mx-auto  flex justify-between items-center h-16">
+< ToastContainer />
+      
+      <div className="container mx-auto  flex justify-between  items-center h-16">
         {/* Logo */}
         <Link href="/">
           <img
@@ -152,7 +156,7 @@ const Navbar: React.FC = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center space-x-7">
+        <nav className="hidden md:flex items-center space-x-9">
           <Link href="/blogs" className="text-gray-600 hover:text-gray-900">
             Blog
           </Link>
@@ -168,7 +172,7 @@ const Navbar: React.FC = () => {
         </nav>
 
         {/* Social Icons */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-6">
         <Link href="#" className="text-gray-600 hover:text-gray-900">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M22.225 0H1.771C.79 0 0 .792 0 1.767V22.23c0 .976.79 1.77 1.771 1.77H22.23c.976 0 1.77-.794 1.77-1.77V1.768C24 .792 23.206 0 22.225 0zM7.08 20.466H3.634V8.989H7.08v11.477zm-1.724-13.09c-1.167 0-2.116-.955-2.116-2.13s.95-2.12 2.117-2.12c1.167 0 2.116.949 2.116 2.12-.002 1.175-.95 2.13-2.117 2.13zm16.157 13.09h-3.45v-5.804c0-1.388-.025-3.17-1.93-3.17-1.93 0-2.23 1.506-2.23 3.068v5.906h-3.45V8.989h3.312v1.563h.048c.461-.872 1.588-1.794 3.272-1.794 3.5 0 4.148 2.306 4.148 5.308v6.4z" />
@@ -298,7 +302,7 @@ const Navbar: React.FC = () => {
             Logout
           </button>
         ) : (
-          <Link href="/jobs" className="block bg-blue-500 text-white px-4 py-2 text-center mt-4 rounded-md hover:bg-blue-600">
+          <Link href="/jobs" className="block bg-blue-600 text-white px-4 py-2 text-center mt-4 rounded-md hover:bg-blue-600">
             Explore Jobs
           </Link>
         )}

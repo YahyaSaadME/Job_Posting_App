@@ -3,8 +3,10 @@
 "use client"
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-
+import { useSession } from 'next-auth/react';
 const AddBlog = () => {
+  const {data : session} = useSession()
+  console.log("session is" , session)
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [category, setCategory] = useState("");
@@ -104,8 +106,10 @@ const AddBlog = () => {
       setError((err as Error).message);
     }
   };
-
+   
   return (
+
+
     <div className="max-w-xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Add Blog</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -237,6 +241,7 @@ const AddBlog = () => {
         </button>
       </form>
     </div>
+    
   );
 };
 

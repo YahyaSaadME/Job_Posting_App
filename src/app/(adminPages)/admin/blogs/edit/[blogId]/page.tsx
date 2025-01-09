@@ -3,11 +3,14 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useSession } from 'next-auth/react';
+
 
 const UpdateBlog = () => {
   const router = useRouter();
   const { blogId } = useParams();
-
+  const {data : session} = useSession()
+  console.log("session is" , session)
   const [blog, setBlog] = useState({
     title: "",
     author: "",

@@ -46,14 +46,14 @@ const JobRoles = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  "> 
+    <div className="flex flex-col items-center justify-center  bg-gray-100 h-auto  "> 
       <h1 className="text-3xl font-bold mb-7  mt-10">Explore Job Roles</h1> 
 
       <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-12">
         {jobRoles.map((role  , index) => (
             <div key = {index}>
            
-          <Link href={`/jobs/?category=${role.title}`} key={role.title} className="flex flex-col items-center justify-center bg-white border shadow-xl  text-blue-600 rounded-md p-8"> 
+          <Link href={`/jobs/?category=${role.title}`} key={role.title} className="flex flex-col items-center justify-center bg-white border shadow-md  text-blue-600 rounded-sm p-8"> 
           <FaCloud className='text-5xl text-blue-600'/>
             <span className={`material-icons text-3xl mb-2 ${role.icon}`}>
               {/* Replace with actual Material Icons */}
@@ -66,7 +66,7 @@ const JobRoles = () => {
         
   
       </div>
-      <div className="flex justify-center mt-8"> {/* Added flexbox for centering */}
+      <div className="flex justify-center m-8 "> {/* Added flexbox for centering */}
         <button className="bg-blue-600 text-white px-4 py-2 mt-6 rounded-md shadow-md hover:bg-blue-700">
           View All
         </button>

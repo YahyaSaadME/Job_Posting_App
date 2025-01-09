@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-
-
+import { toast ,  ToastContainer  } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 export default function SignIn() {
   const router = useRouter();
-
+   const{data : session} = useSession()
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -18,6 +18,10 @@ export default function SignIn() {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
+
+    if(session){
+      toast.warn(`you are already login ${session?.user?.name}`)
+    }
     e.preventDefault();
     setIsLoading(true);
 
@@ -30,27 +34,21 @@ export default function SignIn() {
       });
 
       if (result?.error) {
-        alert({
-          variant: "destructive",
-          title: "Error",
-          description: result.error,
-        });
+
+        toast.error('log in failed')
         return;
       }
 
-          alert({
-            variant: "success",
-            title: "SuccessFully Log In !! ",
-            description: "you have logged in.",
-          })
-          router.push("/");
+  
+            toast("SuccessFully Log In !! ")
+         
+      
+                router.push("/");
       
     } catch (error) {
-      alert({
-        variant: "destructive",
-        title: "Error",
-        description: "An error occurred during sign in",
-      });
+
+      toast("An error occurred during sign in")
+
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +56,7 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen bg-gray-200/80">
+       <ToastContainer />
       <div className="mx-auto max-w-[1200px] p-4 h-screen flex items-center">
         <div className="w-full flex shadow-lg rounded-lg overflow-hidden bg-white">
           <div className="hidden md:flex md:w-1/2 bg-blue-500 p-12 flex-col text-white relative">
