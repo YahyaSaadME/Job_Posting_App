@@ -3,13 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 import Job from "@/models/jobs";
 
+import dbConnect from "@/utils/dbConnect"; 
 
 
 
 
 
 export async function GET(request: NextRequest) {
+  
     try {
+      await dbConnect()
         const company = await Job.distinct('company');
   
   

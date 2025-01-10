@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import Job from "../../../models/jobs"; // Adjust the path to your model
-import dbConnect from "../../../utils/dbConnect";
+import dbConnect from "@/utils/dbConnect"; 
 
-await dbConnect();
+
 
 // Create a new job posting
 export async function POST(request: NextRequest) {
   try {
+    await dbConnect();
     const body = await request.json();
     const {
       company,

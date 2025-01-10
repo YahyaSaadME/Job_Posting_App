@@ -1,13 +1,13 @@
 import Blog from "../../../../models/blogs";
 import { NextRequest, NextResponse } from "next/server";
+import dbConnect from "@/utils/dbConnect"; 
 
-import dbConnect from "../../../../utils/dbConnect";
-await dbConnect();
 
 // Get 4 most recent blogs
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   try {
+    await dbConnect();
     // Fetch the 4 most recent blogs sorted by creation date (descending)
     const latestBlogs = await Blog.find({})
       .sort({ createdAt: -1 })  // Sort by createdAt in descending order (newest first)

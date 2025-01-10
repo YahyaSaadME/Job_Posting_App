@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
@@ -8,8 +9,10 @@ import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { AiFillLike } from "react-icons/ai";
+import { AiFillHeart } from 'react-icons/ai';
+import { motion } from 'framer-motion';
 import ClipLoader from "react-spinners/ClipLoader";
+import { useRouter } from "next/navigation";
 export default function page() {
   type TableOfContentItem = {
     title: string;
@@ -29,12 +32,14 @@ export default function page() {
     thumbnail: string;
     _id: string;
   };
+
+    const router = useRouter()
   const [id, setId] = useState("");
   const [data, setdata] = useState<Blog>();
   const [BlogBar, setBlogBar] = useState<number>();
   const [liked, setLiked] = useState<boolean>(false);
  const [loading ,setLoading] = useState(false)
-
+const [relBlog , setRelBlog] = useState<any>();
   const handleBlog = async (id: string) => {
     try {
       setLoading(true)
@@ -49,6 +54,25 @@ export default function page() {
       setLoading(false)
     } catch (e) {}
   };
+  const handleRelatedBlog = async (id: string) => {
+    try {
+      setLoading(true)
+      const req = await fetch(`/api/catRelatedBlogs/${id}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const res = await req.json();
+      if (req.ok) {
+        setRelBlog(res.data);
+      }
+      setLoading(false)
+    } catch (e) {}
+  };
+  const openBlog = (id: string) => {
+    router.push(`/blog/${id}`);
+   
+  };
+  
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -61,9 +85,10 @@ export default function page() {
       const ID = window.location.pathname.replace("/blog/", "");
       setId(ID);
       handleBlog(ID);
+      handleRelatedBlog(ID)
       setLoading(false)
     }
-
+ 
     window.addEventListener("scroll", () => {
       const maxScrollY =
         document.documentElement.scrollHeight - window.innerHeight;
@@ -88,10 +113,10 @@ export default function page() {
     } catch (e) {}
   };
   
-    console.log(data)
+  console.log("rel blog" , relBlog)
   
   return (
- 
+ <>
     <div>
   
       <div
@@ -131,19 +156,27 @@ export default function page() {
             <Image src={`${window.location.origin}/images/${data?.thumbnail}`} className="w-full rounded-md shadow-md" alt="img"   width={200}
             height={100}/>:""
           }
-               <div className="flex flex-col absolute left-56 items-start max-h-fit">
-            <span className="text-gray-600">{data?.likes}</span>
-            <div
-              className={`p-4 border-2 shadow-md cursor-pointer  max-h-fit rounded-full ${
-                liked ? " text-blue-600 border-blue-700 bg-white" : "bg-white text-gray-400 border-gray-600"
-              }`}
-              onClick={(e: any) => {
-                handleLike();
-              }}
-            >
-              <AiFillLike />
-            </div>
-          </div>
+      <div className="flex flex-col absolute max-sm:left-80 max-sm:bottom-[30rem] left-56 items-start max-h-fit">
+  {/* Likes Count */}
+  <span className="text-gray-600">{data?.likes}</span>
+
+  {/* Like Button */}
+  <motion.div
+        className={`p-4 border-2 rounded-full shadow-md  cursor-pointer bg-white text-gray-400    ${ liked ? 'border-blue-600' : 'border-gray-600'}`}
+        animate={{ scale: liked ? 1.25 : 1, color: liked ? '#3b82f6' : '#9ca3af' }}
+      
+        whileHover={{ scale: 1.15 }}
+        transition={{ type: 'spring', stiffness: 300 }}
+        onClick={() =>  handleLike()
+
+          
+        }
+      >
+        <AiFillHeart size={24} />
+      </motion.div>
+
+</div>
+
           <div>
             {data?.tableOfContent.map(
               (item: TableOfContentItem, index: number) => (
@@ -202,11 +235,75 @@ export default function page() {
   </div>
 </div>
 
-       
+
       </div>
      
+
+       
+       
     )}
+        <div
+ className=" m-12 "
+>
+<h2 className='text-2xl text-gray-400 font-sans font-semibold'> More Related Blogs</h2>
+
+<div className="p-6 pt-1 grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  {relBlog && relBlog.length > 0 ? (
+    relBlog.map((item: {
+      _id: string;
+      tableOfContent: any;
+      tags: string[];
+      id: React.Key | null;
+      category: string;
+      title: string;
+      description: string;
+      avatar?: string;
+      author: string;
+      date?: string;
+      readTime?: string;
+    }) => (
+      <div
+        key={item._id}
+        onClick={() => openBlog(item._id)}
+        className="bg-gray-50 rounded-lg cursor-pointer shadow-md p-5 hover:shadow-lg transition"
+      >
+        {/* Render Tags */}
+        {item.tags?.map((cat: string, index: number) => (
+          <span
+            key={index}
+            className="text-sm m-2 bg-blue-100 text-blue-600 px-2 py-1 rounded"
+          >
+            {cat}
+          </span>
+        ))}
+
+        {/* Blog Title */}
+        <h3 className="mt-4 text-lg font-bold text-gray-800">{item.title}</h3>
+
+        {/* Blog Description */}
+        <p className="mt-2 text-sm text-gray-600">
+          {item.tableOfContent?.[0]?.description || 'No description available'}
+        </p>
+
+        {/* Author Information */}
+        <div className="flex items-center mt-4">
+          <div>
+            <p className="text-sm font-semibold text-gray-800">{item.author}</p>
+          </div>
+        </div>
+      </div>
+    ))
+  ) : (
+    <p className="text-center h-screen w-full mt-44">
+      No related blogs published yet.
+    </p>
+  )}
+</div>
+
+  </div>
+ 
         <Footer/>
     </div>
+    </>
   );
 }

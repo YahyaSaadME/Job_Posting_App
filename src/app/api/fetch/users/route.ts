@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
+import dbConnect from "@/utils/dbConnect"; 
 
 import {User} from "@/models/User"; // Ensure your models are set up properly
 
 export async function GET(request: NextRequest) {
+  
   try {
+    await dbConnect()
     // Fetch the count of available jobs
     const jobCount = await User.countDocuments();; // Adjust the condition as needed
 

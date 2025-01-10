@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import Job from "@/models/jobs";
+import dbConnect from "@/utils/dbConnect"; 
 
 export async function GET(request: NextRequest) {
+
   try {
+    await dbConnect()
     // Count all jobs in the collection
     const jobCount = await Job.countDocuments();
 

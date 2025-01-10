@@ -43,9 +43,9 @@ const Page = () => {
         <ClipLoader color={"#2563eb"} size={60} />
       </div>
     ) : (
-    <div className="container mx-auto px-4 py-8 mt-16">
+    <div className="  px-4 py-8 mt-16">
       <h1 className="text-3xl font-bold mb-6 text-center"> Free Courses</h1>
-           <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4 gap-6 p-6 pt-1 cursor-pointer">
+           <div className="flex flex-wrap  gap-8 p-2 pt-1 cursor-pointer">
              {courses.map((course: {
                _id: string;
                id: any ;
@@ -53,7 +53,7 @@ const Page = () => {
                tags: any; thumbnail: any; title: any | string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
      })  => (
                <>
-              <div onClick={() => openBlog(course._id)} key={courses._id} className="bg-gray-50  w-96 h-auto space-y-3 rounded-lg p-7 shadow-lg">
+              <div onClick={() => openBlog(course._id)} key={courses._id} className="bg-gray-50  w-[22rem] h-auto space-y-3 rounded-lg p-7 shadow-lg">
               <div className="flex justify-center mb-4">
                             <Image
                              src={`${window.location.origin}/images/${course.thumbnail}`}
@@ -63,14 +63,16 @@ const Page = () => {
                              height={150}
                            />
               </div>
-               {course.tags.map((cat: string, index: React.Key | null | undefined) => (
-                                              <span 
-                                                key={index} 
-                                                className="text-sm m-2 bg-blue-100 text-blue-600 px-2 py-1 rounded"
-                                              >
-                                                {cat}
-                                              </span>
-                                            ))}
+                <div className=' flex gap-1 flex-wrap'>
+                       {course.tags.map((cat: string, index: React.Key | null | undefined) => (
+                                                      <span 
+                                                        key={index} 
+                                                        className="text-sm  bg-blue-100 text-blue-600 px-2 py-1 rounded"
+                                                      >
+                                                        {cat}
+                                                      </span>
+                                                    ))}
+                              </div>
                       
               <h3 className="text-lg font-bold mb-2 text-black">{course.title}</h3>
               <p className="text-gray-600">{course.description}</p>

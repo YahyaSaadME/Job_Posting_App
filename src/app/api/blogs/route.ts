@@ -1,11 +1,12 @@
 import Blog from "../../../models/blogs";
 import { NextRequest, NextResponse } from "next/server";
 
-import dbConnect from "../../../utils/dbConnect";
-await dbConnect();
+import dbConnect from "@/utils/dbConnect"; 
+
 
 // Create a new blog
 export async function POST(request: NextRequest) {
+  await dbConnect();
   try {
     const body = await request.json();
     const { title, author, category, tableOfContent, thumbnail, tags } = body;

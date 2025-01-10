@@ -12,6 +12,10 @@ const AddCourse = () => {
   const [link, setLink] = useState("");
   const [thumbnail, setThumbnail] = useState("image-1736147122488.png");
   const [duration, setDuration] = useState("");
+  const [responsibilities, setResponsibilities] = useState("");
+  const [courseContent, setCourseContent] = useState("");
+  const [prerequisites, setPrerequisites] = useState("");
+  const [instructorName, setInstructorName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -34,8 +38,6 @@ const AddCourse = () => {
       });
 
       const data = await response.json();
-      console.log(data);
-      
       if (response.ok) {
         setThumbnail(data.url);
         setSuccess("Image uploaded successfully!");
@@ -59,7 +61,7 @@ const AddCourse = () => {
       const response = await fetch("/api/courses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, category, tags, link, thumbnail, duration }),
+        body: JSON.stringify({ title, description, category, tags, link, thumbnail, duration, responsibilities, courseContent, prerequisites, instructorName }),
       });
 
       if (!response.ok) {
@@ -139,7 +141,7 @@ const AddCourse = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {thumbnail && (
             <div className="mt-2">
-              <img src={window.location.origin+"/images/"+thumbnail} alt="Thumbnail" className="w-full h-auto" />
+              <img src={window.location.origin + "/images/" + thumbnail} alt="Thumbnail" className="w-full h-auto" />
               <button
                 type="button"
                 onClick={() => setThumbnail("")}
@@ -156,6 +158,43 @@ const AddCourse = () => {
             type="text"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Responsibilities:</label>
+          <textarea
+            value={responsibilities}
+            onChange={(e) => setResponsibilities(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Course Content:</label>
+          <textarea
+            value={courseContent}
+            onChange={(e) => setCourseContent(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Prerequisites:</label>
+          <textarea
+            value={prerequisites}
+            onChange={(e) => setPrerequisites(e.target.value)}
+            required
+            className="w-full border border-gray-300 p-2 rounded"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">Instructors Name:</label>
+          <input
+            type="text"
+            value={instructorName}
+            onChange={(e) => setInstructorName(e.target.value)}
             required
             className="w-full border border-gray-300 p-2 rounded"
           />

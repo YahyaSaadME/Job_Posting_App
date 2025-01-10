@@ -12,6 +12,8 @@ const CourseList = () => {
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const routes = useRouter();
+
+  // Fetch courses from the server
   const fetchCourses = async (page: number) => {
     setError(null);
     try {
@@ -29,11 +31,14 @@ const CourseList = () => {
       setError((err as Error).message);
     }
   };
+
+  // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setCurrentPage(1); // Reset to page 1 when search changes
   };
 
+  // Handle course deletion
   const handleDelete = async (courseId: string) => {
     if (confirm("Are you sure you want to delete this course?")) {
       try {
@@ -52,16 +57,17 @@ const CourseList = () => {
     }
   };
 
+  // Fetch courses on page load or when search or currentPage changes
   useEffect(() => {
     fetchCourses(currentPage);
-  }, [currentPage,search]);
+  }, [currentPage, search]);
 
   return (
     <div className="container min-h-screen mx-auto mt-10 p-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Course List</h1>
         <button
-          onClick={(e) => routes.push("/admin/course/add")}
+          onClick={() => routes.push("/admin/course/add")}
           className="bg-black p-2 text-white rounded-md"
         >
           Add Courses

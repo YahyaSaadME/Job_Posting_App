@@ -1,13 +1,14 @@
 import Course from "../../../../models/courses";
 import { NextRequest, NextResponse } from "next/server";
 
-import dbConnect from "../../../../utils/dbConnect";
-await dbConnect();
+import dbConnect from "@/utils/dbConnect"; 
+
 
 // Get 4 most recent courses
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function GET(request: NextRequest) {
   try {
+    await dbConnect();
     // Fetch the 4 most recent courses sorted by creation date (descending)
     const latestCourses = await Course.find({})
       .sort({ createdAt: -1 })  // Sort by createdAt in descending order (newest first)

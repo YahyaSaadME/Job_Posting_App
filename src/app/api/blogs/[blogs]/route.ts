@@ -7,8 +7,9 @@ import { Types } from "mongoose";
 export async function GET(request: NextRequest) {
     const { pathname } = new URL(request.url);
     const blogId = pathname.split('/').pop();
-    await dbConnect();
+   
     try {
+      await dbConnect();
       if(!blogId){
         return NextResponse.json({ success: false, message: 'Please provide id.' }, { status: 404 });
       }

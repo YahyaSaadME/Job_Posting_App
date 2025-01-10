@@ -55,17 +55,18 @@ const BlogCards = () => {
           className="bg-gray-50 rounded-lg  cursor-pointer  shadow-md p-5 hover:shadow-lg transition" 
         
         >
-
-               {item.tags.map((cat: string, index: React.Key | null | undefined) => (
-                                <span 
-                                  key={index} 
-                                  className="text-sm m-2 bg-blue-100 text-blue-600 px-2 py-1 rounded"
-                                >
-                                  {cat}
-                                </span>
-                              ))}
+   <div className=' flex gap-3 flex-wrap'>
+          {item.tags.map((cat: string, index: React.Key | null | undefined) => (
+                                         <span 
+                                           key={index} 
+                                           className="text-sm  bg-blue-100 text-blue-600 px-2 py-1 rounded"
+                                         >
+                                           {cat}
+                                         </span>
+                                       ))}
+                 </div>
         
-          <h3 className="mt-4 text-lg font-bold text-gray-800">{item.title}</h3>
+          <h3 className="mt-4 text-lg font-bold text-gray-800 hover:underline" onClick={() => openBlog(item._id)}>{item.title}</h3>
           <p className="mt-2 text-sm text-gray-600">{item.tableOfContent[0].description}</p>
           <div className="flex items-center mt-4">
         

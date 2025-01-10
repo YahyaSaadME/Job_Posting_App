@@ -1,17 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
-
+import { Types } from 'mongoose';
 import course from "./../../../../models/courses"; // Adjust the path to your model
-import dbConnect from "../../../../utils/dbConnect";
+import dbConnect from "@/utils/dbConnect"; 
 
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-    dbConnect()
+export async function GET(request: Request) {
+
+  const { pathname } = new URL(request.url);
+  console.log('Extracted Path:', pathname);
+  const id : any = pathname.split('/').pop();
+  
   try {
-    // Await params before using the ID
-    const { id } = params; // Extracting ID after ensuring params are resolved
 
-    if (!id) {
-      return NextResponse.json({ message: 'ID is required' }, { status: 400 });
+   await dbConnect()
+    if (!Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ message: 'Invalid ID format' }, { status: 400 });
     }
 
     const data = await course.findById(id); // Fetch the course by ID from MongoDB

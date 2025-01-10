@@ -16,6 +16,10 @@ const UpdateCourse = () => {
     link: "",
     thumbnail: "image-1736147122488.png",
     duration: "",
+    responsibilities: "", // New field
+    courseContent: "",    // New field
+    prerequisites: "",    // New field
+    instructorName: "",   // New field
   });
 
   const [loading, setLoading] = useState(false);
@@ -59,7 +63,6 @@ const UpdateCourse = () => {
       });
 
       const data = await response.json();
-      console.log(data);
       
       if (response.ok) {
         setCourse((prev) => ({ ...prev, thumbnail: data.url }));
@@ -175,6 +178,42 @@ const UpdateCourse = () => {
             onChange={(e) => handleFieldChange("duration", e.target.value)}
           />
         </div>
+        
+        {/* New Fields */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Responsibilities</label>
+          <textarea
+            className="w-full border rounded px-3 py-2"
+            value={course.responsibilities}
+            onChange={(e) => handleFieldChange("responsibilities", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Course Content</label>
+          <textarea
+            className="w-full border rounded px-3 py-2"
+            value={course.courseContent}
+            onChange={(e) => handleFieldChange("courseContent", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Prerequisites</label>
+          <textarea
+            className="w-full border rounded px-3 py-2"
+            value={course.prerequisites}
+            onChange={(e) => handleFieldChange("prerequisites", e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Instructors Name</label>
+          <input
+            type="text"
+            className="w-full border rounded px-3 py-2"
+            value={course.instructorName}
+            onChange={(e) => handleFieldChange("instructorName", e.target.value)}
+          />
+        </div>
+
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

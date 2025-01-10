@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '../../../../utils/dbConnect';
+import dbConnect from "@/utils/dbConnect"; 
 import Job from '../../../../models/jobs';
 import { Types } from 'mongoose';
 export async function GET(request: NextRequest) {
   const { pathname } = new URL(request.url);
   const jobId = pathname.split('/').pop();
-  await dbConnect();
+  
   try {
+    await dbConnect();
     if(!jobId){
       return NextResponse.json({ success: false, message: 'Please provide id.' }, { status: 404 });
     }

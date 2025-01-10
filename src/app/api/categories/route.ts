@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import Courses from "../../../models/courses";
 import Blogs from "../../../models/blogs";
 import Jobs from "../../../models/jobs";
+import dbConnect from "@/utils/dbConnect"; 
 
 export async function GET(request: NextRequest) {
+
   try {
+    await dbConnect()
     const { searchParams } = new URL(request.url);
 
     // Pagination parameters for Courses

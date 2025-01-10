@@ -62,6 +62,9 @@ export default function Page() {
 
   return (
     <div className="p-6">
+      <div className='flex flex-wrap justify-center w-full m-6 '>
+              <h2 className='text-3xl font-sans font-bold'> IT Referral Job Posting Page</h2>
+            </div>
       <div className="flex mb-4">
         <input
           type="text"
@@ -71,7 +74,7 @@ export default function Page() {
           className="w-full p-2 border rounded shadow-md"
         />
         <button
-          onClick={(e) => router.push("/itreferral/add")}
+          onClick={(e: any) => router.push("/itreferral/add")}
           className="bg-blue-500 ml-2 w-[100px] text-white rounded-md px-1 py-3 shaodow-md"
         >
           Add Job

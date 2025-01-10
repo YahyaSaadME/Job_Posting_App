@@ -7,7 +7,11 @@ interface ICourse extends Document {
   tags: string[];
   link: string;
   thumbnail: string;
-  duration:string;
+  duration: string;
+  responsibilities: string;
+  courseContent: string;
+  prerequisites: string;
+  instructorName: string;
 }
 
 const courseSchema = new Schema<ICourse>(
@@ -40,7 +44,22 @@ const courseSchema = new Schema<ICourse>(
       type: String,
       required: true,
     },
-    
+    responsibilities: {
+      type: String,
+      required: true,
+    },
+    courseContent: {
+      type: String,
+      required: true,
+    },
+    prerequisites: {
+      type: String,
+      required: true,
+    },
+    instructorName: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,

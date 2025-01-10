@@ -1,24 +1,48 @@
 import Course from "../../../models/courses";
 import { NextRequest, NextResponse } from "next/server";
 
-import dbConnect from "../../../utils/dbConnect";
-await dbConnect();
+import dbConnect from "@/utils/dbConnect"; 
+
 
 // Create a new course
 export async function POST(request: NextRequest) {
   try {
+    await dbConnect();
     const body = await request.json();
-    const { title, description, category, tags, link, thumbnail, duration } = body;
+    const {
+      title, 
+      description, 
+      category, 
+      tags, 
+      link, 
+      thumbnail, 
+      duration, 
+      responsibilities, 
+      courseContent, 
+      prerequisites, 
+      instructorName
+    } = body;
+    
 
     // Validation
-    if (!title || !description || !category || !Array.isArray(tags) || !link || !thumbnail || !duration) {
+    if (
+      !title || 
+      !description || 
+      !category || 
+      !Array.isArray(tags) || 
+      !link || 
+      !thumbnail || 
+      !duration || 
+      !responsibilities || 
+      !courseContent || 
+      !prerequisites || 
+      !instructorName
+    ) {
       return NextResponse.json(
-        { message: "All fields are required, including tags, link, thumbnail, and duration." },
+        { message: "All fields are required." },
         { status: 400 }
       );
     }
-
-    // Create a new course
     const newCourse = await Course.create({
       title,
       description,
@@ -27,8 +51,13 @@ export async function POST(request: NextRequest) {
       link,
       thumbnail,
       duration,
+      responsibilities,
+      courseContent,
+      prerequisites,
+      instructorName,
     });
-
+    console.log('New course created:', newCourse);
+    
     return NextResponse.json(newCourse, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "Error creating course", error }, { status: 500 });
