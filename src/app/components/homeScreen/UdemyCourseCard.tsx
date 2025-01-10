@@ -1,61 +1,84 @@
+/* eslint-disable react/jsx-no-undef */
+
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Link from 'next/link';
-import React from 'react';
 
-const courses = [
-  {
-    id: 1,
-    title: 'BGP',
-    description: 'My goal is to make BGP easy to understand by using simple examples that everyone can understand and follow.',
-    icon: 'network-wired' 
-  },
-  {
-    id: 2,
-    title: 'Docker',
-    description: 'Gentle introduction to Docker and what problems does it solve for you. This course is specifically designed for complete beginners.',
-    icon: 'ship'
-  },
-  {
-    id: 3,
-    title: 'Netmiko',
-    description: 'Introduction to Netmiko Python Library and How You Can Use It to Automate Your Network with Real-World Examples and Labs.',
-    icon: 'python'
-  },
-  {
-    id: 4,
-    title: 'Network CI/CD',
-    description: 'Introduction to Network CI/CD pipelines with super simple examples and clear explanations (in progress)',
-    icon: 'infinity'
-  },
-];
-
-const CourseCard = ({ title, description }: any) => {
-  return (
-    <div className="bg-blue-100 rounded-lg p-7 shadow-lg">
-      <div className="flex justify-center mb-4">
-        <img 
-        src='https://www.packetswitch.co.uk/content/images/size/w100/2024/03/python.png'
-        /> 
-      </div>
-      <h3 className="text-lg font-bold mb-2 text-black">{title}</h3>
-      <p className="text-gray-600">{description}</p>
-    </div>
-  );
-};
-
+import React, { useEffect, useState } from 'react';
+import Image from "next/image";
+//import Link from "next/navigation"
+import { useRouter } from 'next/navigation';
 const  UdemyCourseCard = () => {
+
+  const [courses, setCourses] : any = useState<any>([])
+ const router = useRouter()
+
+  const openBlog = (id: string) => {
+    router.push(`/free-courses/${id}`);
+   
+  };
+    useEffect(() => {
+      const getCourses = async () => {
+        try {
+        
+          const response = await fetch('/api/courses/latestCourse');
+          const data = await response.json();
+          setCourses(Array.isArray(data.data) ? data.data : []);
+      
+        } catch (error) {
+          console.error('Error fetching jobs:', error);
+        }
+      };
+      getCourses();
+    }, []);
+
+  console.log("course is" , courses)
+
   return (
-    <div className="container mx-auto py-10 p-6">
-        <div className='flex  gap-14 mb-8'>
-      <h2 className="text-2xl font-bold ">Courses </h2> <Link href={"/free-courses"}> <p className="text-gray-500 text-lg mt-1">View All →</p></Link>
+    <div className=''>
+    <div className="p-3 m-2 mt-10 ">
+        <div className='flex pl-7 gap-14 mb-6'>
+      <h2 className="text-2xl font-bold ">Courses </h2>
+       <a href={"/free-courses"}> <p className="text-gray-500 text-lg mt-1">View All →</p></a>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {courses.map((course) => (
-          <CourseCard key={course.id} {...course} /> 
+      <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-4 gap-6 p-6 pt-1 cursor-pointer">
+        {courses.map((course: {
+          _id: any;
+          duration: any;
+          tags: any; thumbnail: any; title: any | string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
+})  => (
+          <>
+         <div key= {course.title} className="bg-gray-50  w-96 h-auto space-y-3 rounded-lg p-7 shadow-lg">
+         <div className="flex justify-center mb-4">
+                       <Image
+                        src={`${window.location.origin}/images/${course.thumbnail}`}
+                        alt={course.title}
+                        className="w-full h-44 rounded-md object-fill"
+                        width={200}
+                        height={150}
+                      />
+         </div>
+          {course.tags.map((cat: string, index: React.Key | null | undefined) => (
+                                         <span 
+                                           key={index} 
+                                           className="text-sm m-2 bg-blue-100 text-blue-600 px-2 py-1 rounded"
+                                         >
+                                           {cat}
+                                         </span>
+                                       ))}
+                 
+         <h3 className="text-lg font-bold mb-2 text-black">{course.title}</h3>
+         <p className="text-gray-600">{course.description}</p>
+
+
+         <p className="text-gray-900"> <span className='font-semibold'>Duration :</span> {course.duration}</p>
+         <button className="text-blue-600 mt-4 font-sans  " onClick={() => openBlog(course._id)}> View course</button>
+       </div>
+
+       </>
         ))}
       </div>
+    </div>
     </div>
   );
 };

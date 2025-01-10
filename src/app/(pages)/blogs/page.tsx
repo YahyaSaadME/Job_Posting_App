@@ -50,51 +50,47 @@ const page = () => {
 
    <><div className='flex justify-center w-full'>
               <h2 className='text-3xl font-sans font-bold'> Blogs</h2>
-            </div><div className="p-6 pt-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-                {blogs.map((item: {
-                  createdAt: any;
-                  updatedAt: any;
-                  thumbnail: string | any;
-                  _id: Key | any | undefined; id: React.Key | null | undefined; category: any |string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; title: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; avatar: string | undefined; author: any | string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; date: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; readTime: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined;
-                }) => (
-                 
-
-                  <div
-                    key={item._id}
-                    onClick={() => openBlog(item._id)}
-                    className="bg-gray-100 rounded-lg mt-6 shadow-md p-5 hover:shadow-lg transition"
-                  >
-                     <Image
-                     src={`${window.location.origin}/images/${item.thumbnail}`}
-                        alt={item.author}
-                        width={200}
-                        height={150}
-                        className="w-full h-40 object-fill rounded-md"/>
- <div className="flex flex-wrap gap-2  p-4">
-                        {item.category.split(',').map((cat: string, index: React.Key | null | undefined) => (
-                      <span 
-                        key={index} 
-                        className="text-sm bg-blue-100 text-blue-600 px-2 py-1 rounded"
-                      >
-                        {cat.trim()}
-                      </span>
-                    ))}
-                    </div>
-                    <h3 className="mt-4 text-lg font-bold text-gray-800">{item.title}</h3>
-                    <p className="mt-2 text-sm text-gray-600">{item.description}</p>
-                    <div className="flex items-center mt-4">
+            </div>
+            
+            <div className="p-6 pt-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6" >
+                    
+                 {blogs.map((item: {
+                   _id: string;
+                   tableOfContent: any;
+                   tags: any; id: React.Key | null; category: string; title: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; avatar: string | undefined; author: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; date: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; readTime: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
+           }) => (
+                   <div
+                     key={item.id}
+                     onClick={() => openBlog(item._id)}
+                     className="bg-gray-50 rounded-lg  cursor-pointer  shadow-md p-5 hover:shadow-lg transition" 
+                   
+                   >
+           
+                          {item.tags.map((cat: string, index: React.Key | null | undefined) => (
+                                           <span 
+                                             key={index} 
+                                             className="text-sm m-2 bg-blue-100 text-blue-600 px-2 py-1 rounded"
+                                           >
+                                             {cat}
+                                           </span>
+                                         ))}
+                   
+                     <h3 className="mt-4 text-lg font-bold text-gray-800">{item.title}</h3>
+                     <p className="mt-2 text-sm text-gray-600">{item.tableOfContent[0].description}</p>
+                     <div className="flex items-center mt-4">
+                   
+                       <div>
+                         <p className="text-sm font-semibold text-gray-800">  {item.author}</p>
+                      
+                       </div>
                      
-                    <div>
-  <p className="text-sm font-semibold text-gray-800">{item.author}</p>
-  <p className="text-xs text-gray-500">
-    {new Date(item.createdAt).toISOString().split('T')[0]} — {new Date(item.updatedAt).toISOString().split('T')[0]}
-  </p>
-</div>
-
-                    </div>
-                  </div>
-                ))}
+                     </div>
+                     <div>
+                
+               </div>
+                   </div>
+                 ))}
+                
     
                {
                 blogs.length <= 0 ? (< p className='text-center h-screen w-full mt-44'> not published any blog yet</p>) : (console.log("blogs "))

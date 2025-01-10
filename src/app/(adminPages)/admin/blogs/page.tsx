@@ -4,8 +4,10 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+import { useSession } from 'next-auth/react';
 const BlogsList = () => {
+  const {data : session} = useSession()
+  console.log("session is" , session)
   const [blogs, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -63,7 +65,7 @@ const BlogsList = () => {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Blog List</h1>
         <button
-          onClick={(e) => routes.push("/admin/blogs/add")}
+          onClick={() => routes.push("/admin/blogs/add")}
           className="bg-black p-2 text-white rounded-md"
         >
           Add Blogs

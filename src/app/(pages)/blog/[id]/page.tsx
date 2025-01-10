@@ -107,22 +107,10 @@ export default function page() {
     ) : (
       <div className="flex min-h-screen px-6 w-full mt-20">
         <div className="lg:w-1/3 flex justify-end mt-2">
-          <div className="flex flex-col items-center max-h-fit">
-            <span className="text-gray-600">{data?.likes}</span>
-            <div
-              className={`p-4 border-2 shadow-md cursor-pointer border-blue-700 max-h-fit rounded-full ${
-                liked ? "bg-blue-600 text-white" : "bg-white text-blue-600"
-              }`}
-              onClick={(e) => {
-                handleLike();
-              }}
-            >
-              <AiFillLike />
-            </div>
-          </div>
+     
         </div>
-        <div className="w-full lg:w-2/3 px-4">
-          <h1 className="text-2xl font-bold">{data?.title}</h1>
+        <div className="w-full lg:w-2/3 px-4 mt-4 space-y-4">
+          <h1 className="text-3xl font-bold">{data?.title}</h1>
           <p className="font-medium text-md">
             {data?.author} -{" "}
             <span className="font-medium text-xs">
@@ -141,9 +129,21 @@ export default function page() {
           {
             data?.thumbnail?
             <Image src={`${window.location.origin}/images/${data?.thumbnail}`} className="w-full rounded-md shadow-md" alt="img"   width={200}
-            height={150}/>:""
+            height={100}/>:""
           }
-          
+               <div className="flex flex-col absolute left-56 items-start max-h-fit">
+            <span className="text-gray-600">{data?.likes}</span>
+            <div
+              className={`p-4 border-2 shadow-md cursor-pointer  max-h-fit rounded-full ${
+                liked ? " text-blue-600 border-blue-700 bg-white" : "bg-white text-gray-400 border-gray-600"
+              }`}
+              onClick={(e: any) => {
+                handleLike();
+              }}
+            >
+              <AiFillLike />
+            </div>
+          </div>
           <div>
             {data?.tableOfContent.map(
               (item: TableOfContentItem, index: number) => (
@@ -157,7 +157,7 @@ export default function page() {
                   ></p>
                   {item.imageLink ? (
                     <img               src={`${window.location.origin}/images/${item.imageLink}`}
-                    className="my-2 w-full p-8 h-72 rounded-md shadow-md" />
+                    className="my-2 w-full p-8 h-72 rounded-md " />
                   ) : (
                     ""
                   )}
@@ -184,26 +184,24 @@ export default function page() {
           </div>
         </div>
         <div className="hidden lg:block w-1/3">
-          <div className="py-4 border-2 border-gray-200 mx-2 max-w-1/4 min-w-1/3 w-1/4 rounded-lg shadow-md fixed top-20 right-0">
-            <h4 className="font-bold px-6 pb-4 text-lg ">Table of Content</h4>
-            <hr className="w-full" />
-            <ul className="px-6">
-              {data?.tableOfContent.map(
-                (item: TableOfContentItem, index: number) => (
-                  <div className="my-3" key={index}>
-                    <li
-                      className="font-normal cursor-pointer"
-                      onClick={(e) => scrollToSection(item._id)}
-                    >
-                      {item.title}
-                    </li>
-                  </div>
-                )
-              )}
-            </ul>
-          </div>
-      
+  <div className="py-4 border-2 border-gray-200 mx-2  w-[19rem] rounded-lg shadow-md sticky top-20">
+    <h4 className="font-bold px-6 pb-4 text-lg">Table of Content</h4>
+    <hr className="w-full" />
+    <ul className="px-6">
+      {data?.tableOfContent.map((item: TableOfContentItem, index: number) => (
+        <div className="my-3" key={index}>
+          <li
+            className="font-normal cursor-pointer"
+            onClick={(e: any) => scrollToSection(item._id)}
+          >
+            {item.title}
+          </li>
         </div>
+      ))}
+    </ul>
+  </div>
+</div>
+
        
       </div>
      

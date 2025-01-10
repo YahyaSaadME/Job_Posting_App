@@ -4,6 +4,9 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
+
+
+
 'use client'
 import Navbar from '@/app/components/global/Navbar';
 import React, { useEffect, useState } from 'react';
