@@ -69,7 +69,7 @@ const Jobs = () => {
     <div className="container min-h-screen mx-auto mt-10 p-6">
      <div className="flex justify-between items-center">
       <h1 className="text-3xl font-semibold mb-4">Job Listings</h1>
-      <button onClick={e=>router.push("/admin/jobs/add")} className="p-2 bg-black text-white rounded-md hover:bg-gray-800">
+      <button onClick={()=>router.push("/admin/jobs/add")} className="p-2 bg-black text-white rounded-md hover:bg-gray-800">
         Add Job
       </button>
      </div>

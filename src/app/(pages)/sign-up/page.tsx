@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
+import { toast ,  ToastContainer  } from 'react-toastify';
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -31,7 +32,23 @@ export default function SignUp() {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const router = useRouter();
+  const restrictedDomains = [
+    "gmail.com",
+    "yahoo.com",
+    "outlook.com",
+    "hotmail.com",
+    "icloud.com",
+    "aol.com",
+    "zoho.com",
+    "protonmail.com",
+    "yandex.com",
+  ];
 
+  // Function to check if the email domain is restricted
+  const isRestrictedDomain = (email: string) => {
+    const domain = email.split("@")[1]?.toLowerCase();
+    return restrictedDomains.includes(domain);
+  };
   const validatePassword = (pass: string) => {
     const hasLength = pass.length >= 8 && pass.length <= 15;
     const hasLowerUpper = /(?=.*[a-z])(?=.*[A-Z])/.test(pass);
@@ -50,6 +67,12 @@ export default function SignUp() {
       setError("Please fill all fields correctly and accept terms.");
       return;
     }
+        // Validate restricted domains for job posters
+        if (type === "jobPoster" && isRestrictedDomain(email)) {
+          setError("Personal email addresses are not allowed for job posters. Please use your office email.");
+          return;
+        }
+    
 
     setIsLoading(true);
     try {
@@ -62,8 +85,11 @@ export default function SignUp() {
       });
 
       const data = await response.json();
-
-      if (data) {
+      if (!data.success) {
+        alert(data.message);
+        setShowOtpDialog(false); // Display the alert to the user
+      }
+      if (data.success) {
         setShowOtpDialog(true);
         setError("");
       } else {
@@ -103,6 +129,8 @@ export default function SignUp() {
       const data = await response.json();
 
       if (data.success) {
+        toast("Sucessfully account created !!")
+        
         router.push("/signin");
       } else {
         setError(data.message || "Sign up failed");
@@ -116,6 +144,7 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen bg-gray-200/80 ">
+      <ToastContainer/>
       <div className="mx-auto max-w-[1200px] p-4 h-auto flex items-center ">
         <div className="w-full flex shadow-lg rounded-lg overflow-hidden bg-white">
           <div className="hidden sm:flex bg-blue-600 p-12 relative">
@@ -179,7 +208,7 @@ export default function SignUp() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="jobSeeker">Job seeker</SelectItem>
-                      <SelectItem value="jobPoster">Job poster</SelectItem>
+                      <SelectItem value="jobPoster">Job poster (It Referral)</SelectItem>
         
                     </SelectContent>
                   </Select>

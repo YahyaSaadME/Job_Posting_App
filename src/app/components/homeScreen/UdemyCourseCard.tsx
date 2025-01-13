@@ -1,39 +1,14 @@
-/* eslint-disable react/jsx-no-undef */
-
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useEffect, useState } from 'react';
-import Image from "next/image";
-//import Link from "next/navigation"
-import { useRouter } from 'next/navigation';
-const  UdemyCourseCard = () => {
-
-  const [courses, setCourses] : any = useState<any>([])
- const router = useRouter()
-
-  const openBlog = (id: string) => {
-    router.push(`/free-courses/${id}`);
-   
-  };
-    useEffect(() => {
-      const getCourses = async () => {
-        try {
-        
-          const response = await fetch('/api/courses/latestCourse');
-          const data = await response.json();
-          setCourses(Array.isArray(data.data) ? data.data : []);
-      
-        } catch (error) {
-          console.error('Error fetching jobs:', error);
-        }
-      };
-      getCourses();
-    }, []);
-
-  console.log("course is" , courses)
-
+  import React, { useEffect, useState } from 'react';
+   import Image from "next/image";
+    import { useRouter } from 'next/navigation';
+     import ClipLoader from 'react-spinners/ClipLoader'; 
+     const UdemyCourseCard = () => { const [courses, setCourses] = useState([]);
+       const [loading, setLoading] = useState(true); 
+       const openBlog = (id: string) => { router.push(`/free-courses/${id}`); };
+       const router = useRouter(); useEffect(() => { const getCourses = async () => { try { const response = await fetch('/api/courses/latestCourse'); const data = await response.json(); setCourses(Array.isArray(data.data) ? data.data : []); setLoading(false); } catch (error) { console.error('Error fetching courses:', error); setLoading(false); } }; getCourses(); }, []); if (loading) { return ( <div className="flex justify-center items-center h-screen w-full"> <ClipLoader color={"#2563eb"} size={60} /> </div> ); }
   return (
     <div className=''>
     <div className="p-3 m-2 mt-10 ">
@@ -41,14 +16,10 @@ const  UdemyCourseCard = () => {
       <h2 className="text-2xl font-bold ">Courses </h2>
        <a href={"/free-courses"}> <p className="text-gray-500 text-lg mt-1">View All →</p></a>
       </div>
-      <div className="flex flex-wrap gap-6 p-6 pt-1 cursor-pointer">
-        {courses.map((course: {
-          _id: any;
-          duration: any;
-          tags: any; thumbnail: any; title: any | string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
-})  => (
-          <>
-         <div key= {course.title} className="bg-gray-50 max-sm:w-[16rem] md:w-[22rem] h-auto space-y-3 rounded-lg p-7 shadow-lg">
+      <div className="flex flex-wrap gap-12 p-6 pt-1 cursor-pointer">
+        {courses.map((course: any)  => (
+      
+         <div     key={course._id.toString()} className="bg-gray-100 max-sm:w-[16rem] md:w-[22rem] h-auto space-y-3 rounded-lg p-7 shadow-lg">
          <div className="flex justify-center mb-4">
                        <Image
                         src={`${window.location.origin}/images/${course.thumbnail}`}
@@ -61,7 +32,8 @@ const  UdemyCourseCard = () => {
          <div className=' flex gap-1 flex-wrap'>
           {course.tags.map((cat: string, index: React.Key | null | undefined) => (
                                          <span 
-                                           key={index} 
+                                         key={index}
+
                                            className="text-sm  bg-blue-100 text-blue-600 px-2 py-1 rounded"
                                          >
                                            {cat}
@@ -76,7 +48,7 @@ const  UdemyCourseCard = () => {
          <button className="text-blue-600 mt-4 font-sans  " onClick={() => openBlog(course._id)}> View course</button>
        </div>
 
-       </>
+     
         ))}
       </div>
     </div>

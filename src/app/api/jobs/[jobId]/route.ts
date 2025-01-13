@@ -23,14 +23,17 @@ export async function GET(request: NextRequest) {
 }
 // Update a job by ID
 export async function PUT(request: NextRequest) {
+  const { pathname } = new URL(request.url);
+  const jobId = pathname.split('/').pop();
+  console.log(jobId)
   try {
     const body = await request.json();
-    const { _id, ...updates } = body;
-    if (!_id) {
+    const {  ...updates } = body;
+    if (!jobId) {
       return NextResponse.json({ message: "Job ID is required." }, { status: 400 });
     }
 
-    const updatedJob = await Job.findByIdAndUpdate(_id, updates, {
+    const updatedJob = await Job.findByIdAndUpdate(jobId, updates, {
       new: true,
       runValidators: true,
     });

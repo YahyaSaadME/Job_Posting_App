@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '../../../utils/dbConnect';
-import Job from '../../../models/jobs';
-
-
+import itRefJob from '../../../models/itRefJob';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -31,12 +29,12 @@ export async function GET(request: NextRequest) {
     console.log(status);
     
     if (status !== "undefined") {
-      const jobs = await Job.find({by: userId,
+      const jobs = await itRefJob.find({by: userId,
         approved: status == "null" ? null : status,
       })
         .skip(skip)
         .limit(limit);
-      const totalJobs = await Job.countDocuments({by: userId,
+      const totalJobs = await itRefJob.countDocuments({by: userId,
         approved: status == "null" ? null : status,
       });
       return NextResponse.json({
@@ -46,8 +44,8 @@ export async function GET(request: NextRequest) {
         pages: Math.ceil(totalJobs / limit),
       });
     }
-    const totalDocuments = await Job.countDocuments(searchQuery);
-    const jobs = await Job.find(searchQuery).skip(skip).limit(limit);
+    const totalDocuments = await itRefJob.countDocuments(searchQuery);
+    const jobs = await itRefJob.find(searchQuery).skip(skip).limit(limit);
     const totalPages = Math.ceil(totalDocuments / limit);
 
     return NextResponse.json({
@@ -69,25 +67,35 @@ export async function POST(request: NextRequest) {
   await dbConnect();
   try {
     const body = await request.json();
-    const { company, location, title, description, requirement, category, yearsOfExperience, jobType, link, tags, by } = body;
+    const { title, description, companyName, jobType, by, yearsOfExperience, location, qualification } = body;
 
-    if (!company || !location || !title || !description || !requirement || !category || !yearsOfExperience || !jobType || !link || !tags || !by) {
+    if (!location || !title || !description || !yearsOfExperience || !jobType || !by) {
       return NextResponse.json({ message: "All fields are required." }, { status: 400 });
     }
 
-    const newJob = new Job({
-      company,
-      location,
+    const currentDate = new Date();
+    const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+    const postCount = await itRefJob.countDocuments({
+      by: by,
+      createdAt: { $gte: firstDayOfMonth }
+    });
+
+    if (postCount >= 10) {
+      return NextResponse.json({ message: "You have reached your posting limit for this month." }, { status: 403 });
+    }
+
+    const newJob = new itRefJob({
       title,
       description,
-      requirement,
-      category,
-      yearsOfExperience,
+      companyName,
       jobType,
-      link,
-      tags,
+      yearsOfExperience,
+      location,
+      qualification,
+      applicants: [],
       by,
-      approved:false
+      approved: false
     });
 
     const savedJob = await newJob.save();

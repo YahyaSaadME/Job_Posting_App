@@ -32,7 +32,7 @@ interface Job {
     createdAt: string;
     updatedAt: string;
     link: string;
-    qualifications: string | string[];
+    Qualifications: string | string[];
     requirement: string | string[]; // Allow both string or array of strings
   }
   
@@ -63,7 +63,7 @@ const [job , setJob] = useState<Job>();
   }, []);
 
 
-
+console.log(job)
   const {data : session} = useSession()
    const router = useRouter()
     function applyForJob(jobLink: string | undefined) {
@@ -123,10 +123,10 @@ const [job , setJob] = useState<Job>();
               {/* Qualifications */}
               <h2 className="text-lg sm:text-xl font-bold text-gray-700 mt-6">Qualifications</h2>
               <ul className="list-disc list-inside text-gray-600 mt-2">
-                {Array.isArray(job?.qualifications)
-                  ? job?.qualifications.map((item, index) => <li key={index}>{item.trim()}</li>)
-                  : typeof job?.qualifications === 'string'
-                  ? job?.qualifications
+                {Array.isArray(job?.Qualifications)
+                  ? job?.Qualifications.map((item, index) => <li key={index}>{item.trim()}</li>)
+                  : typeof job?.Qualifications === 'string'
+                  ? job?.Qualifications
                       .split(',')
                       .map((item, index) => <li key={index}>{item.trim()}</li>)
                   : null}
@@ -253,12 +253,12 @@ const [job , setJob] = useState<Job>();
         {/* Qualifications */}
         <h2 className="text-xl font-bold text-gray-700 mb-2">Qualifications</h2>
         <ul className="list-disc list-inside text-gray-600 mb-4">
-  {Array.isArray(job?.qualifications)
-    ? job?.qualifications.map((item, index) => (
+  {Array.isArray(job?.Qualifications)
+    ? job?.Qualifications.map((item, index) => (
         <li key={index}>{item.trim()}</li>
       ))
-    : typeof job?.qualifications === 'string'
-    ? job?.qualifications.split(',').map((item, index) => (
+    : typeof job?.Qualifications === 'string'
+    ? job?.Qualifications.split(',').map((item, index) => (
         <li key={index}>{item.trim().replace(/^['"]|['"]$/g, '')}</li>
       ))
     : null}

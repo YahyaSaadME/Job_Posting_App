@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     // Fetch the 4 most recent courses sorted by creation date (descending)
     const latestCourses = await Course.find({})
       .sort({ createdAt: -1 })  // Sort by createdAt in descending order (newest first)
-      .limit(4);  // Limit to the 4 most recent courses
+      .limit(3);  // Limit to the 4 most recent courses
 
     return NextResponse.json({
       success: true,

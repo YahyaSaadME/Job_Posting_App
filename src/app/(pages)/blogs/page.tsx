@@ -8,7 +8,7 @@ import Navbar from '@/app/components/global/Navbar';
 import { useRouter } from 'next/navigation';
 import React, { useState , useEffect} from 'react'
 import ClipLoader from 'react-spinners/ClipLoader';
-
+import Image from "next/image"
 const page = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [blogs, setBlogs] : any = useState<any>([])
@@ -52,20 +52,24 @@ const page = () => {
               <h2 className='text-3xl font-sans font-bold'> Blogs</h2>
             </div>
             
-            <div className="p-6 pt-1 grid grid-cols-1  mt-8 sm:grid-cols-2 md:grid-cols-3 gap-6" >
+            <div className="p-8 pt-1 grid grid-cols-1  mt-8 sm:grid-cols-2 md:grid-cols-3 gap-6" >
                     
-                 {blogs.map((item: {
-                   _id: string;
-                   tableOfContent: any;
-                   tags: any; id: React.Key | null; category: string; title: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; avatar: string | undefined; author: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; date: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; readTime: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
-           }) => (
+                 {blogs.map((item : any) => (
                    <div
                      key={item.id}
                      onClick={() => openBlog(item._id)}
                      className="bg-gray-50 rounded-lg  cursor-pointer  shadow-md p-5 hover:shadow-lg transition" 
                    
                    >
-           
+              <div className="flex justify-center mb-4">
+                                                        <Image
+                                                         src={`${window.location.origin}/images/${item.thumbnail}`}
+                                                         alt={item.title}
+                                                         className="w-full md:h-44 max-sm:h-auto rounded-md object-fill"
+                                                         width={200}
+                                                         height={150}
+                                                       />
+                                          </div>
                              <div className=' flex gap-4 flex-wrap'>
                                     {item.tags.map((cat: string, index: React.Key | null | undefined) => (
                                                                    <span 

@@ -4,8 +4,15 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useSession } from 'next-auth/react';
+import ClipLoader from 'react-spinners/ClipLoader';
+import Link from "next/link";
 
 const CourseList = () => {
+  const { data: session, status }: any = useSession();
+  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const userEmail = session?.user?.email;
+
   const [courses, setCourses] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -13,7 +20,6 @@ const CourseList = () => {
   const [search, setSearch] = useState("");
   const routes = useRouter();
 
-  // Fetch courses from the server
   const fetchCourses = async (page: number) => {
     setError(null);
     try {
@@ -32,13 +38,11 @@ const CourseList = () => {
     }
   };
 
-  // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
     setCurrentPage(1); // Reset to page 1 when search changes
   };
 
-  // Handle course deletion
   const handleDelete = async (courseId: string) => {
     if (confirm("Are you sure you want to delete this course?")) {
       try {
@@ -57,10 +61,44 @@ const CourseList = () => {
     }
   };
 
-  // Fetch courses on page load or when search or currentPage changes
   useEffect(() => {
     fetchCourses(currentPage);
   }, [currentPage, search]);
+
+  if (status === 'loading') {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <ClipLoader color="#2563eb" size={60} />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <p className="text-red-600">You need to be authenticated to view this page.</p>
+      </div>
+    );
+  }
+
+  if (userEmail !== adminEmail) {
+    return (
+      <div className="flex mt-16 mb-6 flex-col justify-center items-center h-screen bg-gray-50 text-black">
+        <div className="bg-red-400 p-6 rounded-md shadow-md text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Access Restricted</h2>
+          <p>This page is a protected route for admin only. You cant access the features.</p>
+        </div>
+        <Link href={"/sign-up"}>
+          <div className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300">
+            Sign Up
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
+
+
 
   return (
     <div className="container min-h-screen mx-auto mt-10 p-6">

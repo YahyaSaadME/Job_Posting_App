@@ -1,10 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useSession } from 'next-auth/react';
+import ClipLoader from 'react-spinners/ClipLoader';
+import Link from "next/link";
 
 const AddCourse = () => {
+  const { data: session, status }: any = useSession();
+  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const userEmail = session?.user?.email;
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
@@ -75,6 +83,41 @@ const AddCourse = () => {
       setError("An error occurred while adding the course.");
     }
   };
+
+  if (status === 'loading') {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <ClipLoader color="#2563eb" size={60} />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <p className="text-red-600">You need to be authenticated to view this page.</p>
+      </div>
+    );
+  }
+
+  if (userEmail !== adminEmail) {
+    return (
+      <div className="flex mt-16 mb-6 flex-col justify-center items-center h-screen bg-gray-50 text-black">
+        <div className="bg-red-400 p-6 rounded-md shadow-md text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Access Restricted</h2>
+          <p>This page is a protected route for admin only. You cant access the features.</p>
+        </div>
+        <Link href={"/sign-up"}>
+          <div className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300">
+            Sign Up
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
+
+
 
   return (
     <div className="max-w-xl mx-auto p-4">

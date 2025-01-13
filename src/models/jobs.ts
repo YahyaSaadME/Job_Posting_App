@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Schema, model, Document, models } from "mongoose";
 
 interface IJob extends Document {
@@ -13,6 +14,9 @@ interface IJob extends Document {
   tags:string[];
   by:Schema.Types.ObjectId|null;
   approved:boolean|null;
+  companyImgLink : string | any
+  companySummary: string | any
+  Qualifications  : string | any
 }
 
 const jobSchema = new Schema<IJob>(
@@ -20,6 +24,10 @@ const jobSchema = new Schema<IJob>(
     company: {
       type: String,
       required: true,
+    },
+    companySummary : {
+   type : String,
+   required : true
     },
     location: {
       type: String,
@@ -41,6 +49,10 @@ const jobSchema = new Schema<IJob>(
       type: String,
       required: true,
     },
+    Qualifications : {
+      type : String,
+      require :true
+    },
     category: {
       type: String,
       required: true,
@@ -49,6 +61,11 @@ const jobSchema = new Schema<IJob>(
       type: Number,
       required: true,
     },
+    companyImgLink : {
+      type : String,
+      required : true
+    }
+    ,
     jobType: {
       type: String,
       required: true,
@@ -56,11 +73,7 @@ const jobSchema = new Schema<IJob>(
     tags:[{
       type: String,
     }],
-    by:{
-      type: Schema.Types.ObjectId,
-      default:null
-    },
-    approved:{type:Boolean,default:null}
+ 
   },
  
   {

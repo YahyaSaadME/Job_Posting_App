@@ -5,6 +5,10 @@
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import ClipLoader from "react-spinners/ClipLoader";
+import Link from "next/link";
+import Navbar from "@/app/components/global/Navbar";
+import Footer from "@/app/components/global/Footer";
 
 export default function Page() {
   const router = useRouter();
@@ -12,12 +16,18 @@ export default function Page() {
   const [jobs, setJobs] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [uid, setuid] = useState<string>("6777b98bde4abe31a6d4990a");
+  const [uid, setUid] = useState<string>("");
   const [status, setstatus] = useState<boolean | null | undefined>(undefined);
 
-  const { data: session, status:s } = useSession();
+  const { data: session, status:s }:any = useSession();
+
 
   const handleSearch = async (page: number = 1) => {
+    if (!uid) {
+      console.log("UID is not available yet.");
+      return; // Don't make API call if UID is not set
+    }
+
     try {
       const req = await fetch(
         `/api/itreferral?uid=${uid}&search=${search}&page=${page}&status=${status}`
@@ -32,19 +42,22 @@ export default function Page() {
   };
 
   useEffect(() => {
-    handleSearch();
-  }, [search,status]);
-
-  useEffect(() => {
-    if (s === "authenticated") {
-      setuid(session?.user?.id as string);
+    if (session?.user?.id) {
+      setUid(session.user.id);
     }
   }, [session]);
+
+  useEffect(() => {
+    if (uid) {
+      handleSearch();
+    }
+  }, [search, status, uid]); // Ensure `uid` is included in dependencies
 
   const handlePageChange = (page: number) => {
     handleSearch(page);
   };
 
+  console.log("jobs", jobs);
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(`/api/itreferral/${id}`, {
@@ -59,11 +72,54 @@ export default function Page() {
       console.log("An error occurred while deleting the job.");
     }
   };
+  if (s === 'loading') {
+    return   <div className="flex justify-center items-center h-screen w-full">
+    <ClipLoader color={"#2563eb"} size={60} />
+  </div>
+  }
+  if (!session) {
+    router.push('/signin')
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <p className="text-red-600">You need to be authenticated to view this page.</p>
+      </div>
+    );
+  }
+
+  // Unauthorized page for non-job posters
+  if (session?.user?.type === 'jobSeeker') {
+    return (
+      <>
+      <Navbar/>
+      <div className="flex  mt-16 mb-6 flex-col justify-center items-center h-screen bg-gray-50 text-black">
+        <div className="bg-red-400 p-6 rounded-md shadow-md text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Access Restricted</h2>
+          <p>This page is for job posters as (It Referral) only. Please create an account to access the features.</p>
+        </div>
+        <Link href={"/sign-up"}>
+          <div className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300">
+            Sign Up
+          </div>
+        </Link>
+      </div>
+      <Footer/>
+      </>
+    );
+  }
 
   return (
-    <div className="p-6">
+
+    <>
+
+
+{/* 
+    {
+      session?.user?.type = ""
+    } */}
+    <Navbar/>
+    <div className="p-6 mt-10 mb-6">
       <div className='flex flex-wrap justify-center w-full m-6 '>
-              <h2 className='text-3xl font-sans font-bold'> IT Referral Job Posting Page</h2>
+              <h2 className='text-3xl font-sans font-bold'> IT Referral Job Posting Page </h2>
             </div>
       <div className="flex mb-4">
         <input
@@ -79,14 +135,18 @@ export default function Page() {
         >
           Add Job
         </button>
+
       </div>
+      <div className=" m-5">
+      <h1>Welcome, {session?.user?.name}!</h1>
+      <p>Email: {session?.user?.email}</p>
+    </div>
       <table className="min-w-full bg-white border">
         <thead>
           <tr>
             <th className="py-2 px-4 border">Title</th>
-            <th className="py-2 px-4 border">Description</th>
-            <th className="py-2 px-4 border">Category</th>
-            <th className="py-2 px-4 border">Tags</th>
+            <th className="py-2 px-4 border">Company</th>
+        
             <th className="py-2 px-4 border"><select name="Status" id="" className="w-fit" onChange={e=>{setstatus(e.target.value as unknown as boolean | null | undefined);}}>
                 <option value="undefined">All</option>
                 <option value="true">Approved</option>
@@ -101,12 +161,10 @@ export default function Page() {
             <tr key={job._id}>
               <td className="py-2 px-4 border text-justify">{job.title}</td>
               <td className="py-2 px-4 border text-justify">
-                {job.description}
+                {job.companyName}
               </td>
-              <td className="py-2 px-4 border text-center">{job.category}</td>
-              <td className="py-2 px-4 border text-center">
-                {job.tags.join(", ")}
-              </td>
+            
+         
               <td className="py-2 px-4 border text-center">
                 {job.approved == true
                   ? "Approved"
@@ -126,6 +184,12 @@ export default function Page() {
                   className="bg-red-500 text-white rounded-md px-2 py-1"
                 >
                   Delete
+                </button>
+                <button
+                  onClick={() => router.push(`/itreferral/applicants/${job._id}`)}
+                  className="bg-green-500 text-white rounded-md px-2 py-1 mr-2"
+                >
+                  View applicants
                 </button>
               </td>
             </tr>
@@ -152,5 +216,7 @@ export default function Page() {
         </button>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from "next/image";
-import heroImg  from "../../../../assets/heroImg.png"
+import heroImg  from "../../../../public/images/heroimg.jpg"
 import Link from "next/link";
 
 
@@ -14,7 +14,7 @@ const HeroSection = () => {
     alt="Cybersecurity background"
     layout="fill"
     objectFit="fill" /* Ensures the image fills the container proportionally */
-    className=""
+    className="opacity-50"
   />
   <div className="absolute inset-0 bg-black/30"></div> {/* Adds a semi-transparent dark overlay */}
 </div>

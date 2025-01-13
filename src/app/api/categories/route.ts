@@ -1,69 +1,87 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
-import Courses from "../../../models/courses";
-import Blogs from "../../../models/blogs";
-import Jobs from "../../../models/jobs";
-import dbConnect from "@/utils/dbConnect"; 
+import dbConnect from "@/utils/dbConnect";
+import Blog from "@/models/blogs";
+import Course from "@/models/courses";
+import Job from "@/models/jobs";
+import Category from "../../../models/categories"
 
 export async function GET(request: NextRequest) {
+  await dbConnect();
 
   try {
-    await dbConnect()
     const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const search = searchParams.get("search") || "";
 
-    // Pagination parameters for Courses
-    const coursesPage = parseInt(searchParams.get("coursesPage") || "1", 10);
-    const coursesLimit = parseInt(searchParams.get("coursesLimit") || "10", 10);
-    const coursesSkip = (coursesPage - 1) * coursesLimit;
+    const query = search ? { title: { $regex: search, $options: "i" } } : {};
 
-    // Pagination parameters for Blogs
-    const blogsPage = parseInt(searchParams.get("blogsPage") || "1", 10);
-    const blogsLimit = parseInt(searchParams.get("blogsLimit") || "10", 10);
-    const blogsSkip = (blogsPage - 1) * blogsLimit;
+    const categories = await Category.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
 
-    // Pagination parameters for Jobs
-    const jobsPage = parseInt(searchParams.get("jobsPage") || "1", 10);
-    const jobsLimit = parseInt(searchParams.get("jobsLimit") || "10", 10);
-    const jobsSkip = (jobsPage - 1) * jobsLimit;
+    const total = await Category.countDocuments(query);
 
-    const coursesCategories = await Courses.aggregate([
-      { $group: { _id: "$category", count: { $sum: 1 } } },
-      { $project: { _id: 0, category: "$_id", count: 1 } },
-      { $skip: coursesSkip },
-      { $limit: coursesLimit },
-    ]);
+    const categoriesWithCounts = await Promise.all(
+      categories.map(async (category: { title: any; toObject: () => any; }) => {
+        const categoryQuery = { category: category.title };
 
-    const blogsCategories = await Blogs.aggregate([
-      { $group: { _id: "$category", count: { $sum: 1 } } },
-      { $project: { _id: 0, category: "$_id", count: 1 } },
-      { $skip: blogsSkip },
-      { $limit: blogsLimit },
-    ]);
+        const [blogCount, courseCount, jobCount] = await Promise.all([
+          Blog.countDocuments(categoryQuery),
+          Course.countDocuments(categoryQuery),
+          Job.countDocuments(categoryQuery),
+        ]);
 
-    const jobsCategories = await Jobs.aggregate([
-      { $group: { _id: "$category", count: { $sum: 1 } } },
-      { $project: { _id: 0, category: "$_id", count: 1 } },
-      { $skip: jobsSkip },
-      { $limit: jobsLimit },
-    ]);
+        return {
+          ...category.toObject(),
+          count: blogCount + courseCount + jobCount,
+        };
+      })
+    );
 
-    const combinedCategories = [...coursesCategories, ...blogsCategories, ...jobsCategories];
-
-    // Combine and count unique categories
-    const categoryCountMap = combinedCategories.reduce((acc, { category, count }) => {
-      if (!acc[category]) {
-        acc[category] = 0;
-      }
-      acc[category] += count;
-      return acc;
-    }, {});
-
-    const uniqueCategories = Object.entries(categoryCountMap).map(([category, count]) => ({
-      category,
-      count,
-    }));
-
-    return NextResponse.json(uniqueCategories, { status: 200 });
+    return NextResponse.json({
+      categories: categoriesWithCounts,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    });
   } catch (error) {
-    return NextResponse.json({ message: "Error fetching categories", error }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { message: "Error fetching categories", error },
+      { status: 500 }
+    );
+  }
+}
+export async function POST(request: NextRequest) {
+  await dbConnect();
+
+  try {
+    const { title, desc, bg, icon } = await request.json();
+
+    if (!title || !desc || !bg || !icon) {
+      return NextResponse.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
+    }
+
+    const newCategory = new Category({
+      title,
+      desc,
+      bg,
+      icon,
+    });
+
+    await newCategory.save();
+
+    return NextResponse.json({ message: "Category created successfully" });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "Error creating category", error },
+      { status: 500 }
+    );
   }
 }

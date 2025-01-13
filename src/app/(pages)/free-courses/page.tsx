@@ -43,7 +43,7 @@ const Page = () => {
         <ClipLoader color={"#2563eb"} size={60} />
       </div>
     ) : (
-    <div className="  px-4 py-8 mt-16">
+    <div className="  px-14 py-8 mt-16">
       <h1 className="text-3xl font-bold mb-6 text-center"> Free Courses</h1>
            <div className="flex flex-wrap  gap-8 p-2 pt-1 cursor-pointer">
              {courses.map((course: {

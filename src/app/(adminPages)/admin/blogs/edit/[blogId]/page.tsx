@@ -1,16 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from 'next-auth/react';
-
+import ClipLoader from 'react-spinners/ClipLoader';
+import Link from "next/link";
 
 const UpdateBlog = () => {
   const router = useRouter();
   const { blogId } = useParams();
-  const {data : session} = useSession()
-  console.log("session is" , session)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: session, status }: any = useSession();
+  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const userEmail = session?.user?.email;
+
   const [blog, setBlog] = useState({
     title: "",
     author: "",
@@ -136,7 +140,40 @@ const UpdateBlog = () => {
     }
   };
 
+  if (status === 'loading') {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <ClipLoader color="#2563eb" size={60} />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="flex justify-center items-center h-screen w-full">
+        <p className="text-red-600">You need to be authenticated to view this page.</p>
+      </div>
+    );
+  }
+
+  if (userEmail !== adminEmail) {
+    return (
+      <div className="flex mt-16 mb-6 flex-col justify-center items-center h-screen bg-gray-50 text-black">
+        <div className="bg-red-400 p-6 rounded-md shadow-md text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Access Restricted</h2>
+          <p>This page is a protected route for admin only. You cant access the features.</p>
+        </div>
+        <Link href={"/sign-up"}>
+          <div className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300">
+            Sign Up
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
   return (
+  
     <div className="container mx-auto p-6 max-w-xl">
       <h1 className="text-2xl font-bold mb-4">Update Blog</h1>
       {error && <p className="text-red-500">{error}</p>}
