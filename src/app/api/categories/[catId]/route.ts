@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { catId: string } }
+  { }: { params: { catId: string } }
 ) {
   try {
     await dbConnect();
@@ -69,7 +69,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { catId: string } }
+  { }: { params: { catId: string } }
 ) {
   try {
     await dbConnect();
