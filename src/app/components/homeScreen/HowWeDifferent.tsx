@@ -82,9 +82,9 @@ const HowWeAreDifferent = () => {
           With our personalized approach and industry-specific focus, we aim to redefine how professionals grow and succeed in cybersecurity. Lets grow together.
         </p>
         <Link href="/jobs">
-          <a className="px-6 py-3 bg-blue-700 text-white shadow hover:bg-blue-800 transition">
+          <div className="px-6 py-3 bg-blue-700 text-white shadow hover:bg-blue-800 transition">
             Explore Jobs
-          </a>
+          </div>
         </Link>
       </div>
     </div>
