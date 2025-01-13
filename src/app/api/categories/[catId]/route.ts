@@ -41,11 +41,11 @@ export async function GET(request: NextRequest) {
 // ✅ PUT Handler
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { catId: string } }
+  context: { params: { catId: string } }
 ) {
   try {
     await dbConnect();
-    const { catId } = params;
+    const { catId } = context.params;
     const body = await request.json();
 
     const updatedCategory = await Category.findByIdAndUpdate(catId, body, {
@@ -72,11 +72,11 @@ export async function PUT(
 // ✅ DELETE Handler
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { catId: string } }
+  context: { params: { catId: string } }
 ) {
   try {
     await dbConnect();
-    const { catId } = params;
+    const { catId } = context.params;
 
     const deletedCategory = await Category.findByIdAndDelete(catId);
 
