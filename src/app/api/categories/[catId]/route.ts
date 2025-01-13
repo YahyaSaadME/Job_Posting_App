@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import Category from "../../../../models/categories"; // Adjust the path as necessary
 import dbConnect from "@/utils/dbConnect";
 
+// ✅ GET Handler
 export async function GET(request: NextRequest) {
   await dbConnect();
   const { pathname } = new URL(request.url);
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
     });
     if (!category) {
       return NextResponse.json(
-        { success: false, message: "category not found" },
+        { success: false, message: "Category not found" },
         { status: 404 }
       );
     }
@@ -31,21 +32,22 @@ export async function GET(request: NextRequest) {
     );
   } catch (error: any) {
     return NextResponse.json(
-      { success: false, message: error },
+      { success: false, message: error.message || error },
       { status: 400 }
     );
   }
 }
 
+// ✅ PUT Handler
 export async function PUT(
   request: NextRequest,
-  { }: { params: { catId: string } }
+  { params }: { params: { catId: string } }
 ) {
   try {
     await dbConnect();
-    const { pathname } = new URL(request.url);
-    const catId = pathname.split("/").pop();
+    const { catId } = params;
     const body = await request.json();
+
     const updatedCategory = await Category.findByIdAndUpdate(catId, body, {
       new: true,
     });
@@ -67,14 +69,15 @@ export async function PUT(
   }
 }
 
+// ✅ DELETE Handler
 export async function DELETE(
   request: NextRequest,
-  { }: { params: { catId: string } }
+  { params }: { params: { catId: string } }
 ) {
   try {
     await dbConnect();
-    const { pathname } = new URL(request.url);
-    const catId = pathname.split("/").pop();
+    const { catId } = params;
+
     const deletedCategory = await Category.findByIdAndDelete(catId);
 
     if (!deletedCategory) {
