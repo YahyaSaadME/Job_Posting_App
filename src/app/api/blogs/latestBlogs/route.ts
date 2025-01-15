@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     // Fetch the 4 most recent blogs sorted by creation date (descending)
     const latestBlogs = await Blog.find({})
       .sort({ createdAt: -1 })  // Sort by createdAt in descending order (newest first)
-      .limit(3);  // Limit to the 4 most recent blogs
+      .limit(6);  // Limit to the 4 most recent blogs
 
     return NextResponse.json({
       success: true,

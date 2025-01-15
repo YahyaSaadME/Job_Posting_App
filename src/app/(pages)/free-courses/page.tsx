@@ -7,6 +7,7 @@ import Image from "next/image";
 import React , {useState , useEffect} from "react";
 import ClipLoader from 'react-spinners/ClipLoader';
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const Page = () => {
 
@@ -43,45 +44,54 @@ const Page = () => {
         <ClipLoader color={"#2563eb"} size={60} />
       </div>
     ) : (
-    <div className="  px-14 py-8 mt-16">
-      <h1 className="text-3xl font-bold mb-6 text-center"> Free Courses</h1>
-           <div className="flex flex-wrap  gap-8 p-2 pt-1 cursor-pointer">
-             {courses.map((course: {
-               _id: string;
-               id: any ;
-               duration: any;
-               tags: any; thumbnail: any; title: any | string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; description: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | null | undefined; 
-     })  => (
-               <>
-              <div onClick={() => openBlog(course._id)} key={courses._id} className="bg-gray-50  w-[22rem] h-auto space-y-3 rounded-lg p-7 shadow-lg">
-              <div className="flex justify-center mb-4">
-                            <Image
-                             src={`${window.location.origin}/images/${course.thumbnail}`}
-                             alt={course.title}
-                             className="w-full h-44 rounded-md object-fill"
-                             width={200}
-                             height={150}
-                           />
-              </div>
-                <div className=' flex gap-1 flex-wrap'>
-                       {course.tags.map((cat: string, index: React.Key | null | undefined) => (
-                                                      <span 
-                                                        key={index} 
-                                                        className="text-sm  bg-blue-100 text-blue-600 px-2 py-1 rounded"
-                                                      >
-                                                        {cat}
-                                                      </span>
-                                                    ))}
-                              </div>
-                      
-              <h3 className="text-lg font-bold mb-2 text-black">{course.title}</h3>
-              <p className="text-gray-600">{course.description}</p>
-     
-     
-              <p className="text-gray-900"> <span className='font-semibold'>Duration :</span> {course.duration}</p>
-     
+    <div className="  px-8 mt-20 ">
+     <div className='flex flex-wrap  justify-center w-full'>
+              <h2 className='text-3xl  font-bold font-sans text-gray-400'> Free Courses</h2>
             </div>
-            </>
+           <div className="flex flex-wrap lg:mx-16 max-sm:mx-2 gap-8 p-2 pt-1 cursor-pointer ">
+             {courses.map((item: any
+)  => (
+      <motion.div
+      onClick={() => openBlog(item._id)}
+      key={item._id.toString()}
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="bg-white shadow-md p-3 w-[20rem]  mt-12 border border-gray-200"
+  >
+          <Image
+                                                       src={`${window.location.origin}/images/${item.thumbnail}`}
+                                                       alt={item.title}
+                                                       className="w-full md:h-44  mt-8 max-sm:h-auto  object-fill"
+                                                       width={200}
+                                                       height={150}
+                                                     />
+      <div className='flex gap-3 flex-wrap mt-10'>
+          {item.tags.map((cat: string, index: number) => (
+              <span key={index} className="bg-pink-100 text-pink-600 text-sm font-semibold px-3 py-1 rounded-full mb-4 inline-block">
+                  {cat}
+              </span>
+          ))}
+      </div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2 cursor-pointer hover:underline" onClick={() => router.push(`/blog/${item._id}`)}>
+          {item.title}
+      </h2>
+      <p className="text-gray-600 mb-4">{item?.description?.slice(0, 100)}...</p>
+      <div className="flex items-center mt-4">
+          <div className="flex items-center gap-4">
+              <Image
+                  src={"https://tse2.mm.bing.net/th?id=OIP.YoTUWMoKovQT0gCYOYMwzwHaHa&pid=Api&P=0&h=180"}
+                  alt="Author Avatar"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+              />
+              <div>
+                  <p className="font-medium text-gray-900">Admin</p>
+              </div>
+          </div>
+      </div>
+  </motion.div> 
              ))}
            
          {

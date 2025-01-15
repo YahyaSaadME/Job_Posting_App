@@ -66,22 +66,22 @@ const DataSection = () => {
 
     return (
         <div>
-            <div className="bg-gray-800 text-white py-8">
+            <div className="bg-gray-200 text-black  py-4 lg:mx-16 max-sm:mx-4 ">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-3 gap-8 text-center">
                     <div>
-                        <h2 className="text-4xl max-sm:text-2xl font-bold text-blue-500">
+                        <h2 className="text-3xl max-sm:text-2xl font-bold text-black">
                             {userCount}
                         </h2>
                         <p className="mt-2 text-lg max-sm:text-md">Users</p>
                     </div>
                     <div>
-                        <h2 className="text-4xl max-sm:text-2xl font-bold text-blue-500">
+                        <h2 className="text-3xl max-sm:text-2xl font-bold text-black">
                             {companyCount}
                         </h2>
                         <p className="mt-2 text-lg max-sm:text-md">Companies</p>
                     </div>
                     <div>
-                        <h2 className="text-4xl max-sm:text-2xl font-bold text-blue-500">
+                        <h2 className="text-3xl max-sm:text-2xl font-bold text-black">
                             {jobCount}
                         </h2>
                         <p className="mt-2 text-lg max-sm:text-md">Jobs</p>

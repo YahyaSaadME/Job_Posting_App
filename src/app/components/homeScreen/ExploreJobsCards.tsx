@@ -1,78 +1,47 @@
-import Link from 'next/link';
-import { FaCloud } from "react-icons/fa";
 
-const JobRoles = () => {
-  const jobRoles = [
-    {
-      title: "GRC Profile",
-      count: 22,
-      icon: "shield", 
-    },
-    {
-      title: "SOC Operations",
-      count: 8,
-      icon: "grid", 
-    },
-    {
-      title: "Security Support",
-      count: 3,
-      icon: "cloud", 
-    },
-    {
-      title: "Penetration Testing",
-      count: 8,
-      icon: "code", 
-    },
-    {
-      title: "Security Sales",
-      count: 3,
-      icon: "chart-bar", 
-    },
-    {
-      title: "Cloud Security",
-      count: 19,
-      icon: "clipboard-check", 
-    },
-    {
-      title: "Security Engineering",
-      count: 25,
-      icon: "user", 
-    },
-    {
-      title: "DevSecOps",
-      count: 2,
-      icon: "cog", 
-    },
-  ];
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import ClipLoader from 'react-spinners/ClipLoader';
+import { motion } from "framer-motion";
+import Image from "next/image";
 
-  return (
-    <div className="flex flex-col items-center justify-center  bg-gray-100 h-auto  "> 
-      <h1 className="text-3xl font-bold mb-7  mt-10">Explore Job Roles</h1> 
 
-      <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-4 gap-12">
-        {jobRoles.map((role  , index) => (
-            <div key = {index}>
-           
-          <Link href={`/jobs/?category=${role.title}`} key={role.title} className="flex flex-col items-center justify-center bg-white border shadow-md  text-blue-600 rounded-sm p-8"> 
-          <FaCloud className='text-5xl text-blue-600'/>
-            <span className={`material-icons text-3xl mb-2 ${role.icon}`}>
-              {/* Replace with actual Material Icons */}
-            </span>
-            <h3 className="text-lg font-semibold">{role.title}</h3>
-            <span>{role.count} Jobs</span>
+
+  const Tags = () => { 
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true); 
+    const openBlog = (id: string) => { router.push(`/free-courses/${id}`); };
+    const router = useRouter();
+     useEffect(() => 
+      { const getCourses = async () => { try
+        { const response = await fetch('/api/courses/latestCourse');
+           const data = await response.json();
+            setCourses(Array.isArray(data.data) ? data.data : []);
+             setLoading(false); } 
+             catch (error) { console.error('Error fetching courses:', error);
+               setLoading(false); } }; getCourses(); }, []); 
+               if (loading) { return ( <div className="flex justify-center items-center h-screen w-full"> <ClipLoader color={"#2563eb"} size={60} /> </div> ); }
+
+    return (
+      <div className="p-3 mx-16 mt-8">
+      <div className='flex gap-14 mb-8'>
+          <h2 className="text-3xl font-bold font-sans text-gray-400">Tags</h2>
+          <Link href={"/blogs"}>
+              <p className="text-gray-500 text-lg md:mt-2">View All →</p>
           </Link>
-          </div>
-        ))}
-        
-  
       </div>
-      <div className="flex justify-center m-8 "> {/* Added flexbox for centering */}
-        <button className="bg-blue-600 text-white px-4 py-2 mt-6 rounded-md shadow-md hover:bg-blue-700">
-          View All
-        </button>
-      </div>
-    </div>
-  );
+      <div className="pt-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <motion.div>
+              
+                    </motion.div>
+               </div>
+               </div>
+          
+    );
 };
 
-export default JobRoles;
+export default Tags;
