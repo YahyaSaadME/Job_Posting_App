@@ -11,7 +11,7 @@ import Link from "next/link";
 const BlogsList = () => {
   const { data: session, status }: any = useSession();
   const router = useRouter();
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail ="shivinfosec15@gmail.com"
   const userEmail = session?.user?.email;
 
   const [blogs, setBlogs] = useState([]);

@@ -21,7 +21,7 @@ const EditCategory = () => {
   const { catId } = useParams();
   const { data: session, status }: any = useSession();
 
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail ="shivinfosec15@gmail.com"
   const userEmail = session?.user?.email;
   useEffect(() => {
     const fetchCategory = async () => {

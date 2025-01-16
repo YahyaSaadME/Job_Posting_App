@@ -66,7 +66,7 @@ const DataSection = () => {
 
     return (
         <div>
-            <div className="bg-gray-200 text-black  py-4 lg:mx-16 max-sm:mx-4 ">
+            <div className="bg-gray-100 text-black mt-16 py-4 lg:mx-16 max-sm:mx-4 ">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-3 gap-8 text-center">
                     <div>
                         <h2 className="text-3xl max-sm:text-2xl font-bold text-black">

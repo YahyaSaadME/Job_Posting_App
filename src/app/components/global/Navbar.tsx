@@ -44,33 +44,34 @@ const Navbar: React.FC = () => {
     <header className="bg-white shadow-md fixed z-20 w-full  top-0 left-0 h-16">
 < ToastContainer />
       
-      <div className="container lg:mx-16 mx-6  flex lg:gap-16  max-sm:gap-36 items-center h-16">
+      <div className="container    flex justify-evenly  max-sm:justify-between mx-1 items-center h-16">
         {/* Logo */}
+        <div>
         <Link href="/">
-       <h1 className=" font-sans text-2xl hover:text-gray-800">Shiv InfoSec</h1>
+       <h1 className=" font-bold text-2xl hover:text-gray-800">Shiv InfoSec</h1>
         </Link>
-
-        {/* Desktop Menu */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link href="/blogs" className="text-gray-900  text-md font-sans hover:text-gray-600">
+        </div>
+   <div>
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link href="/blogs" className="text-gray-900  text-md font-sans hover:underline hover:text-gray-600">
             Blog
           </Link>
-          <Link href="/free-courses" className="text-gray-900  text-md font-sans hover:text-gray-600">
+          <Link href="/free-courses" className="text-gray-900  hover:underline text-md font-sans hover:text-gray-600">
             Free Course
           </Link>
-          <Link href="/jobs" className="text-gray-900  text-md font-sans hover:text-gray-600">
+          <Link href="/jobs" className="text-gray-900  text-md  hover:underline font-sans hover:text-gray-600">
             Jobs
           </Link>
-          <Link href="/categories" className="text-gray-900  text-md font-sans hover:text-gray-600">
+          <Link href="/categories" className="text-gray-900 hover:underline text-md font-sans hover:text-gray-600">
           Categories
           </Link>
-          <Link href="/itReferralJobs" className="text-gray-900  text-md font-sans hover:text-gray-600">
+          <Link href="/itReferralJobs" className="text-gray-900 hover:underline text-md font-sans hover:text-gray-600">
             Employee IT Referral
           </Link>
         </nav>
-
+        </div>
         {/* Social Icons */}
-        <div className="hidden md:flex items-center space-x-7">
+        <div className="hidden md:flex items-center space-x-4">
         <Link href="https://www.linkedin.com/company/shivinfosec/" className="text-blue-700 hover:text-blue-800">
             <FaLinkedin className="text-3xl"/>
               </Link>
@@ -91,29 +92,32 @@ const Navbar: React.FC = () => {
           <Link href="https://t.me/ShivInfoSec" className="text-sky-600 hover:text-sky-800">
            <FaTelegram className="text-3xl"/>
           </Link>
+          </div>
+
+          <div className="max-sm:hidden">
                   {session ? (
           <button
             onClick={handleLogout}
-           className="bg-black text-gray-100 font-bold py-3 px-6  w-28 rounded-xl hover:bg-zinc-950"
+           className="bg-black text-gray-100 font-sans py-3 px-6  w-28 rounded-xl hover:bg-zinc-950"
           >
             Logout
           </button>
         ) : (
           <Link
                 href="/signin"
-           className="bg-black text-gray-100 font-bold py-3 px-8 w-28 rounded-xl hover:bg-zinc-950"
+           className="bg-black text-gray-100 font-sans py-3 px-8 w-28 rounded-xl hover:bg-zinc-950"
               >
             Log In
               </Link>
         )}
 
-
+</div>
 
 
 
 
           
-        </div>
+      
 
         {/* Hamburger Icon for Mobile */}
         <button
@@ -124,6 +128,7 @@ const Navbar: React.FC = () => {
           <span className="w-6 h-0.5 bg-gray-800"></span>
           <span className="w-6 h-0.5 bg-gray-800"></span>
         </button>
+
       </div>
 
       {/* Mobile Menu */}

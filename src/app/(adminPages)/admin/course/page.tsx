@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const CourseList = () => {
   const { data: session, status }: any = useSession();
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail ="shivinfosec15@gmail.com"
   const userEmail = session?.user?.email;
 
   const [courses, setCourses] = useState([]);

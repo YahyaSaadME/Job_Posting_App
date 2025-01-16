@@ -9,22 +9,24 @@ const HeroSection = () => {
       initial={{ y: -50, opacity: 0 }} // Start position (upward)
       animate={{ y: 0, opacity: 1 }} // End position (natural position)
       transition={{ duration: 0.8, ease: "easeOut" }} // Animation duration
-      className="bg-gray-50 pt-10 lg:m-16 lg:mb-0  max-sm:m-6 mt-16 max-sm:flex-col-reverse max-sm:gap-8 rounded-lg py-6 px-6 lg:px-20 flex flex-col lg:flex-row items-center justify-between"
+      className="bg-gray-100 pt-16 lg:m-16 lg:mb-0  max-sm:m-6 mt-2 max-sm:flex-col-reverse max-sm:gap-8 rounded-lg py-16 px-6 lg:px-20 flex flex-col lg:flex-row items-center justify-between"
     >
       {/* Left Content */}
       <div className="lg:w-1/2 mb-10 lg:mb-0">
         <h2 className="text-4xl max-sm:text-3xl font-bold text-gray-900 mb-4">
-          Super Simple Networking and Automation Blog
+        Cybersecurity Simplified
+
         </h2>
         <p className="text-gray-600 text-lg mb-6">
-          Explore the exciting side of Network, Cloud & Automation with simple
-          best blog posts, hands-on labs, and practical examples.
+        Dive into the fascinating world of Cybersecurity, Network Security, Network and Cloud with easy-to-follow blogs, Jobs , Employee IT referrals and Courses.
+        
         </p>
         <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-          Ready to stay ahead in Network Automation?
+        Ready to stay ahead in Cybersecurity?
         </h3>
         <p className="text-gray-600 text-lg mb-6">
-          Subscribe to Packetswitch to get the latest updates directly to your inbox. Spam-free, always.
+        
+        Sign up to SHIV INFOSEC for the latest updates.
         </p>
         <Link href={"/jobs"}>
           <button className="bg-black text-gray-100 font-bold py-3 px-6 w-60 rounded-full hover:bg-zinc-950">

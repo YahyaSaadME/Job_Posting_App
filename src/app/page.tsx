@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <div className="bg-white">
       <Navbar />
-      <div className="mt-20"><HeroSection /></div>
+      <div className="mt-24"><HeroSection /></div>
       
       <DataSection />
       <ExploreJobs />

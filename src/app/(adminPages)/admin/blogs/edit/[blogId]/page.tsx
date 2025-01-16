@@ -12,7 +12,7 @@ const UpdateBlog = () => {
   const { blogId } = useParams();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data: session, status }: any = useSession();
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail ="shivinfosec15@gmail.com"
   const userEmail = session?.user?.email;
 
   const [blog, setBlog] = useState({

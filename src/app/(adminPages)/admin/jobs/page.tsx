@@ -18,7 +18,7 @@ const Jobs = () => {
   const [status, setstatus] = useState<boolean | null | undefined>(undefined);
   const router = useRouter();
   const { data: session, status:s }: any = useSession();
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail ="shivinfosec15@gmail.com"
   const userEmail = session?.user?.email;
   
   const fetchJobs = async () => {
