@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
-import { toast ,  ToastContainer  } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -25,6 +25,8 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [resume, setResume] = useState<File | null>(null);
+  const [resumeUrl, setResumeUrl] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showOtpDialog, setShowOtpDialog] = useState(false);
@@ -62,20 +64,41 @@ export default function SignUp() {
       !validatePassword(password) ||
       !name ||
       !phone ||
-      !termsAccepted
+      !termsAccepted ||
+      (type === "jobSeeker" && !resume)
     ) {
       setError("Please fill all fields correctly and accept terms.");
       return;
     }
-        // Validate restricted domains for job posters
-        if (type === "jobPoster" && isRestrictedDomain(email)) {
-          setError("Personal email addresses are not allowed for job posters. Please use your office email.");
-          return;
-        }
-    
+
+    // Validate restricted domains for job posters
+    if (type === "jobPoster" && isRestrictedDomain(email)) {
+      setError("Personal email addresses are not allowed for job posters. Please use your office email.");
+      return;
+    }
 
     setIsLoading(true);
     try {
+      // Upload resume if job seeker
+      if (type === "jobSeeker" && resume) {
+        const formData = new FormData();
+        formData.append("resume", resume);
+
+        const uploadResponse = await fetch("/api/upload/resume", {
+          method: "POST",
+          body: formData,
+        });
+
+        const uploadData = await uploadResponse.json();
+        if (!uploadData.success) {
+          setError(uploadData.error || "Failed to upload resume");
+          setIsLoading(false);
+          return;
+        }
+
+        setResumeUrl(uploadData.url);
+      }
+
       const response = await fetch("api/auth/sign-up/send-otp", {
         method: "POST",
         headers: {
@@ -123,13 +146,14 @@ export default function SignUp() {
           type,
           mobile: phone,
           otp,
+          resume: resumeUrl,
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        toast("Sucessfully account created !!")
+        toast("Successfully account created !!")
         
         router.push("/signin");
       } else {
@@ -266,6 +290,21 @@ export default function SignUp() {
                     </ul>
                   </div>
                 </div>
+
+                {type === "jobSeeker" && (
+                  <div className="space-y-2">
+                    <label className="block">
+                      Resume <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="file"
+                      onChange={(e) => setResume(e.target.files?.[0] || null)}
+                      className="w-full p-3 border rounded-lg"
+                      required
+                    />
+                    {resume && <p>Resume uploaded: {resume.name}</p>}
+                  </div>
+                )}
 
                 <div className="flex items-center gap-2">
                   <input

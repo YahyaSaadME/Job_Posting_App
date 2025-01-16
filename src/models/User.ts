@@ -7,6 +7,7 @@ export interface IUser {
   password: string;
   type: "jobSeeker" | "jobPoster";
   otp?: string;
+  resume: string | null;
   otpExpiresAt?: Date;
   verified: "approved" | "declined";
   resetPasswordToken?: string;
@@ -22,7 +23,12 @@ const UserSchema = new mongoose.Schema<IUser>({
     enum: ["jobSeeker", "jobPoster"],
     default: "jobSeeker",
   },
-  verified: { type: String, enum: ["approved", "declined"], default: "declined" },
+  resume: { type: String },
+  verified: {
+    type: String,
+    enum: ["approved", "declined"],
+    default: "declined",
+  },
   resetPasswordToken: { type: String },
   resetPasswordExpiresAt: { type: Date },
   otp: { type: String },
@@ -30,4 +36,5 @@ const UserSchema = new mongoose.Schema<IUser>({
 });
 
 // Named export
-export const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);

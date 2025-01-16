@@ -8,10 +8,8 @@ import mailSender from "@/utils/mailSender"; // Assuming you have a mailSender u
 
 export async function POST(req: Request) {
   try {
-    const { email, name, password, type, mobile, otp } = await req.json();
-    console.log(email, name, password, type, mobile, otp);
-
-    if (!email || !name || !password || !type || !mobile || !otp) {
+    const { email, name, password, type, mobile, otp,resume } = await req.json();
+    if (!email || !name || !password || !type || !mobile || !otp || !resume) {
       return NextResponse.json({ success: false, message: "All fields are required." }, { status: 400 });
     }
 
@@ -35,6 +33,7 @@ export async function POST(req: Request) {
       password: hashedPassword,
       type,
       mobile,
+      resume
     });
 
     await newUser.save();

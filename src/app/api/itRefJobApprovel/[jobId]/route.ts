@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ message: "Job ID is required." }, { status: 400 });
     }
 
-    const updatedJob = await Job.findByIdAndUpdate(jobId, updates, {
+    const updatedJob = await Job.findByIdAndUpdate(jobId, {...updates,approved:false}, {
       new: true,
       runValidators: true,
     });
