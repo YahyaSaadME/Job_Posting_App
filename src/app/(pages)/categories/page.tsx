@@ -51,7 +51,7 @@ export default function Page() {
       <Navbar />
       {loading ? (
         <div className="flex justify-center items-center h-screen w-full">
-          <ClipLoader color={"##020617"} size={60} />
+          <ClipLoader color={"#020617"} size={60} />
         </div>
       ) : (
         <div className="mt-24 mx-16">

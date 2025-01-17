@@ -8,7 +8,7 @@ import mailSender from "@/utils/mailSender";
 
 export async function POST(req: Request) {
   try {
-    const { email } = await req.json();
+    const { email , name } = await req.json();
 
     if (!email) {
       return NextResponse.json({ success: false, message: "Email is required." }, { status: 400 });
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
 
         <!-- Content Section -->
         <div class="content">
-            Dear <strong>${email}</strong>,  
+            Dear <strong>${name}</strong>,  
             <br><br>
             Thank you for choosing Shiv Infosec! To proceed securely, please use the One-Time Password (OTP) below:  
             <div class="otp">

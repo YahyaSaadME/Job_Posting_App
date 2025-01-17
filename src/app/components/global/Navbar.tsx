@@ -107,9 +107,9 @@ const Navbar: React.FC = () => {
         ) : (
           <Link
                 href="/signin"
-           className="bg-black text-gray-100 font-sans py-3 px-8 w-28 rounded-full hover:bg-zinc-950"
+           className="bg-black text-gray-100 font-sans py-3 px-4 w-28 text-center rounded-full hover:bg-zinc-950"
               >
-            Log In
+            Sign In
               </Link>
         )}
 
@@ -197,7 +197,7 @@ const Navbar: React.FC = () => {
         ) : (
           <Link href="/signin"
               className="bg-black text-gray-100 font-bold py-3 px-6  w-full rounded-xl hover:bg-zinc-950">
-           Log In
+           Sign In
           </Link>
         )}
       </motion.div>

@@ -325,7 +325,7 @@ const Page = () => {
 
         </div>
         <button
-            className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
+            className="bg-black h-10 md:hidden lg:hidden w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
             onClick={() => setIsOpen(!isOpen)}
           >
     

@@ -59,7 +59,7 @@ const router = useRouter()
   }, [jobId]);
 
   if (loading) return <div className="flex justify-center items-center h-screen w-full">
-  <ClipLoader color={"#2563eb"} size={60} />
+  <ClipLoader color={"#020617"} size={60} />
 </div>
   if (error) return <p>{error}</p>;
   if (session?.user?.type === 'jobSeeker') {

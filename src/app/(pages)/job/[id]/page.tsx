@@ -72,7 +72,7 @@ const Page = () => {
       <div className="mt-16 md:hidden ">
         {loading ? (
           <div className="flex  justify-center items-center h-screen w-full">
-            <ClipLoader color={"#2563eb"} size={60} />
+            <ClipLoader color={"#020617"} size={60} />
           </div>
         ) : (
           <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
@@ -139,19 +139,19 @@ const Page = () => {
 
             {/* Job Summary and Company Summary */}
             <div className="flex flex-col sm:flex-row gap-4 mt-4 max-w-4xl mx-auto">
-              <div className="bg-blue-100 p-4 rounded-md shadow-md flex-1">
-                <h2 className="text-lg font-bold text-blue-700">Job Summary</h2>
+              <div className="bg-gray-100 p-4 rounded-md shadow-md flex-1">
+                <h2 className="text-lg font-bold text-black">Job Summary</h2>
                 <ul className="text-gray-600 mt-2">
                   {session?.user ? (
                     <button
-                      className="bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-700"
+                      className="bg-black text-white px-4 py-2 rounded mt-2 hover:bg-black"
                       onClick={() => applyForJob(job?.link)}
                     >
                       Apply Now
                     </button>
                   ) : (
                     <button
-                      className="bg-blue-600 text-white px-4 py-2 rounded mt-2 hover:bg-blue-700"
+                      className="bg-black text-white px-4 py-2 rounded mt-2 hover:bg-black"
                       onClick={() => router.push("/signin")}
                     >
                       Sign In to Apply
@@ -166,8 +166,8 @@ const Page = () => {
                 </ul>
               </div>
 
-              <div className="bg-blue-100 p-4 rounded-md shadow-md flex-1">
-                <h2 className="text-lg font-bold text-blue-700">
+              <div className="bg-gray-100 p-4 rounded-md shadow-md flex-1">
+                <h2 className="text-lg font-bold text-black">
                   Company Summary
                 </h2>
                 <p className="text-gray-600 mt-2">{job?.companySummary}</p>
@@ -180,7 +180,7 @@ const Page = () => {
       <div className="max-sm:hidden mt-16">
         {loading ? (
           <div className="flex  justify-center items-center h-screen w-full">
-            <ClipLoader color={"#2563eb"} size={60} />
+            <ClipLoader color={"#020617"} size={60} />
           </div>
         ) : (
           <div>
@@ -262,8 +262,14 @@ const Page = () => {
 
               <div className="   ">
                 <div className="grid grid-rows-1 md:grid-rows-1 gap-4 mt-4">
-                  <div className="bg-blue-100 w-[24rem] p-4 rounded-md shadow-md">
-                    <h2 className="text-lg font-bold text-blue-700 mb-2">
+                <div className="bg-gray-100 p-4 w-[24rem] rounded-md shadow-md">
+                    <h2 className="text-lg font-bold text-black mb-2">
+                      Company Summary
+                    </h2>
+                    <p className="text-gray-600">{job?.companySummary}</p>
+                  </div>
+                  <div className="bg-gray-100 w-[24rem] p-4 rounded-md shadow-md">
+                    <h2 className="text-lg font-bold text-black mb-2">
                       Job Summary
                     </h2>
                     <ul className="list-none  text-gray-600">
@@ -271,7 +277,7 @@ const Page = () => {
                       {session?.user ? (
                         <>
                           <button
-                            className="bg-blue-600  h-10 w-36  text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+                            className="bg-black  h-10 w-36  text-white px-4  rounded hover:bg-black transition-colors"
                             onClick={() => applyForJob(job?.link)}
                           >
                             Apply Now
@@ -280,7 +286,7 @@ const Page = () => {
                       ) : (
                         <>
                           <button
-                            className="bg-blue-600  h-10 w-48  text-white px-2 py-2 rounded hover:bg-blue-700 transition-colors"
+                            className="bg-black  h-10 w-48  text-white px-2 rounded hover:bg-black transition-colors"
                             onClick={() => router.push("/signin")}
                           >
                             Sign In to Apply
@@ -302,12 +308,7 @@ const Page = () => {
                       <br />
                     </ul>
                   </div>
-                  <div className="bg-blue-100 p-4 w-[24rem] rounded-md shadow-md">
-                    <h2 className="text-lg font-bold text-blue-700 mb-2">
-                      Company Summary
-                    </h2>
-                    <p className="text-gray-600">{job?.companySummary}</p>
-                  </div>
+                 
                 </div>
               </div>
             </div>

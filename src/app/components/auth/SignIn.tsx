@@ -18,13 +18,12 @@ export default function SignIn() {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-
-    if(session){
-      toast.warn(`you are already login ${session?.user?.name}`)
+    if (session) {
+      toast.warn(`You are already logged in as ${session?.user?.name}`);
     }
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
       const result = await signIn("sign-in", {
         email: formData.email,
@@ -32,34 +31,29 @@ export default function SignIn() {
         role: formData.role,
         redirect: false,
       });
-
+  
       if (result?.error) {
-
-        toast.error('log in failed')
+        // Show the error message from the API
+        toast.error(result.error);
         return;
       }
-
   
-            toast("SuccessFully Log In !! ")
-         
-      
-                router.push("/");
-      
+      toast.success("Successfully logged in!");
+      router.push("/");
     } catch (error) {
-
-      toast("An error occurred during sign in")
-
+      console.error("Sign-in error:", error);
+      toast.error("An error occurred during sign-in.");
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-200/80">
        <ToastContainer />
       <div className="mx-auto max-w-[1200px] p-4 h-screen flex items-center">
         <div className="w-full flex shadow-lg rounded-lg overflow-hidden bg-white">
-          <div className="hidden md:flex md:w-1/2 bg-blue-500 p-12 flex-col text-white relative">
+          <div className="hidden md:flex md:w-1/2 bg-gray-600 p-12 flex-col text-white relative">
             <div className="max-w-md">
               <h2 className="text-3xl font-medium leading-tight mb-6">
                 Discover world best online courses here. 24k online course is
@@ -134,7 +128,7 @@ export default function SignIn() {
                 <div className="flex justify-end">
                   <Link
                     href="/forgot-password"
-                    className="text-sm text-blue-600 hover:text-blue-500"
+                    className="text-sm text-black "
                   >
                     Forgot Password?
                   </Link>
@@ -143,7 +137,7 @@ export default function SignIn() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 disabled:opacity-70"
+                  className="w-full bg-black text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 disabled:opacity-70"
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
                 </button>

@@ -56,8 +56,11 @@ const ItReferralJobs = () => {
       setLoading(true);
       const response = await fetch(`/api/itRefJobApprovel/${jobId}`, {
         method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ _id: jobId, approved: status }),
       });
+      
+      
       if (response.ok) {
         fetchItReferralJobs();
       } else {

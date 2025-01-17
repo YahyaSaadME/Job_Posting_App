@@ -79,7 +79,7 @@ if(data){
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-md  focus:outline-none focus:ring-2  focus:ring-offset-2"
+          className="w-full bg-black  text-white py-2 rounded-md  focus:outline-none focus:ring-2  focus:ring-offset-2"
         >
           {isLoading ? "Sending..." : "Send Reset Link"}
         </Button>

@@ -73,7 +73,7 @@ const AddJobPage = () => {
 
   if (s === 'loading') {
     return   <div className="flex justify-center items-center h-screen w-full">
-    <ClipLoader color={"#2563eb"} size={60} />
+    <ClipLoader color={"#020617"} size={60} />
   </div>
   }
 
@@ -112,7 +112,8 @@ const AddJobPage = () => {
               type={field === "tags" ? "text" : field === "yearsOfExperience" ? "number" : "text"}
               value={formData[field as keyof typeof formData]}
               onChange={handleChange}
-              className="w-full p-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className={`${field === "description" ? "h-56" : "h-auto"} w-full p-4 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+
               required
             />
           </div>
@@ -120,7 +121,7 @@ const AddJobPage = () => {
 
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold text-xl hover:bg-blue-700 transition duration-300"
+          className="w-full py-3 bg-black text-white rounded-lg font-semibold text-xl  transition duration-300"
         >
           Add Job
         </button>

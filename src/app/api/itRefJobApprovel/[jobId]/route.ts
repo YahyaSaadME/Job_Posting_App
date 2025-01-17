@@ -8,19 +8,21 @@ import Job from '../../../../models/itRefJob';
 
 // Update a job by ID
 export async function PUT(request: NextRequest) {
-
-    const { pathname } = new URL(request.url);
-    const jobId = pathname.split('/').pop();
-  console.log(jobId)
   try {
-    dbConnect()
-    const body = await request.json();
-    const {  ...updates } = body;
+    dbConnect(); // Ensure database connection
+    const { pathname } = new URL(request.url);
+    const jobId = pathname.split('/').filter(Boolean).pop();
+
     if (!jobId) {
       return NextResponse.json({ message: "Job ID is required." }, { status: 400 });
     }
 
-    const updatedJob = await Job.findByIdAndUpdate(jobId, {...updates,approved:false}, {
+    const body = await request.json();
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
+    }
+
+    const updatedJob = await Job.findByIdAndUpdate(jobId, body, {
       new: true,
       runValidators: true,
     });
@@ -30,7 +32,8 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json(updatedJob, { status: 200 });
-  } catch (error) {
+  } catch (error : any) {
+    console.error("Update Error:", error.message);
     return NextResponse.json({ message: "Error updating job", error }, { status: 500 });
   }
 }

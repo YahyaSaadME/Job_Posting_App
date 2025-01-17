@@ -74,7 +74,7 @@ export default function Page() {
   };
   if (s === 'loading') {
     return   <div className="flex justify-center items-center h-screen w-full">
-    <ClipLoader color={"#2563eb"} size={60} />
+    <ClipLoader color={"#020617"} size={60} />
   </div>
   }
   if (!session) {
@@ -117,10 +117,8 @@ export default function Page() {
       session?.user?.type = ""
     } */}
     <Navbar/>
-    <div className="p-6 mt-10 mb-6">
-      <div className='flex flex-wrap justify-center w-full m-6 '>
-              <h2 className='text-3xl font-sans font-bold'> IT Referral Job Posting Page </h2>
-            </div>
+    <div className="p-6 mt-16 mb-6 mx-16">
+  
       <div className="flex mb-4">
         <input
           type="text"
@@ -131,7 +129,7 @@ export default function Page() {
         />
         <button
           onClick={(e: any) => router.push("/itreferral/add")}
-          className="bg-blue-500 ml-2 w-[100px] text-white rounded-md px-1 py-3 shaodow-md"
+          className="bg-black ml-2 w-[100px] text-white rounded-md px-1 py-3 shaodow-md"
         >
           Add Job
         </button>
@@ -172,7 +170,7 @@ export default function Page() {
                   ? "Declined"
                   : "Pending"}
               </td>
-              <td className="py-2 px-4 border text-center">
+              <td className="py-2 px-4 flex gap-4 border text-center">
                 <button
                   onClick={() => router.push(`/itreferral/${job._id}`)}
                   className="bg-yellow-500 text-white rounded-md px-2 py-1 mr-2"

@@ -130,12 +130,12 @@ const Page = () => {
       <Navbar />
       <ToastContainer/>
 
-      <div className="bg-white text-black min-h-screen mt-16 flex flex-col">
+      <div className="bg-white text-black md:mx-16 min-h-screen mt-16 flex flex-col">
         {/* Header Section */}
-        <div className="flex flex-col px-5 md:flex-row justify-between items-center bg-blue-100 p-6 md:p-8">
+        <div className="flex flex-col  md:flex-row justify-between items-center bg-gray-100 p-6 md:p-6">
           <div className="text-3xl md:text-4xl font-bold mb-4 md:mb-0">It Referral Jobs</div>
           <Link href="/itreferral">
-            <button className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-4 px-8 rounded-md transition duration-300">
+            <button className="bg-black hover:bg-black text-white font-semibold py-4 px-8 rounded-full transition duration-300">
               Post Jobs as It Referral / Dashboard
             </button>
           </Link>
@@ -156,7 +156,7 @@ const Page = () => {
         <div className="p-6 md:p-8">
           {loading ? (
             <div className="flex justify-center items-center h-screen w-full">
-              <ClipLoader color="#2563eb" size={60} />
+              <ClipLoader color="#020617" size={60} />
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6">
@@ -172,22 +172,22 @@ const Page = () => {
                       </h3>
                       <div className="flex flex-wrap gap-4 text-gray-600 max-sm:gap-2 max-sm:text-sm">
                         <div className="flex items-center gap-2">
-                          <FaLocationDot className="text-blue-700 max-sm:text-base" />
+                          <FaLocationDot className="text-black max-sm:text-base" />
                           <span>{job.location}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <MdAccessTimeFilled className="text-blue-700 max-sm:text-base" />
+                          <MdAccessTimeFilled className="text-black max-sm:text-base" />
                           <span>{job.jobType}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <MdWork className="text-blue-700 max-sm:text-base" />
+                          <MdWork className="text-black max-sm:text-base" />
                           <span>{job.yearsOfExperience} years</span>
                         </div>
                       </div>
                       <p className="text-gray-700 max-sm:text-sm">{job.description}</p>
                     </div>
                     <button
-                      className="bg-blue-600 h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-blue-700 max-sm:h-9 max-sm:text-sm"
+                      className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
                       onClick={() => handleApplyClick(job)}
                     >
                       Apply

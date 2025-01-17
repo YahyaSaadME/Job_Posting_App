@@ -104,7 +104,7 @@ export default function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, name }),
       });
 
       const data = await response.json();
@@ -171,7 +171,7 @@ export default function SignUp() {
       <ToastContainer/>
       <div className="mx-auto max-w-[1200px] p-4 h-auto flex items-center ">
         <div className="w-full flex shadow-lg rounded-lg overflow-hidden bg-white">
-          <div className="hidden sm:flex bg-blue-600 p-12 relative">
+          <div className="hidden sm:flex bg-gray-600 p-12 relative">
             <div className="text-white text-4xl font-medium max-w-md mt-24">
               Discover world best online courses here. 24k online course is
               waiting for you
@@ -211,7 +211,7 @@ export default function SignUp() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full p-3 border rounded-lg"
-                    placeholder="First Name"
+                    placeholder="Full Name"
                     required
                   />
                 </div>
@@ -319,14 +319,14 @@ export default function SignUp() {
                     the{" "}
                     <a
                       href="/terms"
-                      className="text-blue-500 hover:underline"
+                      className="text-black hover:underline"
                     >
                       Terms of Use
                     </a>{" "}
                     and{" "}
                     <a
                       href="/privacy"
-                      className="text-blue-500 hover:underline"
+                      className="text-black hover:underline"
                     >
                       Privacy Policy
                     </a>
@@ -344,7 +344,7 @@ export default function SignUp() {
                   type="button"
                   onClick={handleSendOtp}
                   disabled={isLoading}
-                  className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-black text-white p-3 rounded-lg hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
@@ -376,7 +376,7 @@ export default function SignUp() {
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading || !otp}
-                  className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-black text-white p-3 rounded-lg  disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center gap-2">
