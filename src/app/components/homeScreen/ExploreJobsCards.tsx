@@ -58,24 +58,24 @@ import Image from "next/image";
             </div>
       <div className="pt-1 flex-wrap gap-4 ">
                     <motion.div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mx-4 mt-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mx-4 mt-4">
   {categories.map((category: any, index) => (
     <div
       key={index}
-      className="cursor-pointer p-4 rounded-md flex flex-col justify-between"
+      className="cursor-pointer p-4  max-sm:w-36  rounded-md flex flex-col justify-between"
       style={{
         backgroundImage: `url(${
           window.location.origin + "/images/" + category.bg
         })`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        minHeight: "200px",
+        minHeight: "100px",
       }}
     >
       <Link href={`/categories/${category.title}`}>
-        <div className="w-full">
+        <div className="w-auto ">
           <img
-            className="w-[40px] sm:w-[50px] md:w-[60px] mx-auto"
+            className="w-[40px] max-sm:w-[20px] sm:w-[50px] md:w-[60px] mx-auto"
             src={window.location.origin + "/images/" + category.icon}
             alt={category.title}
           />

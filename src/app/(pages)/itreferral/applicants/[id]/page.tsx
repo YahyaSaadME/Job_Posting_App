@@ -81,7 +81,7 @@ const router = useRouter()
     <div className="overflow-x-auto">
     <table className="min-w-full table-auto border-collapse">
       <thead>
-        <tr className="bg-blue-500 text-white">
+        <tr className="bg-gray-500 text-white">
           <th className="px-4 py-2 border-b border-gray-200">Name</th>
           <th className="px-4 py-2 border-b border-gray-200">Email</th>
           <th className="px-4 py-2 border-b border-gray-200">Mobile</th>
@@ -92,7 +92,7 @@ const router = useRouter()
       </thead>
       <tbody className="bg-white divide-y divide-gray-200">
         {applicants.map((applicant) => (
-          <tr key={applicant._id} className="hover:bg-gray-50">
+          <tr key={applicant._id} className="hover:bg-gray-50 mr-1">
             <td className="px-4 py-2 border-b border-gray-200">{applicant.name}</td>
             <td className="px-4 py-2 border-b border-gray-200">{applicant.email}</td>
             <td className="px-4 py-2 border-b border-gray-200">{applicant.mobile}</td>
@@ -121,7 +121,7 @@ const router = useRouter()
 
   return (
     <div className="p-6">
-   <h1 className="text-2xl font-bold mb-4">Applicants for Job ID:ID: {jobId}</h1>
+   <h1 className="text-2xl font-bold mb-4">Applicants Data </h1>
       <ApplicantTable jobId={jobId as string} />
     </div>
   );

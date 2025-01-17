@@ -71,13 +71,13 @@ const page = () => {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                   className="bg-white shadow-md p-4 max-w-sm border border-gray-200"
                 >
-                  {/* <Image
+                  <Image
                     src={`${window.location.origin}/images/${item.thumbnail}`}
                     alt={item.title}
-                    className="w-full md:h-44 max-sm:h-auto  object-fill"
+                    className="w-full md:h-44 mb-4 max-sm:h-auto  object-fill"
                     width={200}
                     height={150}
-                  /> */}
+                  />
                   <div className='flex gap-3 flex-wrap'>
                     {item.tags.map((cat: string, index: number) => (
                       <span key={index} className="bg-pink-100 text-pink-600 text-sm font-semibold px-3 py-1 rounded-full mb-4 inline-block">

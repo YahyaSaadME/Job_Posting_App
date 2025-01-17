@@ -8,7 +8,7 @@ import mailSender from "@/utils/mailSender";
 
 export async function POST(req: Request) {
   try {
-    const { email , name } = await req.json();
+    const { email, name, type } = await req.json();
 
     if (!email) {
       return NextResponse.json({ success: false, message: "Email is required." }, { status: 400 });
@@ -18,7 +18,6 @@ export async function POST(req: Request) {
 
     const checkUserPresent = await User.findOne({ email });
     if (checkUserPresent) {
-    
       return NextResponse.json({ success: false, message: "User already registered." }, { status: 409 });
     }
 
@@ -30,14 +29,17 @@ export async function POST(req: Request) {
       existingOTP = await OTP.findOne({ otp });
     }
 
-    const otpPayload = { email, otp };
+    // If the type is 'jobPoster', set the OTP expiration time to 48 hours
+    const expirationTime = type === 'jobPoster' ? Date.now() + 48 * 60 * 60 * 1000 : Date.now() + 5 * 60 * 1000; // 48 hours or 5 minutes
+
+    const otpPayload = { email, otp, expirationTime };
     await OTP.create(otpPayload);
     console.log("OTP generated and stored:", otpPayload);
 
     try {
       const emailResponse = await mailSender({
         email,
-        title: "Shiv InfoSec Your OTP Code for Secure Access",
+        title: "Shiv InfoSec Your OTP Code for Secure Access",
         body: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -107,7 +109,7 @@ export async function POST(req: Request) {
             <div class="otp">
                 ${otp}
             </div>
-            This code is valid for the next <strong>[Time Limit, e.g., 5 minutes]</strong> and is for one-time use only.  
+            This code is valid for the next <strong>${type === 'jobPoster' ? '48 hours' : '5 minutes'}</strong> and is for one-time use only.  
             <br><br>
             Please do not share this code with anyone to ensure your account's safety.
             <br><br>

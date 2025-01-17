@@ -162,13 +162,13 @@ export default function Page() {
               ) : (
                 ""
               )}
-              <div className="flex flex-col absolute max-sm:left-80 max-sm:bottom-[30rem] left-56 items-start max-h-fit">
+              <div className="flex flex-col max-sm:hidden  absolute max-sm:left-80 max-sm:bottom-[30rem] left-56 items-start max-h-fit">
                 {/* Likes Count */}
-                <span className="text-gray-600">{data?.likes}</span>
+                <span className= " max-sm:hidden  text-gray-600">{data?.likes}</span>
 
                 {/* Like Button */}
                 <motion.div
-                  className={`p-4 border-2 rounded-full shadow-md cursor-pointer bg-white text-gray-400 ${
+                  className={`p-4 border-2 max-sm:hidden rounded-full shadow-md cursor-pointer bg-white text-gray-400 ${
                     liked ? "border-blue-600" : "border-gray-600"
                   }`}
                   animate={{

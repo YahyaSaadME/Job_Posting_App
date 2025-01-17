@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '../../../utils/dbConnect';
@@ -65,6 +66,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   await dbConnect();
+
   try {
     const body = await request.json();
     const { title, description, companyName, jobType, by, yearsOfExperience, location, qualification } = body;

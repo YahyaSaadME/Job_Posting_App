@@ -10,13 +10,14 @@ import Link from "next/link";
 import Navbar from "@/app/components/global/Navbar";
 import Footer from "@/app/components/global/Footer";
 import { FaLocationDot } from "react-icons/fa6";
+import {useRouter} from "next/navigation"
 import { MdAccessTimeFilled, MdWork } from "react-icons/md";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
 import { toast, ToastContainer } from "react-toastify";
 
 const Page = () => {
@@ -24,17 +25,18 @@ const Page = () => {
   const [filteredJobs, setFilteredJobs] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [showDialog, setShowDialog] = useState<boolean>(false);
-  const [selectedJob, setSelectedJob] = useState<any>(null);
-  const [uid, setUid]: any = useState<any>("");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    mobileNo: "",
-    resumeLink: "",
-    currentCompany: "",
-    noticePeriod: "",
-  });
+  const router = useRouter()
+  // const [showDialog, setShowDialog] = useState<boolean>(false);
+  // const [selectedJob, setSelectedJob] = useState<any>(null);
+  // const [uid, setUid]: any = useState<any>("");
+  // const [formData, setFormData] = useState({
+  //   name: "",
+  //   email: "",
+  //   mobileNo: "",
+  //   resumeLink: "",
+  //   currentCompany: "",
+  //   noticePeriod: "",
+  // });
 
   // Fetch all jobs when the component mounts
   useEffect(() => {
@@ -54,96 +56,101 @@ const Page = () => {
     fetchJobs();
   }, []);
 
-  const fetchUser = async (uid: string) => {
-    try {
-      setLoading(true);
-      const req = await fetch(`/api/user`, {
-        method: "POST",
-        body: JSON.stringify({ id: uid }),
-      });
-      const res = await req.json();
-      console.log(res);
+  // const fetchUser = async (uid: string) => {
+  //   try {
+  //     setLoading(true);
+  //     const req = await fetch(`/api/user`, {
+  //       method: "POST",
+  //       body: JSON.stringify({ id: uid }),
+  //     });
+  //     const res = await req.json();
+  //     console.log(res);
       
-      setFormData((prev) => ({ ...prev, email: res?.email || "" }));
-      setFormData((prev) => ({ ...prev, email: res?.name || "" }));
-      setFormData((prev) => ({ ...prev, email: res?.number || "" }));
-      setFormData((prev) => ({ ...prev, email: res?.resume || "" }));
-    } catch (error) {
-      setLoading(false);
-    }
+  //     setFormData((prev) => ({ ...prev, email: res?.email || "" }));
+  //     setFormData((prev) => ({ ...prev, email: res?.name || "" }));
+  //     setFormData((prev) => ({ ...prev, email: res?.number || "" }));
+  //     setFormData((prev) => ({ ...prev, email: res?.resume || "" }));
+  //   } catch (error) {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // // Filter jobs based on the search term
+  // useEffect(() => {
+  //   const filtered = jobs.filter((job) =>
+  //     `${job.title} ${job.companyName} ${job.location}`
+  //       .toLowerCase()
+  //       .includes(searchTerm.toLowerCase())
+  //   );
+  //   setFilteredJobs(filtered);
+  // }, [searchTerm, jobs]);
+
+  // // Handle Apply button click
+  // const handleApplyClick = async (job: any) => {
+  //   setSelectedJob(job);
+  //   setUid(job?._id);
+  //   await fetchUser(job?._id);
+  //   setShowDialog(true);
+  //   setLoading(false);
+  // };
+
+  // // Close the dialog
+  // const handleCloseDialog = () => {
+  //   setLoading(false);
+  //   setShowDialog(false);
+  //   setSelectedJob(null);
+  //   setFormData({
+  //     name: "",
+  //     email: "",
+  //     mobileNo: "",
+  //     resumeLink: "",
+  //     currentCompany: "",
+  //     noticePeriod: "",
+  //   });
+  // };
+  // console.log(uid);
+  // // Handle form input change
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+
+  // // Handle form submission
+  // const handleSubmit = async (jobId: any): Promise<void> => {
+  //   try {
+  //     const response = await fetch(`/api/itreferral/${jobId}`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         name: formData.name,
+  //         email: formData.email,
+  //         mobile: formData.mobileNo,
+  //         resume: formData.resumeLink,
+  //         currentCompany: formData.currentCompany || "",
+  //         noticePeriod: formData.noticePeriod || "",
+  //       }),
+  //     });
+
+  //     const result = await response.json();
+
+  //     if (result.ok) {
+  //       toast("you have sucessfully applied ");
+  //       handleCloseDialog();
+  //     } else {
+  //       console.log("error");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     console.log("An error occurred while submitting the application.");
+  //   }
+  // };
+
+  const applyForJob = (jobId: string) => {
+    router.push(`/itReferralJobs/${jobId}`);
   };
 
-  // Filter jobs based on the search term
-  useEffect(() => {
-    const filtered = jobs.filter((job) =>
-      `${job.title} ${job.companyName} ${job.location}`
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-    setFilteredJobs(filtered);
-  }, [searchTerm, jobs]);
-
-  // Handle Apply button click
-  const handleApplyClick = async (job: any) => {
-    setSelectedJob(job);
-    setUid(job?._id);
-    await fetchUser(job?._id);
-    setShowDialog(true);
-    setLoading(false);
-  };
-
-  // Close the dialog
-  const handleCloseDialog = () => {
-    setLoading(false);
-    setShowDialog(false);
-    setSelectedJob(null);
-    setFormData({
-      name: "",
-      email: "",
-      mobileNo: "",
-      resumeLink: "",
-      currentCompany: "",
-      noticePeriod: "",
-    });
-  };
-  console.log(uid);
-  // Handle form input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  // Handle form submission
-  const handleSubmit = async (jobId: any): Promise<void> => {
-    try {
-      const response = await fetch(`/api/itreferral/${jobId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          mobile: formData.mobileNo,
-          resume: formData.resumeLink,
-          currentCompany: formData.currentCompany || "",
-          noticePeriod: formData.noticePeriod || "",
-        }),
-      });
-
-      const result = await response.json();
-
-      if (result.ok) {
-        toast("you have sucessfully applied ");
-        handleCloseDialog();
-      } else {
-        console.log("error");
-      }
-    } catch (error) {
-      console.error(error);
-      console.log("An error occurred while submitting the application.");
-    }
-  };
 
   return (
     <>
@@ -205,6 +212,10 @@ const Page = () => {
                           <MdWork className="text-black max-sm:text-base" />
                           <span>{job.yearsOfExperience} years</span>
                         </div>
+                        <div className="flex text-green-500 items-center gap-2">
+                       
+                          <span>Applied by <span className="font-bold ">{job.applicants.length}</span> applicants</span>
+                        </div>
                       </div>
                       <p className="text-gray-700 max-sm:text-sm">
                         {job.description}
@@ -212,7 +223,7 @@ const Page = () => {
                     </div>
                     <button
                       className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
-                      onClick={() => handleApplyClick(job)}
+                      onClick={() => applyForJob(job._id)}
                     >
                       Apply
                     </button>
@@ -229,7 +240,7 @@ const Page = () => {
       </div>
 
       {/* Modal */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+      {/* <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Apply for {selectedJob?.title}</DialogTitle>
@@ -296,7 +307,7 @@ const Page = () => {
             </button>
           </form>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       <Footer />
     </>

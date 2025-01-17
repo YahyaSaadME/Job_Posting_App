@@ -1,39 +1,72 @@
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
+// Define types for Blogs and Courses
+type Blog = {
+  _id: string;
+  title: string;
+};
+
+type Course = {
+  _id: string;
+  title: string;
+};
+
 const Footer = () => {
-  const [Blogs, setBlogs] = useState([]);
-  const [Courses, setCourses] = useState([]);
+  const [blogs, setBlogs] = useState<Blog[]>([]); // Use defined Blog type
+  const [courses, setCourses] = useState<Course[]>([]); // Use defined Course type
+  const [error, setError] = useState<string | null>(null); // Error state for fetch failure
+
   useEffect(() => {
     const get = async () => {
-      const req = await fetch("/api/latest");
-      const res = await req.json();
-      setBlogs(res.blogs);
-      setCourses(res.courses);
+      try {
+        const req = await fetch("/api/latest");
+        
+        // Check for HTTP errors
+        if (!req.ok) {
+          setError(`Failed to fetch data. Status: ${req.status}`);
+          return;
+        }
+        
+        // Try parsing JSON response
+        const res = await req.json();
+        
+        // Check if response data exists
+        if (!res.blogs || !res.courses) {
+          setError("No blogs or courses available.");
+          return;
+        }
+        
+        setBlogs(res.blogs);
+        setCourses(res.courses);
+      } catch (err) {
+        setError("Failed to load the latest blogs and courses.");
+        console.error("Error fetching data:", err);
+      }
     };
+
     get();
   }, []);
 
   return (
-    <footer className=" text-gray-900 py-10 mt-16  border-t border-y-4 border-gray-950 pt-10  mx-16">
+    <footer className="text-gray-900 py-10 mt-16 border-t border-y-4 border-gray-950 pt-10 mx-16">
       {/* Footer Container */}
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-14">
         {/* Brand / Subscription */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Shiv InfoSec</h2>
           <p className="text-gray-600 mb-4">
-            A collection of articles focusing on Networking, Cloud, and
-            Automation.
+            A collection of articles focusing on Networking, Cloud, and Automation.
           </p>
           <form className="flex">
             <input
               type="email"
               placeholder="Your email address"
               className="px-4 py-2 rounded-l-lg border border-gray-300 w-full"
+              aria-label="Your email address"
             />
             <button
               type="submit"
@@ -48,21 +81,33 @@ const Footer = () => {
         <div>
           <h4 className="text-xl font-bold mb-4">Latest Blogs</h4>
           <ul className="space-y-2">
-            {Blogs.map((item: any, index: number) => (
-              <li key={index} className="hover:text-gray-700 cursor-pointer">
-                <Link href={`/blog/${item?._id}`}>{item?.title}</Link>
-              </li>
-            ))}
+            {error ? (
+              <li className="text-red-500">{error}</li>
+            ) : blogs.length > 0 ? (
+              blogs.map((item) => (
+                <li key={item._id} className="hover:text-gray-700 cursor-pointer">
+                  <Link href={`/blog/${item._id}`}>{item.title}</Link>
+                </li>
+              ))
+            ) : (
+              <li>No blogs available</li>
+            )}
           </ul>
         </div>
         <div>
           <h4 className="text-xl font-bold mb-4">Latest Course</h4>
           <ul className="space-y-2">
-            {Courses.map((item: any, index: number) => (
-              <li key={index} className="hover:text-gray-700 cursor-pointer">
-                <Link href={`/free-courses/${item?._id}`}>{item?.title}</Link>
-              </li>
-            ))}
+            {error ? (
+              <li className="text-red-500">{error}</li>
+            ) : courses.length > 0 ? (
+              courses.map((item) => (
+                <li key={item._id} className="hover:text-gray-700 cursor-pointer">
+                  <Link href={`/free-courses/${item._id}`}>{item.title}</Link>
+                </li>
+              ))
+            ) : (
+              <li>No courses available</li>
+            )}
           </ul>
         </div>
       </div>

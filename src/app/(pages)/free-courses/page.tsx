@@ -57,7 +57,7 @@ const Page = () => {
           <div className='flex flex-wrap justify-center w-full'>
             <h2 className='text-3xl font-bold font-sans text-gray-400'>Free Courses</h2>
           </div>
-          <div className="flex flex-wrap lg:mx-10 md:mx-10 max-sm:mx-2 gap-8 p-2 pt-1 cursor-pointer">
+          <div className="flex flex-wrap lg:mx-24 md:mx-24 max-sm:mx-2 gap-10 p-2 pt-1 cursor-pointer">
             {currentCourses.map((item: any) => (
               <motion.div
                 onClick={() => openBlog(item._id)}
@@ -67,13 +67,13 @@ const Page = () => {
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="bg-white shadow-md p-4 w-[18rem] mt-12 border border-gray-200"
               >
-                {/* <Image
+                <Image
                   src={`${window.location.origin}/images/${item.thumbnail}`}
                   alt={item.title}
-                  className="w-full md:h-44 p-0 max-sm:h-auto object-fill"
+                  className="w-full md:h-44  mb-4 p-0 max-sm:h-auto object-fill"
                   width={200}
                   height={150}
-                /> */}
+                />
                 <div className='flex gap-3 flex-wrap'>
                   {item.tags.map((cat: string, index: number) => (
                     <span key={index} className="bg-pink-100 text-pink-600 text-sm font-semibold px-3 py-1 rounded-full mb-4 inline-block">
@@ -84,7 +84,7 @@ const Page = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mb-2 cursor-pointer hover:underline" onClick={() => router.push(`/blog/${item._id}`)}>
                   {item.title}
                 </h2>
-                <p className="text-gray-600 mb-4">{item?.description?.slice(0, 100)}...</p>
+                {/* <p className="text-gray-600 mb-4">{item?.description?.slice(0, 100)}...</p> */}
                 <div className="flex items-center mt-4">
                   <div className="flex items-center gap-4">
                     <Image

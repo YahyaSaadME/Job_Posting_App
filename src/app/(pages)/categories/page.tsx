@@ -63,40 +63,44 @@ export default function Page() {
               Categories
             </h2>
           </div>
-          <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4 ">
-            {categories.map((category: any, index) => (
-              <div
-                key={index}
-                className="cursor-pointer p-4 rounded-md flex flex-col justify-between"
-                style={{
-                  backgroundImage: `url(${window.location.origin}/images/${category.bg})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                  minHeight: "200px",
-                }}
-              >
-                <Link href={`/categories/${category.title}`}>
-                  <div className="w-full h-full flex flex-col justify-between">
-                    <div className="flex justify-start items-start min-h-full" style={{minHeight: "150px",}}>
-                      <img
-                        className="w-[50px] md:w-[60px]"
-                        src={`${window.location.origin}/images/${category.icon}`}
-                        alt={category.title}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center mt-4 sm:mt-6">
-                      <h2 className="font-semibold text-sm sm:text-base md:text-lg text-white">
-                        {category.title}
-                      </h2>
-                      <h3 className="font-semibold text-sm sm:text-base md:text-lg text-white">
-                        {category.count}+
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4">
+  {categories.map((category: any, index) => (
+    <div
+      key={index}
+      className="cursor-pointer p-4 rounded-md flex flex-col justify-between"
+      style={{
+        backgroundImage: `url(${window.location.origin}/images/${category.bg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "80px",  // Reduced the minHeight here
+      }}
+    >
+      <Link href={`/categories/${category.title}`}>
+        <div className="w-full h-full flex flex-col justify-around">
+          <div
+            className="flex justify-start items-start min-h-36"
+            style={{ minHeight: "80px" }} // Reduced the minHeight of the category box
+          >
+            <img
+              className="w-[50px] md:w-[60px]"
+              src={`${window.location.origin}/images/${category.icon}`}
+              alt={category.title}
+            />
           </div>
+          <div className="flex justify-between items-center mt-4 sm:mt-6">
+            <h2 className="font-semibold text-sm sm:text-base md:text-lg text-white">
+              {category.title}
+            </h2>
+            <h3 className="font-semibold text-sm sm:text-base md:text-lg text-white">
+              {category.count}+
+            </h3>
+          </div>
+        </div>
+      </Link>
+    </div>
+  ))}
+</div>
+
           <Pagination
             categoriesPerPage={50}
             totalCategories={categories.length}

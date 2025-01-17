@@ -1,49 +1,69 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/utils/dbConnect"; // MongoDB connection utility
 import itRefJob from "../../../../models/itRefJob"; // Job model
-import { Types } from "mongoose";
-import mailSender from "@/utils/mailSender";
+import mailSender from "@/utils/mailSender"; // Your email utility
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/utils/auth" // Correct way to get session in App Router
 
 export async function POST(request: NextRequest) {
-    await dbConnect();
-  
-    const { pathname } = new URL(request.url);
-    const jobId = pathname.split('/').pop();
-    console.log(jobId);
-    
+  await dbConnect();
+
+  const { pathname } = new URL(request.url);
+  const jobId = pathname.split('/').pop();
+  console.log(jobId);
+
+  try {
+    const body = await request.json();
+    const { name, email, mobile, resume, currentCompany, noticePeriod } = body;
+
+    // Validate required fields
+    if (!name || !email || !mobile || !resume) {
+      return NextResponse.json({ message: 'Name, Email, Mobile, and Resume are required.' }, { status: 400 });
+    }
+
+    // Get session from cookies using getSession
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.email) {
+      return NextResponse.json({ message: 'You must be logged in to apply.' }, { status: 401 });
+    }
+
+    const userEmail = session.user.email; // Get email from the session
+    console.log('User Email:', userEmail);
+
+    // Find the job by jobId
+    const job = await itRefJob.findById(jobId);
+    if (!job) {
+      return NextResponse.json({ message: 'Job not found.' }, { status: 404 });
+    }
+  const type = session?.user?.type
+   if(type === "jobPoster"){
+    return NextResponse.json({ message: 'You can not apply !! you are not JobSeekers' }, { status: 400 });
+   }
+    // Check if the user has already applied by email
+    const alreadyApplied = job.applicants.some((applicant: any) => applicant.email === userEmail);
+    if (alreadyApplied) {
+      return NextResponse.json({ message: 'You have already applied for this job.' }, { status: 400 });
+    }
+
+    // Add the applicant to the job's applicants list
+    job.applicants.push({
+      name,
+      email: userEmail, // Use the email from the session
+      mobile,
+      resume,
+      currentCompany,
+      noticePeriod,
+    });
+
+    await job.save();
+
+    // Send confirmation email to the applicant
     try {
-        const body = await request.json();
-        const { name, email, mobile, resume, currentCompany, noticePeriod } = body;
-
-        // Validate required fields
-        if (!name || !email || !mobile || !resume) {
-          return NextResponse.json({ message: 'Name, Email, Mobile, and Resume are required.' }, { status: 400 });
-        }
-
-        // Find the job and add the applicant
-        const job = await itRefJob.findById(jobId);
-        if (!job) {
-          return NextResponse.json({ message: 'Job not found.' }, { status: 404 });
-        }
-
-        job.applicants.push({
-          name,
-          email,
-          mobile,
-          resume,
-          currentCompany,
-          noticePeriod,
-        });
-
-        await job.save();
-
-        try {
-          const emailResponse = await mailSender({
-            email,
-            title: `Dear ${name}, You have successfully applied.`,
-            body: `<!DOCTYPE html>
+      const emailResponse = await mailSender({
+        email: userEmail,
+        title: `Dear ${name}, You have successfully applied.`,
+        body: `<!DOCTYPE html>
 <html lang="en">
 <head>
     <style>
@@ -93,7 +113,7 @@ export async function POST(request: NextRequest) {
             Shiv Infosec
         </div>
         <div class="content">
-            Dear <strong>${email}</strong>,  
+            Dear <strong>${name}</strong>,  
             <br><br>
             Thank you for choosing Shiv Infosec! Your application has been submitted to HR.  
             <br>
@@ -105,22 +125,21 @@ export async function POST(request: NextRequest) {
     </div>
 </body>
 </html>`,
-          });
+      });
 
-          if (emailResponse) {
-            console.log("Email sent successfully");
-            return NextResponse.json({ message: 'Application submitted successfully!', job }, { status: 200 });
-          } else {
-            console.log("Failed to send email");
-            return NextResponse.json({ success: false, message: "Failed to send OTP email." }, { status: 500 });
-          }
-          
-        } catch (error: any) {
-          console.log(error);
-          return NextResponse.json({ success: false, message: "Error sending OTP email." }, { status: 500 });
-        }
-      
-    } catch (error: any) {
-      return NextResponse.json({ message: 'Server Error', error: error.message }, { status: 500 });
+      if (emailResponse) {
+        console.log("Email sent successfully");
+        return NextResponse.json({ message: 'Application submitted successfully!', job });
+      } else {
+        console.log("Failed to send email");
+        return NextResponse.json({ success: false, message: "Failed to send confirmation email." }, { status: 500 });
+      }
+    } catch (emailError: any) {
+      console.error('Error sending confirmation email:', emailError);
+      return NextResponse.json({ success: false, message: "Error sending confirmation email." }, { status: 500 });
     }
+  } catch (error: any) {
+    console.error('Error applying for job:', error);
+    return NextResponse.json({ message: 'Server Error', error: error.message }, { status: 500 });
+  }
 }

@@ -74,7 +74,7 @@ export default function SignUp() {
   
     // Restrict specific email domains for job posters
     if (type === "jobPoster" && isRestrictedDomain(email)) {
-      setError("Personal email addresses are not allowed for job posters. Please use your office email.");
+      setError("Personal email addresses are not allowed for job posters. Please use your official email.");
       return;
     }
   
@@ -107,7 +107,7 @@ export default function SignUp() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, name }),
+        body: JSON.stringify({ email, name ,type }),
       });
   
       const data: { success: boolean; message?: string } = await response.json();
@@ -358,7 +358,7 @@ export default function SignUp() {
                   </label>
                 </div>
            {
-            otpSended ? (<p onClick={ifOptAlreadySent} className="text-md m-4 cursor-pointer hover:underline"> Verify Your Email </p>) : (<></>)
+            otpSended ? (<p onClick={ifOptAlreadySent} className="text-lg m-4 cursor-pointer hover:underline"> Enter your Otp </p>) : (<></>)
            }
                 {error && (
                   <Alert variant="destructive">
@@ -388,7 +388,13 @@ export default function SignUp() {
           <Dialog open={showOtpDialog} onOpenChange={setShowOtpDialog}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Enter OTP</DialogTitle>
+              <DialogTitle>
+  Enter OTP{" "}
+  {type === "jobPoster" && (
+    <span className="text-md text-green-600 font-sans ml-6">   Your OTP will be valid for 48 hours</span>
+  )}
+</DialogTitle>
+
               </DialogHeader>
               <div className="space-y-4">
                 <p>Please enter the OTP sent to your email address.</p>
