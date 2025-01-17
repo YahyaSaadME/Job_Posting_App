@@ -325,7 +325,7 @@ const Page = () => {
 
         </div>
         <button
-            className="md:hidden flex m-5 items-center gap-2 text-black font-semibold"
+            className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
             onClick={() => setIsOpen(!isOpen)}
           >
     
@@ -385,7 +385,7 @@ const Page = () => {
                         </p>
                       </div>
                       <button
-                        className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-blue-700 max-sm:h-9 max-sm:text-sm"
+                        className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
                         onClick={() => applyForJob(job._id)}
                       >
                         Apply
