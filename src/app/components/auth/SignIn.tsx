@@ -38,7 +38,7 @@ export default function SignIn() {
         return;
       }
   
-      toast.success("Successfully logged in!");
+      toast.success("Successfully logged in!!");
       router.push("/");
     } catch (error) {
       console.error("Sign-in error:", error);
