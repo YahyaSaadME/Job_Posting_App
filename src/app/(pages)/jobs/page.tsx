@@ -157,9 +157,9 @@ const Page = () => {
                   maxExperience: "",
                 })
               }
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-black hover:underline"
             >
-              Clear All
+              Clear all
             </button>
           </div>
 
@@ -252,9 +252,9 @@ const Page = () => {
                   maxExperience: "",
                 })
               }
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-black hover:underline"
             >
-              Clear All
+              Clear all
             </button>
           </div>
 
@@ -322,21 +322,17 @@ const Page = () => {
               placeholder="Max Experience"
             />
           </div>
-        </div>
 
-        <div className="w-full flex-grow bg-white p-4 rounded-lg shadow-md">
-          <button
-            className="md:hidden flex items-center gap-2 text-blue-600 font-semibold"
+        </div>
+        <button
+            className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
             onClick={() => setIsOpen(!isOpen)}
           >
-            <motion.span
-              initial={false}
-              animate={isOpen ? { rotate: 90 } : { rotate: 0 }}
-            >
-              ▼
-            </motion.span>
+    
             {isOpen ? "Hide Filters" : "Show Filters"}
           </button>
+        <div className="w-full flex-grow bg-white p-4 rounded-lg shadow-md">
+      
           {loading ? (
             <div className="flex justify-center items-center h-screen w-full">
               <ClipLoader color={"#020617"} size={60} />
@@ -372,15 +368,15 @@ const Page = () => {
                         </h3>
                         <div className="flex flex-wrap gap-4 text-gray-600 max-sm:gap-2 max-sm:text-sm">
                           <div className="flex items-center gap-2">
-                            <FaLocationDot className="text-blue-700 max-sm:text-base" />
+                            <FaLocationDot className="text-black max-sm:text-base" />
                             <span>{job.location}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <MdAccessTimeFilled className="text-blue-700 max-sm:text-base" />
+                            <MdAccessTimeFilled className="text-black max-sm:text-base" />
                             <span>{job.jobType}</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <MdWork className="text-blue-700 max-sm:text-base" />
+                            <MdWork className="text-black max-sm:text-base" />
                             <span>{job.yearsOfExperience} years</span>
                           </div>
                         </div>
@@ -389,7 +385,7 @@ const Page = () => {
                         </p>
                       </div>
                       <button
-                        className="bg-blue-600 h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-blue-700 max-sm:h-9 max-sm:text-sm"
+                        className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"
                         onClick={() => applyForJob(job._id)}
                       >
                         Apply
