@@ -49,7 +49,7 @@ import Image from "next/image";
                if (loading) { return ( <div className="flex justify-center items-center h-screen w-full"> <ClipLoader color={"#020617"} size={60} /> </div> ); }
 
     return (
-      <div className=" mx-16 mt-8">
+      <div className=" lg:mx-16 mt-8">
       <div className='flex gap-14 mb-8'>
           <h2 className="text-3xl font-bold font-sans text-gray-400">Tags</h2>
           <Link href={"/blogs"}>
