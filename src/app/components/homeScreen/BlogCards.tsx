@@ -29,7 +29,7 @@ const BlogCards = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen w-full">
-                <ClipLoader color={"#2563eb"} size={60} />
+                <ClipLoader color={"#020617"} size={60} />
             </div>
         );
     }
@@ -71,9 +71,10 @@ const BlogCards = () => {
                                     height={40}
                                     className="rounded-full"
                                 />
-                                <div>
-                                    <p className="font-medium text-gray-900">Admin</p>
-                                </div>
+                              <div>
+    <p className="font-medium text-gray-900">Admin</p>
+    <p className="text-sm text-gray-500">created at : {new Date(item.createdAt).toLocaleDateString()}</p>
+  </div>
                             </div>
                         </div>
                     </motion.div>

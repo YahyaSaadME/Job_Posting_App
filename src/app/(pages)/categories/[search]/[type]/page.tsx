@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
 import { Clock } from "lucide-react";
 import Image from "next/image";
@@ -90,11 +93,11 @@ export default function CategoryPage() {
   };
 
   return (
-    <div>
+    <div className="mx-16">
       <Navbar />
       {/* Items Section */}
-      <section className="mt-24 mx-8">
-          <h1 className="text-center text-xl md:text-4xl text-center font-bold my-4">{typeof type === 'string' ? type.charAt(0).toUpperCase() + type.slice(1) : ''}s</h1>
+      <section className="mt-24 mx-16">
+          <h1 className=" text-xl md:text-4xl text-center font-bold my-4">{typeof type === 'string' ? type.charAt(0).toUpperCase() + type.slice(1) : ''}s</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {items.map((item: IBlog | ICourse | IJob) => (
             <div key={item._id} className="border rounded-md shadow-md">
@@ -170,6 +173,7 @@ export default function CategoryPage() {
           </button>
         </div>
       </section>
+      <Footer/>
     </div>
   );
 }

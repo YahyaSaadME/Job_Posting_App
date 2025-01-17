@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useSession } from 'next-auth/react';
-import ClipLoader from 'react-spinners/ClipLoader';
+import { useSession } from "next-auth/react";
+import ClipLoader from "react-spinners/ClipLoader";
 import Link from "next/link";
 import Image from "next/image";
 
 const AddCategory = () => {
   const { data: session, status }: any = useSession();
   const router = useRouter();
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail = process?.env?.NEXT_PUBLIC_ADMIN;
   const userEmail = session?.user?.email;
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -21,21 +21,23 @@ const AddCategory = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
- 
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, setImage: React.Dispatch<React.SetStateAction<string>>) => {
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    setImage: React.Dispatch<React.SetStateAction<string>>
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", file);
 
     setUploading(true);
     setError(null);
     setSuccess(null);
 
     try {
-      const response = await fetch('/api/upload/image', {
-        method: 'POST',
+      const response = await fetch("/api/upload/image", {
+        method: "POST",
         body: formData,
       });
 
@@ -87,7 +89,7 @@ const AddCategory = () => {
     }
   };
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="flex justify-center items-center h-screen w-full">
         <ClipLoader color="#2563eb" size={60} />
@@ -98,7 +100,9 @@ const AddCategory = () => {
   if (!session) {
     return (
       <div className="flex justify-center items-center h-screen w-full">
-        <p className="text-red-600">You need to be authenticated to view this page.</p>
+        <p className="text-red-600">
+          You need to be authenticated to view this page.
+        </p>
       </div>
     );
   }
@@ -108,7 +112,10 @@ const AddCategory = () => {
       <div className="flex mt-16 mb-6 flex-col justify-center items-center h-screen bg-gray-50 text-black">
         <div className="bg-red-400 p-6 rounded-md shadow-md text-center max-w-md">
           <h2 className="text-2xl font-bold mb-4">Access Restricted</h2>
-          <p>This page is a protected route for admin only. You cant access the features.</p>
+          <p>
+            This page is a protected route for admin only. You cant access the
+            features.
+          </p>
         </div>
 
         <Link href={"/sign-up"}>
@@ -155,7 +162,14 @@ const AddCategory = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {bg && (
             <div className="mt-2">
-              <Image src={window.location.origin + "/images/" + bg} alt="Background" className="w-full h-auto" />
+              <Image
+                layout="responsive"
+                width={100}
+                height={100}
+                src={window.location.origin + "/images/" + bg}
+                alt="Background"
+                className="w-full h-auto"
+              />
               <button
                 type="button"
                 onClick={() => setBg("")}
@@ -176,7 +190,14 @@ const AddCategory = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {icon && (
             <div className="mt-2">
-              <Image src={window.location.origin + "/images/" + icon} alt="Icon" className="w-full h-auto" />
+              <Image
+                layout="responsive"
+                width={100}
+                height={100}
+                src={window.location.origin + "/images/" + icon}
+                alt="Icon"
+                className="w-full h-auto"
+              />
               <button
                 type="button"
                 onClick={() => setIcon("")}

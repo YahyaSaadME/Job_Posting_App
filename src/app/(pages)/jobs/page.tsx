@@ -339,7 +339,7 @@ const Page = () => {
           </button>
           {loading ? (
             <div className="flex justify-center items-center h-screen w-full">
-              <ClipLoader color={"#2563eb"} size={60} />
+              <ClipLoader color={"#020617"} size={60} />
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6">

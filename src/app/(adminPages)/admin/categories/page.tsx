@@ -4,15 +4,15 @@
 "use client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useSession } from 'next-auth/react';
-import ClipLoader from 'react-spinners/ClipLoader';
+import { useSession } from "next-auth/react";
+import ClipLoader from "react-spinners/ClipLoader";
 import Link from "next/link";
 import Image from "next/image";
 
 const CategoriesList = () => {
   const { data: session, status }: any = useSession();
   const router = useRouter();
-  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
+  const adminEmail = process?.env?.NEXT_PUBLIC_ADMIN;
   const userEmail = session?.user?.email;
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +51,9 @@ const CategoriesList = () => {
           method: "DELETE",
         });
         if (response.ok) {
-          setCategories(categories.filter((category: any) => category._id !== categoryId));
+          setCategories(
+            categories.filter((category: any) => category._id !== categoryId)
+          );
         } else {
           const data = await response.json();
           setError(data.message || "Error deleting category");
@@ -65,30 +67,39 @@ const CategoriesList = () => {
   useEffect(() => {
     fetchCategories(currentPage);
   }, [currentPage, search]);
-  if (status === 'loading') {
+  useEffect(() => {
+    console.log(status);
+    console.log(adminEmail);
+    console.log(userEmail);
+  }, [status]);
+
+  if (status === "loading") {
     return (
       <div className="flex justify-center items-center h-screen w-full">
         <ClipLoader color="#2563eb" size={60} />
       </div>
     );
   }
-
   if (!session) {
     return (
       <div className="flex justify-center items-center h-screen w-full">
-        <p className="text-red-600">You need to be authenticated to view this page.</p>
+        <p className="text-red-600">
+          You need to be authenticated to view this page.
+        </p>
       </div>
     );
   }
-
   if (userEmail !== adminEmail) {
     return (
       <div className="flex mt-16 mb-6 flex-col justify-center items-center h-screen bg-gray-50 text-black">
         <div className="bg-red-400 p-6 rounded-md shadow-md text-center max-w-md">
           <h2 className="text-2xl font-bold mb-4">Access Restricted</h2>
-          <p>This page is a protected route for admin only. You cant access the features.</p>
+          <p>
+            This page is a protected route for admin only. You cant access the
+            features.
+          </p>
         </div>
-   <Link href={"/sign-up"}>
+        <Link href={"/sign-up"}>
           <div className="mt-4 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300">
             Sign Up
           </div>
@@ -130,15 +141,53 @@ const CategoriesList = () => {
           <tbody>
             {categories?.map((category: any) => (
               <tr key={category._id}>
-                <td className="border px-4 py-2 text-justify">{category.title}</td>
-                <td className="border px-4 py-2 text-justify">{category.desc}</td>
-                <td className="border px-4 py-2"><div className="flex justify-center items-center"><Image className="w-[100px]" src={window.location.origin+"/images/"+category.bg} alt="" /> </div></td>
-                <td className="border px-4 py-2"><div className="flex justify-center items-center"><Image className="w-[80px]" src={window.location.origin+"/images/"+category.icon} alt=""/></div></td>
-                <td className="border px-4 py-2 text-center">{category.count}</td>
+                <td className="border px-4 py-2 text-justify">
+                  {category.title}
+                </td>
+                <td className="border px-4 py-2 text-justify">
+                  {category.desc}
+                </td>
+                <td className="border px-4 py-2">
+                  <div className="flex justify-center items-center">
+                    {category.bg ? (
+                      <Image
+                        className="w-[100px]"
+                        src={window.location.origin + "/images/" + category.bg}
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
+                    ) : (
+                      ""
+                    )}{" "}
+                  </div>
+                </td>
+                <td className="border px-4 py-2">
+                  <div className="flex justify-center items-center">
+                    {category.icon ? (
+                      <Image
+                        className="w-[80px]"
+                        src={
+                          window.location.origin + "/images/" + category.icon
+                        }
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </td>
+                <td className="border px-4 py-2 text-center">
+                  {category.count}
+                </td>
                 <td className="border px-4 py-2 text-center">
                   <button
                     className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600 m-1"
-                    onClick={() => routes.push(`/admin/categories/edit/${category._id}`)}
+                    onClick={() =>
+                      routes.push(`/admin/categories/edit/${category._id}`)
+                    }
                   >
                     Update
                   </button>
