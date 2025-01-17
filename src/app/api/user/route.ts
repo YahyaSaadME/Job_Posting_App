@@ -1,3 +1,5 @@
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { User } from "../../../models/User";
 import dbConnect from "@/utils/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,9 +15,11 @@ export async function POST(request: NextRequest) {
     const user = await User.findById({_id:new mongoose.Types.ObjectId(id)}).select({email:1,name:1,resume:1,number:1});
     return NextResponse.json(user);
   } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { message: "Something went wrong" },
       { status: 500 }
+     
     );
   }
 }

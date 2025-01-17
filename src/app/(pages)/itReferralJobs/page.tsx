@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -17,8 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast, ToastContainer } from "react-toastify";
-import { useSession } from "next-auth/react";
-import { set } from "mongoose";
+
 const Page = () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [filteredJobs, setFilteredJobs] = useState<any[]>([]);
