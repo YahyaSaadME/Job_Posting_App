@@ -121,7 +121,7 @@ export default function CategoryPage() {
         </div>
       </section>
       {/* Courses Section */}
-      <section className="mt-8 md:mx-16">
+      <section className="mt-8 md:mx-16 mx-4">
         <Link
           className="flex items-center gap-2 mb-4"
           href={`/categories/${search}/course`}
@@ -157,7 +157,7 @@ export default function CategoryPage() {
         </div>
       </section>
       {/* Blogs Section */}
-      <section className="mt-8 md:mx-16">
+      <section className="mt-8 md:mx-16 mx-4">
       <Link
           className="flex items-center gap-2 mb-4"
           href={`/categories/${search}/blog`}
@@ -188,7 +188,7 @@ export default function CategoryPage() {
         </div>
       </section>
       {/* Jobs Section */}
-      <section className="mt-8 md:mx-16">
+      <section className="mt-8 md:mx-16 mx-4">
       <Link
           className="flex items-center gap-2 mb-4"
           href={`/categories/${search}/course`}
