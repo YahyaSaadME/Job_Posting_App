@@ -132,7 +132,7 @@ export default function Page() {
 
         {loading ? (
           <div className="flex justify-center items-center h-screen w-full">
-            <ClipLoader color={"#2563eb"} size={60} />
+            <ClipLoader color={"#020617"} size={60} />
           </div>
         ) : (
           <div className="flex min-h-screen px-6 w-full mt-20">
@@ -255,56 +255,57 @@ export default function Page() {
 
           <div className="p-6 pt-1 grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 gap-6">
           
-  {relBlog && relBlog.length > 0 ? (
-    relBlog.map((item: {
-      _id: string;
-      tableOfContent: any;
-      tags: string[];
-      id: React.Key | null;
-      category: string;
-      title: string;
-      description: string;
-      avatar?: string;
-      author: string;
-      date?: string;
-      readTime?: string;
-    }) => (
-      <div
-        key={item._id}
-        onClick={() => openBlog(item._id)}
-        className="bg-gray-50 rounded-lg cursor-pointer shadow-md p-5 hover:shadow-lg transition"
-      >
-        {/* Render Tags */}
-        {item.tags?.map((cat: string, index: number) => (
-          <span
-            key={index}
-            className="text-sm m-2 bg-blue-100 text-blue-600 px-2 py-1 rounded"
-          >
+          {relBlog && relBlog.length > 0 ? (
+  relBlog.map((item: any) => (
+    <motion.div
+      onClick={() => openBlog(item._id)}
+      key={item._id.toString()}
+      initial={{ y: 50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="bg-white shadow-md p-4 max-w-sm border border-gray-200"
+    >
+      {/* <Image
+        src={`${window.location.origin}/images/${item.thumbnail}`}
+        alt={item.title}
+        className="w-full md:h-44 max-sm:h-auto  object-fill"
+        width={200}
+        height={150}
+      /> */}
+      <div className='flex gap-3 flex-wrap'>
+        {item.tags.map((cat: string, index: number) => (
+          <span key={index} className="bg-pink-100 text-pink-600 text-sm font-semibold px-3 py-1 rounded-full mb-4 inline-block">
             {cat}
           </span>
         ))}
-
-        {/* Blog Title */}
-        <h3 className="mt-4 text-lg font-bold text-gray-800">{item.title}</h3>
-
-        {/* Blog Description */}
-        <p className="mt-2 text-sm text-gray-600">
-          {item.tableOfContent?.[0]?.description || 'No description available'}
-        </p>
-
-        {/* Author Information */}
-        <div className="flex items-center mt-4">
+      </div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-2 cursor-pointer hover:underline" onClick={() => router.push(`/blog/${item._id}`)}>
+        {item.title}
+      </h2>
+      <p className="text-gray-600 mb-4">{item.tableOfContent[0].description.slice(0, 100)}...</p>
+      <div className="flex items-center mt-4">
+        <div className="flex items-center gap-4">
+          <Image
+            src={"https://tse2.mm.bing.net/th?id=OIP.YoTUWMoKovQT0gCYOYMwzwHaHa&pid=Api&P=0&h=180"}
+            alt="Author Avatar"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
           <div>
-            <p className="text-sm font-semibold text-gray-800">{item.author}</p>
+            <p className="font-medium text-gray-900">Admin</p>
+            <p className="text-sm text-gray-500"> created at : {new Date(item.createdAt).toLocaleDateString()}</p>
           </div>
         </div>
       </div>
-    ))
-  ) : (
-    <p className="text-center h-screen w-full mt-44">
-      No related blogs published yet.
-    </p>
-  )}
+    </motion.div>
+  ))
+) : (
+  <p className="text-center h-screen w-full mt-44">
+    No related blogs published yet.
+  </p>
+)}
+
 </div>
 
   </div>

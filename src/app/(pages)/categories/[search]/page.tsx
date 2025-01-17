@@ -1,5 +1,8 @@
+/* eslint-disable react/jsx-no-undef */
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
+import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
 import { ArrowUpRight, Clock } from "lucide-react";
 import Link from "next/link";
@@ -90,7 +93,7 @@ export default function CategoryPage() {
     <div>
       <Navbar />
       {/* Category Section */}
-      <section className="mt-24">
+      <section className="mt-24 ">
         <div className="flex justify-center items-center">
           <div className="max-w-xl md:h-[200px] p-4 md:flex justify-center md:mx-4 mx-0">
             <div className="md:mx-0 bg-gray-100 p-3 w-full h-full flex justify-center items-center rounded-md shadow-md">
@@ -118,7 +121,7 @@ export default function CategoryPage() {
         </div>
       </section>
       {/* Courses Section */}
-      <section className="mt-8 mx-8">
+      <section className="mt-8 md:mx-16">
         <Link
           className="flex items-center gap-2 mb-4"
           href={`/categories/${search}/course`}
@@ -126,9 +129,9 @@ export default function CategoryPage() {
           <h2 className="text-2xl font-bold">Courses</h2>
           <ArrowUpRight />
         </Link>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.map((course) => (
-            <div key={course._id} className="border rounded-md shadow-md">
+            <div key={course._id} className="border w-80 rounded-md shadow-md">
               <img
                 src={window.location.origin + "/images/" + course.thumbnail}
                 alt={course.title}
@@ -154,7 +157,7 @@ export default function CategoryPage() {
         </div>
       </section>
       {/* Blogs Section */}
-      <section className="mt-8 mx-8">
+      <section className="mt-8 md:mx-16">
       <Link
           className="flex items-center gap-2 mb-4"
           href={`/categories/${search}/blog`}
@@ -162,9 +165,9 @@ export default function CategoryPage() {
           <h2 className="text-2xl font-bold">Blogs</h2>
           <ArrowUpRight />
         </Link>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogs.map((blog) => (
-            <div key={blog._id} className=" border rounded-md shadow-md">
+            <div key={blog._id} className="w-80 border rounded-md shadow-md">
               <img
                 src={window.location.origin + "/images/" + blog.thumbnail}
                 alt={blog.title}
@@ -185,7 +188,7 @@ export default function CategoryPage() {
         </div>
       </section>
       {/* Jobs Section */}
-      <section className="mt-8 mx-8">
+      <section className="mt-8 md:mx-16">
       <Link
           className="flex items-center gap-2 mb-4"
           href={`/categories/${search}/course`}
@@ -193,9 +196,9 @@ export default function CategoryPage() {
           <h2 className="text-2xl font-bold">Jobs</h2>
           <ArrowUpRight />
         </Link>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {jobs.map((job) => (
-            <div key={job._id} className="p-4 border rounded-md shadow-md">
+            <div key={job._id} className="p-4 w-80  border rounded-md shadow-md">
               <h3 className="text-xl font-bold">{job.title}</h3>
               <p className="text-gray-600">{job.company}</p>
               <p className="text-gray-600">{job.location}</p>
@@ -207,6 +210,7 @@ export default function CategoryPage() {
           ))}
         </div>
       </section>
+      <Footer/>
     </div>
   );
 }

@@ -59,29 +59,29 @@ const DataSection = () => {
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen w-full">
-                <ClipLoader color={"#2563eb"} size={60} />
+                <ClipLoader color={"#020617"} size={60} />
             </div>
         );
     }
 
     return (
         <div>
-            <div className="bg-gray-100 text-black mt-16 py-4 lg:mx-16 max-sm:mx-4 ">
+            <div className="bg-gray-100 text-black mt-4 py-1 lg:mx-16 max-sm:mx-4 ">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-3 gap-8 text-center">
                     <div>
-                        <h2 className="text-3xl max-sm:text-2xl font-bold text-black">
+                        <h2 className="text-2xl max-sm:text-2xl font-bold text-black">
                             {userCount}
                         </h2>
                         <p className="mt-2 text-lg max-sm:text-md">Users</p>
                     </div>
                     <div>
-                        <h2 className="text-3xl max-sm:text-2xl font-bold text-black">
+                        <h2 className="text-2xl max-sm:text-2xl font-bold text-black">
                             {companyCount}
                         </h2>
                         <p className="mt-2 text-lg max-sm:text-md">Companies</p>
                     </div>
                     <div>
-                        <h2 className="text-3xl max-sm:text-2xl font-bold text-black">
+                        <h2 className="text-2xl max-sm:text-2xl font-bold text-black">
                             {jobCount}
                         </h2>
                         <p className="mt-2 text-lg max-sm:text-md">Jobs</p>
