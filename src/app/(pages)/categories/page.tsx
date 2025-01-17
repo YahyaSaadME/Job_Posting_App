@@ -3,9 +3,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import Navbar from "@/app/components/global/Navbar";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function page() {
   const [categories, setCategories] = useState([]);
@@ -15,7 +16,7 @@ export default function page() {
   //   const [search, setSearch] = useState("");
   const routes = useRouter();
 
-  const fetchCategories = async (page: number) => {
+  const fetchCategories = useCallback(async (page: number) => {
     setError(null);
     try {
       const response = await fetch(
@@ -26,16 +27,18 @@ export default function page() {
         throw new Error("Failed to fetch categories");
       }
       const data = await response.json();
+      console.log(data);
+      
       setCategories(data.categories);
       setCurrentPage(data.page);
       setTotalPages(data.pages);
     } catch (err) {
       setError((err as Error).message);
     }
-  };
+  }, []);
   useEffect(() => {
     fetchCategories(currentPage);
-  }, [currentPage]);
+  }, [currentPage, fetchCategories]);
   return (
     <div>
       <Navbar />
@@ -59,10 +62,12 @@ export default function page() {
               <Link
                 href={`/categories/${category.title}`}>
                 <div className="w-full">
-                  <img
+                  <Image
                     className="w-[60px]"
                     src={window.location.origin + "/images/" + category.icon}
-                    alt=""
+                    alt={category.title}
+                    width={40}
+                    height={40}
                   />
                   <div className="flex justify-between mt-10">
                     <h2 className="font-semibold md:text-lg text-white">

@@ -2,9 +2,10 @@
 "use client";
 import Navbar from "@/app/components/global/Navbar";
 import { ArrowUpRight, Clock } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState, useCallback } from "react";
 
 export default function CategoryPage() {
   interface IBlog {
@@ -62,11 +63,9 @@ export default function CategoryPage() {
   const [blogs, setBlogs] = useState<IBlog[]>([]);
   const [courses, setCourses] = useState<ICourse[]>([]);
   const [jobs, setJobs] = useState<IJob[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const { search } = useParams();
 
-  const fetchCategories = async () => {
-    setError(null);
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await fetch(`/api/category?category=${search}`);
       if (!response.ok) {
@@ -78,13 +77,13 @@ export default function CategoryPage() {
       setCourses(data.courses.items);
       setJobs(data.jobs.items);
     } catch (err) {
-      setError((err as Error).message);
+      console.error((err as Error).message);
     }
-  };
+  }, [search]);
 
   useEffect(() => {
     fetchCategories();
-  }, [search]);
+  }, [search, fetchCategories]);
 
   return (
     <div>
@@ -95,7 +94,7 @@ export default function CategoryPage() {
           <div className="max-w-xl md:h-[200px] p-4 md:flex justify-center md:mx-4 mx-0">
             <div className="md:mx-0 bg-gray-100 p-3 w-full h-full flex justify-center items-center rounded-md shadow-md">
               {category ? (
-                <img
+                <Image
                   className="h-[80px] w-[80px]"
                   src={window.location.origin + "/images/" + category.icon}
                   alt=""
@@ -129,7 +128,7 @@ export default function CategoryPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {courses.map((course) => (
             <div key={course._id} className="border rounded-md shadow-md">
-              <img
+              <Image
                 src={window.location.origin + "/images/" + course.thumbnail}
                 alt={course.title}
                 className="w-full h-48 object-cover rounded-md"
@@ -165,7 +164,7 @@ export default function CategoryPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {blogs.map((blog) => (
             <div key={blog._id} className=" border rounded-md shadow-md">
-              <img
+              <Image
                 src={window.location.origin + "/images/" + blog.thumbnail}
                 alt={blog.title}
                 className="w-full h-48 object-cover rounded-md"

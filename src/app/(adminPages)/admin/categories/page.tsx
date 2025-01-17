@@ -7,11 +7,12 @@ import React, { useEffect, useState } from "react";
 import { useSession } from 'next-auth/react';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Link from "next/link";
+import Image from "next/image";
 
 const CategoriesList = () => {
   const { data: session, status }: any = useSession();
   const router = useRouter();
-  const adminEmail ="shivinfosec15@gmail.com"
+  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
   const userEmail = session?.user?.email;
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -131,8 +132,8 @@ const CategoriesList = () => {
               <tr key={category._id}>
                 <td className="border px-4 py-2 text-justify">{category.title}</td>
                 <td className="border px-4 py-2 text-justify">{category.desc}</td>
-                <td className="border px-4 py-2"><div className="flex justify-center items-center"><img className="w-[100px]" src={window.location.origin+"/images/"+category.bg} alt="" /> </div></td>
-                <td className="border px-4 py-2"><div className="flex justify-center items-center"><img className="w-[80px]" src={window.location.origin+"/images/"+category.icon} alt=""/></div></td>
+                <td className="border px-4 py-2"><div className="flex justify-center items-center"><Image className="w-[100px]" src={window.location.origin+"/images/"+category.bg} alt="" /> </div></td>
+                <td className="border px-4 py-2"><div className="flex justify-center items-center"><Image className="w-[80px]" src={window.location.origin+"/images/"+category.icon} alt=""/></div></td>
                 <td className="border px-4 py-2 text-center">{category.count}</td>
                 <td className="border px-4 py-2 text-center">
                   <button

@@ -7,11 +7,12 @@ import React, { useState } from "react";
 import { useSession } from 'next-auth/react';
 import ClipLoader from 'react-spinners/ClipLoader';
 import Link from "next/link";
+import Image from "next/image";
 
 const AddCategory = () => {
   const { data: session, status }: any = useSession();
   const router = useRouter();
-  const adminEmail ="shivinfosec15@gmail.com"
+  const adminEmail =process?.env?.NEXT_PUBLIC_ADMIN
   const userEmail = session?.user?.email;
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -154,7 +155,7 @@ const AddCategory = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {bg && (
             <div className="mt-2">
-              <img src={window.location.origin + "/images/" + bg} alt="Background" className="w-full h-auto" />
+              <Image src={window.location.origin + "/images/" + bg} alt="Background" className="w-full h-auto" />
               <button
                 type="button"
                 onClick={() => setBg("")}
@@ -175,7 +176,7 @@ const AddCategory = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {icon && (
             <div className="mt-2">
-              <img src={window.location.origin + "/images/" + icon} alt="Icon" className="w-full h-auto" />
+              <Image src={window.location.origin + "/images/" + icon} alt="Icon" className="w-full h-auto" />
               <button
                 type="button"
                 onClick={() => setIcon("")}

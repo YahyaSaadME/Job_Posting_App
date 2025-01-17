@@ -33,10 +33,20 @@ export async function GET(request: NextRequest) {
   }
 }
 
+<<<<<<< HEAD
+// ✅ PUT Handler
+export async function PUT(request: NextRequest) {
+  try {
+    await dbConnect();
+    const { pathname } = new URL(request.url);
+    const catId = pathname.split("/").pop();
+    const body = await request.json();
+=======
 // PUT Handler
 export async function PUT(request: NextRequest) {
   await dbConnect();
   const catId = request.nextUrl.pathname.split("/").pop();
+>>>>>>> a30765f2de9d41378e1ddf4927966cb9a2bc0a29
 
   try {
     const body = await request.json();
@@ -60,12 +70,21 @@ export async function PUT(request: NextRequest) {
   }
 }
 
+<<<<<<< HEAD
+// ✅ DELETE Handler
+export async function DELETE(request: NextRequest) {
+  try {
+    await dbConnect();
+    const { pathname } = new URL(request.url);
+    const catId = pathname.split("/").pop();
+=======
 // DELETE Handler
 export async function DELETE(request: NextRequest) {
   await dbConnect();
   const catId = request.nextUrl.pathname.split("/").pop();
 
   try {
+>>>>>>> a30765f2de9d41378e1ddf4927966cb9a2bc0a29
     const deletedCategory = await Category.findByIdAndDelete(catId);
 
     if (!deletedCategory) {
