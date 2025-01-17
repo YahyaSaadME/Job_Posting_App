@@ -67,11 +67,6 @@ const CategoriesList = () => {
   useEffect(() => {
     fetchCategories(currentPage);
   }, [currentPage, search]);
-  useEffect(() => {
-    console.log(status);
-    console.log(adminEmail);
-    console.log(userEmail);
-  }, [status]);
 
   if (status === "loading") {
     return (
