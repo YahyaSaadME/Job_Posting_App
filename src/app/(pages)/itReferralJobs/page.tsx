@@ -152,7 +152,7 @@ const Page = () => {
 
       <div className="bg-white text-black md:mx-16 min-h-screen mt-16 flex flex-col">
         {/* Header Section */}
-        <div className="flex flex-col px-5 md:flex-row justify-between items-center bg-blue-100 p-6 md:p-8">
+        <div className="flex flex-col px-5 md:flex-row justify-between items-center bg-gray-100 p-6 md:p-8">
           <div className="text-3xl md:text-4xl font-bold mb-4 md:mb-0">
             It Referral Jobs
           </div>

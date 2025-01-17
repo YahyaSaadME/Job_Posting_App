@@ -32,7 +32,7 @@ export default function SignUp() {
   const [showOtpDialog, setShowOtpDialog] = useState(false);
   const [otp, setOtp] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-
+  const [otpSended , setOptSended] = useState(false)
   const router = useRouter();
   const restrictedDomains = [
     "gmail.com",
@@ -59,6 +59,7 @@ export default function SignUp() {
   };
 
   const handleSendOtp = async () => {
+    // Input validation
     if (
       !email ||
       !validatePassword(password) ||
@@ -70,71 +71,85 @@ export default function SignUp() {
       setError("Please fill all fields correctly and accept terms.");
       return;
     }
-
-    // Validate restricted domains for job posters
+  
+    // Restrict specific email domains for job posters
     if (type === "jobPoster" && isRestrictedDomain(email)) {
       setError("Personal email addresses are not allowed for job posters. Please use your office email.");
       return;
     }
-
+  
     setIsLoading(true);
+  
     try {
-      // Upload resume if job seeker
+      // Handle resume upload for job seekers
       if (type === "jobSeeker" && resume) {
         const formData = new FormData();
         formData.append("resume", resume);
-
+  
         const uploadResponse = await fetch("/api/upload/resume", {
           method: "POST",
           body: formData,
         });
-
-        const uploadData = await uploadResponse.json();
+  
+        const uploadData: { success: boolean; url?: string; error?: string } = await uploadResponse.json();
+  
         if (!uploadData.success) {
           setError(uploadData.error || "Failed to upload resume");
-          setIsLoading(false);
-          return;
+          return; // Exit if upload fails
         }
-
-        setResumeUrl(uploadData.url);
+  
+        setResumeUrl(uploadData.url || "");
       }
-
-      const response = await fetch("api/auth/sign-up/send-otp", {
+  
+      // Send OTP request
+      const response = await fetch("/api/auth/sign-up/send-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, name }),
       });
-
-      const data = await response.json();
-      if (!data.success) {
-        alert(data.message);
-        setShowOtpDialog(false); // Display the alert to the user
-      }
+  
+      const data: { success: boolean; message?: string } = await response.json();
+  
       if (data.success) {
         setShowOtpDialog(true);
         setError("");
+        setOptSended(true);
       } else {
+        setShowOtpDialog(false);
         setError(data.message || "Failed to send OTP");
       }
     } catch (err) {
-      console.log(err);
+      console.error("Error sending OTP:", err);
       setError("Failed to send OTP. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+  
+  const ifOptAlreadySent = () => {
+    if (!email || !name) {
+      setError("Please provide a valid email and name to verify.");
+      return;
+    }
+    setShowOtpDialog(true)
+  };
+  
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+  
     if (!otp) {
       setError("Please enter the OTP");
       return;
     }
-    setIsLoading(true);
+  
+    setIsLoading(true); // Show loading state
+    setError(""); // Clear previous errors
+  
     try {
-      const response = await fetch("api/auth/sign-up", {
+      const response = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -149,22 +164,31 @@ export default function SignUp() {
           resume: resumeUrl,
         }),
       });
-
-      const data = await response.json();
-
+  
+      if (!response.ok) {
+        // Handle non-200 responses
+        throw new Error("Failed to sign up. Please check your inputs.");
+      }
+  
+      const data: { success: boolean; message?: string } = await response.json();
+  
       if (data.success) {
-        toast("Successfully account created !!")
-        
+        toast("Account created successfully!");
         router.push("/signin");
       } else {
-        setError(data.message || "Sign up failed");
+        setError(data.message || "Sign up failed.");
       }
-    } catch (err) {
-      setError("Sign up failed. Please try again.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || "Sign up failed. Please try again.");
+      } else {
+        setError("Unexpected error occurred.");
+      }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Hide loading state
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-200/80 ">
@@ -333,7 +357,9 @@ export default function SignUp() {
                     .
                   </label>
                 </div>
-
+           {
+            otpSended ? (<p onClick={ifOptAlreadySent} className="text-md m-4 cursor-pointer hover:underline"> Verify Your Email </p>) : (<></>)
+           }
                 {error && (
                   <Alert variant="destructive">
                     <AlertDescription>{error}</AlertDescription>
