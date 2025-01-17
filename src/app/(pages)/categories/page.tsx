@@ -5,9 +5,10 @@
 "use client";
 import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Page() {
@@ -19,7 +20,7 @@ export default function Page() {
 
   const routes = useRouter();
 
-  const fetchCategories = async (page: number) => {
+  const fetchCategories = useCallback(async (page: number) => {
     setError(null);
     try {
       setLoading(true);
@@ -28,6 +29,8 @@ export default function Page() {
         throw new Error("Failed to fetch categories");
       }
       const data = await response.json();
+      console.log(data);
+
       setCategories(data.categories);
       setCurrentPage(data.page);
       setTotalPages(data.pages);
@@ -35,7 +38,7 @@ export default function Page() {
     } catch (err) {
       setError((err as Error).message);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchCategories(currentPage);
@@ -55,10 +58,12 @@ export default function Page() {
         </div>
       ) : (
         <div className="mt-24 mx-16">
-          <div className='flex flex-wrap justify-center w-full'>
-            <h2 className='text-3xl font-bold font-sans text-gray-400'>Categories</h2>
+          <div className="flex flex-wrap justify-center w-full">
+            <h2 className="text-3xl font-bold font-sans text-gray-400">
+              Categories
+            </h2>
           </div>
-          <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mx-4 ">
+          <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4 ">
             {categories.map((category: any, index) => (
               <div
                 key={index}
@@ -71,13 +76,15 @@ export default function Page() {
                 }}
               >
                 <Link href={`/categories/${category.title}`}>
-                  <div className="w-full">
-                    <img
-                      className="w-[40px] sm:w-[50px] md:w-[60px] mx-auto"
-                      src={`${window.location.origin}/images/${category.icon}`}
-                      alt={category.title}
-                    />
-                    <div className="flex justify-between items-center mt-6 sm:mt-8">
+                  <div className="w-full h-full flex flex-col justify-between">
+                    <div className="flex justify-start items-start min-h-full" style={{minHeight: "150px",}}>
+                      <img
+                        className="w-[50px] md:w-[60px]"
+                        src={`${window.location.origin}/images/${category.icon}`}
+                        alt={category.title}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center mt-4 sm:mt-6">
                       <h2 className="font-semibold text-sm sm:text-base md:text-lg text-white">
                         {category.title}
                       </h2>
@@ -90,7 +97,14 @@ export default function Page() {
               </div>
             ))}
           </div>
-          <Pagination categoriesPerPage={50} totalCategories={categories.length} paginate={paginate} nextPage={nextPage} prevPage={prevPage} currentPage={currentPage} />
+          <Pagination
+            categoriesPerPage={50}
+            totalCategories={categories.length}
+            paginate={paginate}
+            nextPage={nextPage}
+            prevPage={prevPage}
+            currentPage={currentPage}
+          />
         </div>
       )}
       <Footer />
@@ -98,7 +112,14 @@ export default function Page() {
   );
 }
 
-const Pagination = ({ categoriesPerPage, totalCategories, paginate, nextPage, prevPage, currentPage }: any) => {
+const Pagination = ({
+  categoriesPerPage,
+  totalCategories,
+  paginate,
+  nextPage,
+  prevPage,
+  currentPage,
+}: any) => {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalCategories / categoriesPerPage); i++) {
@@ -107,21 +128,34 @@ const Pagination = ({ categoriesPerPage, totalCategories, paginate, nextPage, pr
 
   return (
     <nav className="flex justify-center items-center gap-6 mt-8">
-      <ul className='pagination flex gap-8'>
-        <li className='page-item'>
-          <button onClick={prevPage} className='page-link bg-gray-300 text-gray-700 px-4 py-2 rounded-l hover:bg-gray-400 disabled:opacity-50' disabled={currentPage === 1}>
+      <ul className="pagination flex gap-8">
+        <li className="page-item">
+          <button
+            onClick={prevPage}
+            className="page-link bg-gray-300 text-gray-700 px-4 py-2 rounded-l hover:bg-gray-400 disabled:opacity-50"
+            disabled={currentPage === 1}
+          >
             Previous
           </button>
         </li>
-        {pageNumbers.map(number => (
-          <li key={number} className='page-item mt-2'>
-            <a onClick={() => paginate(number)} className={`page-link px-4 py-2 border-t border-b border-gray-300 hover:bg-gray-200 ${currentPage === number ? 'bg-gray-200' : ''}`}>
+        {pageNumbers.map((number) => (
+          <li key={number} className="page-item mt-2">
+            <a
+              onClick={() => paginate(number)}
+              className={`page-link px-4 py-2 border-t border-b border-gray-300 hover:bg-gray-200 ${
+                currentPage === number ? "bg-gray-200" : ""
+              }`}
+            >
               {number}
             </a>
           </li>
         ))}
-        <li className='page-item'>
-          <button onClick={nextPage} className='page-link bg-gray-300 text-gray-700 px-4 py-2 rounded-r hover:bg-gray-400 disabled:opacity-50' disabled={currentPage === pageNumbers.length}>
+        <li className="page-item">
+          <button
+            onClick={nextPage}
+            className="page-link bg-gray-300 text-gray-700 px-4 py-2 rounded-r hover:bg-gray-400 disabled:opacity-50"
+            disabled={currentPage === pageNumbers.length}
+          >
             Next
           </button>
         </li>

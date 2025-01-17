@@ -4,10 +4,10 @@
 "use client";
 import Footer from "@/app/components/global/Footer";
 import Navbar from "@/app/components/global/Navbar";
-import { ArrowUpRight, Clock } from "lucide-react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { Clock } from "lucide-react";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function CategoryPage() {
   interface IBlog {
@@ -59,7 +59,7 @@ export default function CategoryPage() {
   const [totalPages, setTotalPages] = useState(1);
   const { search, type } = useParams();
 
-  const fetchCategories = async (page: number) => {
+  const fetchCategories = useCallback(async (page: number) => {
     setError(null);
     try {
       const response = await fetch(`/api/category/take?category=${search}&type=${type}&page=${page}&limit=20`);
@@ -74,11 +74,11 @@ export default function CategoryPage() {
     } catch (err) {
       setError((err as Error).message);
     }
-  };
+  }, [search, type]);
 
   useEffect(() => {
     fetchCategories(page);
-  }, [search, type, page]);
+  }, [search, type, page, fetchCategories]);
 
   const handleNextPage = () => {
     if (page < totalPages) {
@@ -103,7 +103,7 @@ export default function CategoryPage() {
             <div key={item._id} className="border rounded-md shadow-md">
               {type === "course" && (
                 <>
-                  <img
+                  <Image
                     src={window.location.origin + "/images/" + (item as ICourse).thumbnail}
                     alt={(item as ICourse).title}
                     className="w-full h-48 object-cover rounded-md"
@@ -125,7 +125,7 @@ export default function CategoryPage() {
               )}
               {type === "blog" && (
                 <>
-                  <img
+                  <Image
                     src={window.location.origin + "/images/" + (item as IBlog).thumbnail}
                     alt={(item as IBlog).title}
                     className="w-full h-48 object-cover rounded-md"

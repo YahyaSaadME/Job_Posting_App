@@ -1,7 +1,20 @@
-'use client'
-import React from "react";
+"use client";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 const Footer = () => {
+  const [Blogs, setBlogs] = useState([]);
+  const [Courses, setCourses] = useState([]);
+  useEffect(() => {
+    const get = async () => {
+      const req = await fetch("/api/latest");
+      const res = await req.json();
+      setBlogs(res.blogs);
+      setCourses(res.courses);
+    };
+    get();
+  }, []);
+
   return (
     <footer className=" text-gray-900 py-10 mt-16  border-t border-y-4 border-gray-950 pt-10  mx-16">
       {/* Footer Container */}
@@ -10,7 +23,8 @@ const Footer = () => {
         <div>
           <h2 className="text-2xl font-bold mb-4">Shiv InfoSec</h2>
           <p className="text-gray-600 mb-4">
-            A collection of articles focusing on Networking, Cloud, and Automation.
+            A collection of articles focusing on Networking, Cloud, and
+            Automation.
           </p>
           <form className="flex">
             <input
@@ -31,19 +45,9 @@ const Footer = () => {
         <div>
           <h4 className="text-xl font-bold mb-4">Latest Blogs</h4>
           <ul className="space-y-2">
-            {[
-              "Contact",
-              "Hire Me",
-              "Training",
-              "About Me",
-              "Cookie Policy",
-          
-            ].map((item, index) => (
-              <li
-                key={index}
-                className="hover:text-gray-700 cursor-pointer"
-              >
-                {item}
+            {Blogs.map((item: any, index: number) => (
+              <li key={index} className="hover:text-gray-700 cursor-pointer">
+                <Link href={`/blog/${item?._id}`}>{item?.title}</Link>
               </li>
             ))}
           </ul>
@@ -51,24 +55,13 @@ const Footer = () => {
         <div>
           <h4 className="text-xl font-bold mb-4">Latest Course</h4>
           <ul className="space-y-2">
-            {[
-              "Contact",
-              "Hire Me",
-              "Training",
-              "About Me"
-           
-            ].map((item, index) => (
-              <li
-                key={index}
-                className="hover:text-gray-700 cursor-pointer"
-              >
-                {item}
+            {Courses.map((item: any, index: number) => (
+              <li key={index} className="hover:text-gray-700 cursor-pointer">
+                <Link href={`/free-courses/${item?._id}`}>{item?.title}</Link>
               </li>
             ))}
           </ul>
         </div>
-
- 
       </div>
 
       {/* Footer Bottom */}
