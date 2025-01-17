@@ -50,12 +50,12 @@ import Image from "next/image";
 
     return (
       <div className=" lg:mx-16 mt-8">
-      <div className='flex gap-14 mb-8'>
-          <h2 className="text-3xl font-bold font-sans text-gray-400">Tags</h2>
-          <Link href={"/blogs"}>
-              <p className="text-gray-500 text-lg md:mt-2">View All →</p>
-          </Link>
-      </div>
+   <div className='flex gap-14 mb-8'>
+                <h2 className="text-3xl font-bold font-sans text-gray-400">Tags</h2>
+                <Link href={"/blogs"}>
+                    <p className="text-gray-500 text-lg md:mt-2">View All →</p>
+                </Link>
+            </div>
       <div className="pt-1 flex-wrap gap-4 ">
                     <motion.div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 mx-4 mt-4">
