@@ -170,7 +170,7 @@ const EditCategory = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {bg && (
             <div className="mt-2">
-              <Image src={window.location.origin + "/images/" + bg} alt="Background" className="w-full h-auto" />
+              <Image src={window.location.origin + "/images/" + bg} alt="Background" className="w-full h-auto" height={100} width={100} />
               <button
                 type="button"
                 onClick={() => setBg("")}
@@ -191,7 +191,7 @@ const EditCategory = () => {
           {uploading && <p className="text-blue-500 mt-2">Uploading...</p>}
           {icon && (
             <div className="mt-2">
-              <Image src={window.location.origin + "/images/" + icon} alt="Icon" className="w-full h-auto" />
+              <Image height={40} width={40} src={window.location.origin + "/images/" + icon} alt="Icon" className="w-full h-auto" />
               <button
                 type="button"
                 onClick={() => setIcon("")}
