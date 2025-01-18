@@ -30,7 +30,7 @@ const EditJob = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const { data: session, status }: any = useSession();
-  const adminEmail ="shivinfosec15@gmail.com"
+  const adminEmail =process.env.NEXT_PUBLIC_ADMIN
   const userEmail = session?.user?.email;
   
   useEffect(() => {

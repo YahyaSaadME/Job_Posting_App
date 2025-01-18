@@ -8,21 +8,37 @@ import mailSender from "@/utils/mailSender"; // Assuming you have a mailSender u
 
 export async function POST(req: Request) {
   try {
-    const { email, name, password, type, mobile, otp,resume } = await req.json();
-    if (!email || !name || !password || !type || !mobile || !otp || !resume) {
-      return NextResponse.json({ success: false, message: "All fields are required." }, { status: 400 });
+    const { email, name, password, type, mobile, otp, resume } =
+      await req.json();
+    if (!email || !name || !password || !type || !mobile || !otp) {
+      return NextResponse.json(
+        { success: false, message: "All fields are required." },
+        { status: 400 }
+      );
+    }
+    if (!resume && type === "jobSeeker") {
+      return NextResponse.json(
+        { success: false, message: "All fields are required." },
+        { status: 400 }
+      );
     }
 
     await dbConnect();
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return NextResponse.json({ success: false, message: "User already registered." }, { status: 409 });
+      return NextResponse.json(
+        { success: false, message: "User already registered." },
+        { status: 409 }
+      );
     }
 
     const otpEntry = await OTP.findOne({ email, otp });
     if (!otpEntry) {
-      return NextResponse.json({ success: false, message: "Invalid or expired OTP." }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "Invalid or expired OTP." },
+        { status: 400 }
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,16 +49,16 @@ export async function POST(req: Request) {
       password: hashedPassword,
       type,
       mobile,
-      resume
+      resume,
     });
 
     await newUser.save();
     await OTP.deleteMany({ email }); // Clear OTPs for this email
 
- 
     await mailSender({
       email,
-      title: "Welcome to Shiv InfoSec – Your Cybersecurity Journey Starts Here! ",
+      title:
+        "Welcome to Shiv InfoSec – Your Cybersecurity Journey Starts Here! ",
       body: `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -125,17 +141,35 @@ export async function POST(req: Request) {
 `,
     });
 
-    return NextResponse.json({ user: newUser, success: true, message: "User registered successfully." }, { status: 201 });
-
+    return NextResponse.json(
+      {
+        user: newUser,
+        success: true,
+        message: "User registered successfully.",
+      },
+      { status: 201 }
+    );
   } catch (error: any) {
     console.error("Error creating user:", error);
 
     if (error.name === "ValidationError") {
-      return NextResponse.json({ success: false, message: "Validation error.", errors: error.errors }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: "Validation error.", errors: error.errors },
+        { status: 400 }
+      );
     } else if (error.code === 11000) {
-      return NextResponse.json({ success: false, message: "Duplicate key error. Email already exists." }, { status: 409 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Duplicate key error. Email already exists.",
+        },
+        { status: 409 }
+      );
     }
 
-    return NextResponse.json({ success: false, message: "Server error. Please try again later." }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: "Server error. Please try again later." },
+      { status: 500 }
+    );
   }
 }

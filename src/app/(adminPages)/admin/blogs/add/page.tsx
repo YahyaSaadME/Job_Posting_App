@@ -10,13 +10,13 @@ import Link from "next/link";
 
 const AddBlog = () => {
   const { data: session, status }: any = useSession();
-  const adminEmail ="shivinfosec15@gmail.com"
+  const adminEmail = process.env.NEXT_PUBLIC_ADMIN
   const userEmail = session?.user?.email;
 
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [category, setCategory] = useState("");
-  const [thumbnail, setThumbnail] = useState("image-1736147122488.png");
+  const [thumbnail, setThumbnail] = useState("");
   const [tags, setTags] = useState("");
   const [tableOfContent, setTableOfContent] = useState([
     { title: "", description: "", imageLink: "", videoLink: "" },

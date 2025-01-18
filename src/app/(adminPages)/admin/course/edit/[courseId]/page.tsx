@@ -12,7 +12,7 @@ const UpdateCourse = () => {
   const router = useRouter();
   const { courseId } = useParams();
   const { data: session, status }: any = useSession();
-  const adminEmail ="shivinfosec15@gmail.com"
+  const adminEmail =process.env.NEXT_PUBLIC_ADMIN
   const userEmail = session?.user?.email;
 
   const [course, setCourse] = useState({
@@ -21,7 +21,7 @@ const UpdateCourse = () => {
     category: "",
     tags: [],
     link: "",
-    thumbnail: "image-1736147122488.png",
+    thumbnail: "",
     duration: "",
     responsibilities: "", // New field
     courseContent: "",    // New field
@@ -140,7 +140,7 @@ const UpdateCourse = () => {
 
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 max-w-xl">
       <h1 className="text-2xl font-bold mb-4">Update Course</h1>
       {error && <p className="text-red-500">{error}</p>}
       {success && <p className="text-green-500">{success}</p>}

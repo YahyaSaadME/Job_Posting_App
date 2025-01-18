@@ -16,7 +16,7 @@ const ItReferralJobs = () => {
   const [error, setError] = useState("");
   const [status, setStatus] = useState<boolean | null | undefined>(undefined);
   const { data: session, status : s }: any = useSession();
-  const adminEmail ="shivinfosec15@gmail.com"
+  const adminEmail =process.env.NEXT_PUBLIC_ADMIN
   const userEmail = session?.user?.email;
   
   const fetchItReferralJobs = async () => {

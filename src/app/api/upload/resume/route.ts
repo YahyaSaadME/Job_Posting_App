@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 async function ensureUploadDir() {
-  const uploadDir = path.join(process.cwd(), 'public/resume');
+  const uploadDir = path.join(process.cwd(), 'assets/resume');
   try {
     await fs.access(uploadDir);
   } catch {
