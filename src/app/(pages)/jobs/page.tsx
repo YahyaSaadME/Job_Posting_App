@@ -19,7 +19,7 @@ interface Job {
   location: string[];
   jobType: string;
   yearsOfExperience: string;
-  description: string;
+  description: any;
   companyImgLink: any;
 }
 
@@ -235,7 +235,7 @@ const Page = () => {
         </motion.div>
       </div>
 
-      <div className="min-h-screen mt-12 bg-gray-100 p-6 flex flex-col md:flex-row">
+      <div className="min-h-screen mt-16 mx-16 bg-gray-100 p-1 flex flex-col md:flex-row">
         <div className="w-full md:w-80 max-sm:hidden bg-white p-4 rounded-lg shadow-md mb-6 md:mb-0 max-sm:bg-gray-50">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold text-gray-800">Filter</h2>
@@ -363,7 +363,7 @@ const Page = () => {
                         className="h-20 w-24 object-fill  rounded "
                       />
                       <div className="flex flex-col gap-2 flex-grow">
-                        <h3 className="text-xl font-semibold text-gray-800 max-sm:text-lg">
+                        <h3    onClick={() => applyForJob(job._id)}  className="text-xl font-semibold text-gray-800 cursor-pointer hover:underline max-sm:text-lg">
                           {job.title} | {job.company}
                         </h3>
                         <div className="flex flex-wrap gap-4 text-gray-600 max-sm:gap-2 max-sm:text-sm">
@@ -381,8 +381,12 @@ const Page = () => {
                           </div>
                         </div>
                         <p className="text-gray-700 max-sm:text-sm">
-                          {job.description}
-                        </p>
+  {typeof job?.description === "string" 
+    ? job.description.split(" ").slice(0, 20).join(" ") 
+    : ""}
+</p>
+
+
                       </div>
                       <button
                         className="bg-black h-10 w-full md:w-36 text-white px-4 py-2 rounded hover:bg-black max-sm:h-9 max-sm:text-sm"

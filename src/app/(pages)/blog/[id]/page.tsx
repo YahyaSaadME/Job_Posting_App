@@ -125,7 +125,7 @@ export default function Page() {
     <>
       <div>
         <div
-          className="h-1 bg-blue-600 fixed top-0 left-0 z-30"
+          className="h-1 bg-black fixed top-0 left-0 z-30"
           style={{ width: `${BlogBar}%` }}
         ></div>
         <Navbar />

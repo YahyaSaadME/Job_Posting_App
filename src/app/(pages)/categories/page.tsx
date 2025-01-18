@@ -63,11 +63,11 @@ export default function Page() {
               Categories
             </h2>
           </div>
-          <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mx-4">
+          <div className="grid grid-cols-1 mt-8 sm:grid-cols-2 md:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 mx-4">
   {categories.map((category: any, index) => (
     <div
       key={index}
-      className="cursor-pointer p-4 rounded-md flex flex-col justify-between"
+      className="cursor-pointer p-4 rounded-md w-48 flex flex-col justify-between"
       style={{
         backgroundImage: `url(${window.location.origin}/images/${category.bg})`,
         backgroundSize: "cover",

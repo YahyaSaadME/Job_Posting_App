@@ -70,44 +70,28 @@ const Page = () => {
         </div>
       ) : (
         <>
-          <div className="container mx-auto md:px-8 p-2 w-[65%] flex justify-center md:py-8 mt-16">
+          <div className="container mx-auto  w-[75%] flex justify-center md:py-8 mt-16">
             <div key={courseData.title} className="bg-gray-50 md:p-6 space-y-4 rounded-lg shadow-md">
               <div className="flex justify-center items-center m-2 p-4">
                 <Image 
                   src={`${window.location.origin}/images/${courseData?.thumbnail}`} 
-                  className="w-[33rem] h-[16rem] rounded-md shadow-md" 
+                  className="w-[39rem] h-[16rem] rounded-md shadow-md" 
                   alt="img" 
                   width={200} 
                   height={100} 
                 />
               </div>
               <div className='flex gap-3 md:mx-16 flex-wrap'>
-                
+{/*                 
                       <span className="bg-pink-100 text-pink-600 text-sm font-semibold px-3 py-1 rounded-full mb-4 inline-block">
                         {courseData.tags}
-                      </span>
+                      </span> */}
                     
                   </div>
               <div className="md:p-6 p-2 space-y-4">
                 <h2 className="text-2xl font-semibold text-gray-800">{courseData.title}</h2>
-                <p className="text-md text-gray-600">{courseData.description}</p>
+                <p className="text-lg text-gray-600">{courseData.description}</p>
 
-                <div className="border-t flex gap-6 pt-4">
-                  <div className="text-lg text-gray-700">Category:</div>
-                  <p className="text-md mt-1font-sans text-gray-500">{courseData.category}</p>
-                </div>
-
-                <div className="border-t flex gap-6 pt-4">
-                  <div className="text-lg text-gray-700">Duration:</div>
-                  <p className="text-md mt-1 font-sans text-gray-500">{courseData.duration}</p>
-                </div>
-
-                <div className="border-t  flex gap-6 pt-4">
-                  <div className="text-lg text-gray-700">Instructor:</div>
-                  <p className="text-md mt-1 font-sans text-gray-500">{courseData.instructorName}</p>
-                </div>
-
-              
 
           </div>
         
@@ -116,25 +100,40 @@ const Page = () => {
 
           </div> 
           <div className="flex flex-col items-center gap-6 justify-center">
-          <div className="md:py-8 md:px-8 p-2 space-y-4 w-[60%] bg-gray-50   rounded-lg shadow-md">
-                  <strong className="text-lg text-gray-700">Responsibilities:</strong>
-                  <p className="text-sm font-sans text-gray-500">{courseData.responsibilities}</p>
+          <div className="md:py-8 md:px-8 p-2 text-2xl font-bold  space-y-4 w-[75%]  bg-gray-50   rounded-lg shadow-md">
+
+                
+              </div>
+          <div className="md:py-8 md:px-8 p-2 space-y-4 w-[75%] bg-gray-50   rounded-lg shadow-md">
+                  <strong className="text-2xl text-gray-700">What you will learn:</strong>
+                  <p className="text-lg font-sans text-gray-500">{courseData.responsibilities}</p>
                 </div>
-                <div className=" space-y-4 w-[60%] md:py-8 md:px-8 p-2  bg-gray-50   rounded-lg shadow-md">
-                <strong className="text-lg text-gray-700">Prerequisites:</strong>
-                <p className="text-sm font-sans text-gray-500">{courseData.prerequisites}</p>
+                <div className=" space-y-4 w-[75%] md:py-8 md:px-8 p-2  bg-gray-50   rounded-lg shadow-md">
+                <strong className="text-2xl text-gray-700">Requirements:</strong>
+                <p className="text-lg font-sans text-gray-500">{courseData.prerequisites}</p>
               </div>
-
-              <div className="md:py-8 md:px-8 p-2  space-y-4 w-[60%]  bg-gray-50   rounded-lg shadow-md">
-                <strong className="text-lg text-gray-700">Course Content:</strong>
-                <p className="text-sm font-sans text-gray-500">{courseData.courseContent}</p>
+              <div className="md:py-8 md:px-8 p-2 text-2xl font-bold  space-y-4 w-[75%]  bg-gray-50   rounded-lg shadow-md">
+  
+                
+  </div>
+              <div className="md:py-8 md:px-8 p-2  space-y-4 w-[75%]  bg-gray-50   rounded-lg shadow-md">
+                <strong className="text-2xl text-gray-700">Description:</strong>
+                <p className="text-lg font-sans text-gray-500">{courseData.courseContent}</p>
               </div>
-
+           
+              <div className="md:py-8 md:px-8 p-2  space-y-4 w-[75%]  bg-gray-50   rounded-lg shadow-md">
+                <strong className="text-2xl text-gray-700">Who this course is for:</strong>
+                <p className="text-lg font-sans text-gray-500">{courseData.courseContent}</p>
+              </div>
+              <div className="md:py-8 md:px-8 p-2 text-2xl font-bold  space-y-4 w-[75%]  bg-gray-50   rounded-lg shadow-md">
+     Link below
+                
+              </div>
               </div>
               <div className="flex justify-center items-center m-8 p-6">
                 <Link href={`${courseData.link}`}>
                   <button className="bg-black h-12 w-60 text-white py-2 px-6 text-xl font-sans rounded-md shadow-md">
-                    Learn More
+                  Apply here 
                   </button>
                 </Link>
               </div>
