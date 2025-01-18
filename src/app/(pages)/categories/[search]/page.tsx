@@ -146,14 +146,10 @@ export default function CategoryPage() {
                   <p className="text-gray-100 bg-blue-400 px-2 py-1 rounded-md w-fit text-xs ">
                     {course.category}
                   </p>
-                  <div className="flex items-center">
-                    <Clock className="mr-2" size={20} />
-                    <p className="text-gray-600">{course.duration}</p>
-                  </div>
+
+                 
                 </div>
-                <p className="text-gray-600 line-clamp-3">
-                  {course.description}
-                </p>
+                <p className="text-sm text-gray-500">created at: {new Date(course.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
           ))}
@@ -184,9 +180,12 @@ export default function CategoryPage() {
                   <p className="text-gray-100 bg-blue-400 px-2 py-1 rounded-md w-fit text-xs ">
                     {blog.category}
                   </p>
-                  <p className="text-gray-800 text-sm">By {blog.author}</p>
+                  <div>
+                        <p className="font-medium text-gray-900">Admin</p>
+                        <p className="text-sm text-gray-500">created at: {new Date(blog.createdAt).toLocaleDateString()}</p>
+                      </div>
                 </div>
-                <p className="text-gray-600">{blog.likes} likes</p>
+            
               </div>
             </div>
           ))}

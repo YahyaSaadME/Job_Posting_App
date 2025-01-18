@@ -44,36 +44,37 @@ const Navbar: React.FC = () => {
     <header className="bg-white shadow-md fixed z-20 w-full  top-0 left-0 h-16">
 < ToastContainer />
       
-      <div className="    flex justify-between  max-sm:justify-between mx-4 items-center h-16">
+      <div className="    flex justify-around  max-sm:justify-between mx-10 items-center h-16">
         {/* Logo */}
         
         <div>
         <Link href="/">
-       <h1 className=" font-bold text-2xl hover:text-gray-800">Shiv InfoSec</h1>
+       <h1 className=" font-bold text-2xl mt-1 hover:text-gray-800">Shiv InfoSec</h1>
         </Link>
         </div>
+        <div className = "flex gap-36">
    <div>
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/blogs" className="text-gray-900  text-md font-bold hover:underline hover:text-gray-600">
+        <nav className="hidden md:flex items-center space-x-4 mt-2">
+          <Link href="/blogs" className="text-gray-900  text-md font-semibold hover:underline hover:text-gray-600">
             Blog
           </Link>
-          <Link href="/free-courses" className="text-gray-900  hover:underline text-md font-bold hover:text-gray-600">
+          <Link href="/free-courses" className="text-gray-900  hover:underline text-md font-semibold hover:text-gray-600">
             Free Course
           </Link>
-          <Link href="/jobs" className="text-gray-900  text-md  hover:underline font-bold hover:text-gray-600">
+          <Link href="/jobs" className="text-gray-900  text-md  hover:underline font-semibold hover:text-gray-600">
             Jobs
           </Link>
-          <Link href="/categories" className="text-gray-900 hover:underline text-md font-bold hover:text-gray-600">
+          <Link href="/categories" className="text-gray-900 hover:underline text-md font-semibold hover:text-gray-600">
           Categories
           </Link>
-          <Link href="/itReferralJobs" className="text-gray-900 hover:underline text-md font-bold hover:text-gray-600">
+          <Link href="/itReferralJobs" className="text-gray-900 hover:underline text-md font-semibold hover:text-gray-600">
             Employee IT Referral
           </Link>
         </nav>
         </div>
         {/* Social Icons */}
        
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-2">
         <Link href="https://www.linkedin.com/company/shivinfosec/" className="text-blue-700 hover:text-blue-800">
             <FaLinkedin className="text-3xl"/>
               </Link>
@@ -95,7 +96,7 @@ const Navbar: React.FC = () => {
            <FaTelegram className="text-3xl"/>
           </Link>
           </div>
-
+</div>
           <div className="hidden md:flex">
                   {session ? (
           <button

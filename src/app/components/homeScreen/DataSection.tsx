@@ -72,19 +72,19 @@ const DataSection = () => {
                         <h2 className="text-2xl max-sm:text-2xl font-bold text-black">
                             {userCount}
                         </h2>
-                        <p className="mt-2 text-lg max-sm:text-md">Users</p>
+                        <p className=" text-lg max-sm:text-md">Users</p>
                     </div>
                     <div>
                         <h2 className="text-2xl max-sm:text-2xl font-bold text-black">
                             {companyCount}
                         </h2>
-                        <p className="mt-2 text-lg max-sm:text-md">Companies</p>
+                        <p className="text-lg max-sm:text-md">Companies</p>
                     </div>
                     <div>
                         <h2 className="text-2xl max-sm:text-2xl font-bold text-black">
                             {jobCount}
                         </h2>
-                        <p className="mt-2 text-lg max-sm:text-md">Jobs</p>
+                        <p className=" text-lg max-sm:text-md">Jobs</p>
                     </div>
                 </div>
             </div>

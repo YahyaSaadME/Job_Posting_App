@@ -58,28 +58,12 @@ const Footer = () => {
         {/* Brand / Subscription */}
         <div>
           <h2 className="text-2xl font-bold mb-4">Shiv InfoSec</h2>
-          <p className="text-gray-600 mb-4">
-            A collection of articles focusing on Networking, Cloud, and Automation.
-          </p>
-          <form className="flex">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="px-4 py-2 rounded-l-lg border border-gray-300 w-full"
-              aria-label="Your email address"
-            />
-            <button
-              type="submit"
-              className="bg-gray-900 text-white px-6 py-2 rounded-r-lg font-semibold hover:bg-gray-700"
-            >
-              SUBSCRIBE
-            </button>
-          </form>
+       
         </div>
 
         {/* Navigation Links */}
         <div>
-          <h4 className="text-xl font-bold mb-4">Latest Blogs</h4>
+          <h4 className="text-xl font-bold mb-4">Top Blogs</h4>
           <ul className="space-y-2">
             {error ? (
               <li className="text-red-500">{error}</li>

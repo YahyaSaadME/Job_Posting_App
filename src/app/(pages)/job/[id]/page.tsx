@@ -75,7 +75,7 @@ const Page = () => {
             <ClipLoader color={"#020617"} size={60} />
           </div>
         ) : (
-          <div className="flex flex-col gap-4 bg-gray-100 min-h-screen">
+          <div className="flex flex-col gap-4 bg-gray-100 min-h-screen ">
             <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
               {/* Job Title */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -84,7 +84,7 @@ const Page = () => {
                   className="h-20 w-24 object-fill rounded"
                 />
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                  <h1  className="text-2xl  sm:text-3xl font-bold text-gray-800">
                     {job?.title}
                   </h1>
                   <div className="flex flex-col sm:flex-row text-gray-600 mt-2">
@@ -177,7 +177,7 @@ const Page = () => {
         )}
       </div>
 
-      <div className="max-sm:hidden mt-16">
+      <div className="max-sm:hidden md:mx-16  mt-16">
         {loading ? (
           <div className="flex  justify-center items-center h-screen w-full">
             <ClipLoader color={"#020617"} size={60} />
@@ -258,17 +258,24 @@ const Page = () => {
                     : null}
                 </ul>
               </div>
+              <div className="   ">
+        
+          </div>
               {/* Job Summary and Company Summary */}
 
               <div className="   ">
                 <div className="grid grid-rows-1 md:grid-rows-1 gap-4 mt-4">
-                <div className="bg-gray-100 p-4 w-[24rem] rounded-md shadow-md">
+                <div className="bg-white p-4 w-[24rem] rounded-md shadow-md">
                     <h2 className="text-lg font-bold text-black mb-2">
                       Company Summary
                     </h2>
                     <p className="text-gray-600">{job?.companySummary}</p>
                   </div>
-                  <div className="bg-gray-100 w-[24rem] p-4 rounded-md shadow-md">
+                  <div className="bg-white p-4 w-[24rem] rounded-md shadow-md">
+          
+                  
+                  </div>
+                  <div className="bg-white w-[24rem] p-4 rounded-md shadow-md">
                     <h2 className="text-lg font-bold text-black mb-2">
                       Job Summary
                     </h2>
@@ -313,7 +320,10 @@ const Page = () => {
               </div>
             </div>
           </div>
+          
         )}
+
+
       </div>
     </div>
   );
